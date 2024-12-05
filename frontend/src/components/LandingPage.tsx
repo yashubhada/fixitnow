@@ -1,82 +1,76 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Logo from '../images/fixitnow-logo-black.png'
+import Gardener from '../images/gardener.png'
+import Cleaner from '../images/cleaner.png'
+import Plumber from '../images/plumber.png'
+import Electrician from '../images/electrician.png'
+import Carpenter from '../images/carpenter.png'
 
 const LandingPage: React.FC = () => {
+
+    type ServiceCategoryType = {
+        icon: JSX.Element;
+        title: string;
+    };
 
     const serviceCategory = [
         {
             title: "Cleaning service",
             icon: (
-                <svg
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-label="Cleaning service"
-                    tabIndex={0}
-                >
-                    <path
-                        d="M4 12h16v8H4v-8Zm12-4V4H8v4H5V4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4h-3Z"
-                        fill="currentColor"
-                    />
-                </svg>
+                <div className='h-[24px] w-[24px]'>
+                    <img src={Cleaner} className='w-full h-full object-contain'/>
+                </div>
             ),
         },
         {
             title: "Plumbing service",
             icon: (
-                <svg
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-label="Plumbing service"
-                    tabIndex={0}
-                >
-                    <path
-                        d="M20.39 6.61a2 2 0 0 0-2.83 0L12 12.17l-2.79-2.8a3 3 0 0 0-4.24 4.24L10 18h4l3.93-3.93 2.46 2.47a1.49 1.49 0 0 0 2.11 0 1.49 1.49 0 0 0 0-2.11ZM5.71 12.71a1 1 0 0 1 1.42 0L10 15.59V16h-1.58L5.71 12.71ZM18 16h-1v-1h1Zm0 2h-1v1h1Z"
-                        fill="currentColor"
-                    />
-                </svg>
+                <div className='h-[24px] w-[24px]'>
+                    <img src={Plumber} className='w-full h-full object-contain'/>
+                </div>
             ),
         },
         {
             title: "Electrical service",
             icon: (
-                <svg
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-label="Electrical service"
-                    tabIndex={0}
-                >
-                    <path
-                        d="M13 3L3 14h6v7l10-11h-6V3Z"
-                        fill="currentColor"
-                    />
-                </svg>
+                <div className='h-[24px] w-[24px]'>
+                    <img src={Electrician} className='w-full h-full object-contain'/>
+                </div>
             ),
         },
         {
             title: "Carpentry service",
             icon: (
-                <svg
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-label="Carpentry service"
-                    tabIndex={0}
-                >
-                    <path
-                        d="M13 2L2 13h3v8h8v-3h8v-8h3L13 2Zm0 2.83L16.17 8H9.83L13 4.83ZM7 10h2v3H7v-3Zm8 0h2v3h-2v-3Zm-4 6h4v2h-4v-2Z"
-                        fill="currentColor"
-                    />
-                </svg>
+                <div className='h-[24px] w-[24px]'>
+                    <img src={Carpenter} className='w-full h-full object-contain'/>
+                </div>
+            ),
+        },
+        {
+            title: "Gardener service",
+            icon: (
+                <div className='h-[24px] w-[24px]'>
+                    <img src={Gardener} className='w-full h-full object-contain'/>
+                </div>
             ),
         },
     ];
+
+
+    const [serviceProviderValue, setServiceProviderValue] = useState<string | number | readonly string[] | undefined>("");
+    const [filteredServiceCategory, setFilteredServiceCategory] = useState<ServiceCategoryType[]>([]);
+
+    const handleServiceProviderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let word = e.target.value.toLowerCase();
+        setServiceProviderValue(word);
+        if (word !== "") {
+            let filteredData = serviceCategory.filter(service => service.title.toLowerCase().includes(word));
+            setFilteredServiceCategory(filteredData)
+        } else {
+            setFilteredServiceCategory([]);
+        }
+        console.log(filteredServiceCategory);
+    }
 
 
     return (
@@ -114,6 +108,8 @@ const LandingPage: React.FC = () => {
                                 <input
                                     type="text"
                                     placeholder='Enter your service'
+                                    value={serviceProviderValue}
+                                    onChange={handleServiceProviderChange}
                                     className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                 />
                                 <div className='ml-3'>
@@ -131,20 +127,30 @@ const LandingPage: React.FC = () => {
                                     </svg>
                                 </div>
                                 {/* serviceCategory list */}
-                                <ul className='hidden absolute max-h-[170px] top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
-                                    {
-                                        serviceCategory.map((service) =>
-                                            <li className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'>
-                                                <div>
-                                                    {service.icon}
-                                                </div>
-                                                <div>
-                                                    {service.title}
-                                                </div>
-                                            </li>
-                                        )
-                                    }
-                                </ul>
+                                {
+                                    filteredServiceCategory.length > 0 &&
+                                    <ul className='absolute max-h-[220px] top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                        {filteredServiceCategory.length > 0 ? (
+                                            filteredServiceCategory.map((service, index) => (
+                                                <li
+                                                    key={index}
+                                                    className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                    onClick={
+                                                        (): void => {
+                                                            setServiceProviderValue(service?.title)
+                                                            setFilteredServiceCategory([])
+                                                        }
+                                                    }
+                                                >
+                                                    <div>{service?.icon}</div>
+                                                    <div>{service?.title}</div>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="text-gray-500 p-2">No results found</li>
+                                        )}
+                                    </ul>
+                                }
                             </div>
                             <div className='w-fit'>
                                 <button className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'>
