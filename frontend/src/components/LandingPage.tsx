@@ -5,6 +5,13 @@ import Cleaner from '../images/cleaner.png'
 import Plumber from '../images/plumber.png'
 import Electrician from '../images/electrician.png'
 import Carpenter from '../images/carpenter.png'
+import Roofing from '../images/roofing.png'
+import Painter from '../images/painter.png'
+import SmartHome from '../images/smart-home.png'
+import HomeRenovation from '../images/renovation.png'
+import Flooring from '../images/flooring.png'
+import LandingImage from '../images/landingImg.svg'
+import RightAngleArrow from '../images/right-angle-arrow.png'
 
 const LandingPage: React.FC = () => {
 
@@ -15,42 +22,82 @@ const LandingPage: React.FC = () => {
 
     const serviceCategory = [
         {
-            title: "Cleaning service",
+            title: "Cleaning",
             icon: (
-                <div className='h-[24px] w-[24px]'>
-                    <img src={Cleaner} className='w-full h-full object-contain'/>
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Cleaner} className='w-full h-full object-contain' />
                 </div>
             ),
         },
         {
-            title: "Plumbing service",
+            title: "Plumbing",
             icon: (
-                <div className='h-[24px] w-[24px]'>
-                    <img src={Plumber} className='w-full h-full object-contain'/>
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Plumber} className='w-full h-full object-contain' />
                 </div>
             ),
         },
         {
-            title: "Electrical service",
+            title: "Electrician",
             icon: (
-                <div className='h-[24px] w-[24px]'>
-                    <img src={Electrician} className='w-full h-full object-contain'/>
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Electrician} className='w-full h-full object-contain' />
                 </div>
             ),
         },
         {
-            title: "Carpentry service",
+            title: "Carpentry",
             icon: (
-                <div className='h-[24px] w-[24px]'>
-                    <img src={Carpenter} className='w-full h-full object-contain'/>
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Carpenter} className='w-full h-full object-contain' />
                 </div>
             ),
         },
         {
-            title: "Gardener service",
+            title: "Garden",
             icon: (
-                <div className='h-[24px] w-[24px]'>
-                    <img src={Gardener} className='w-full h-full object-contain'/>
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Gardener} className='w-full h-full object-contain' />
+                </div>
+            ),
+        },
+        {
+            title: "Painter",
+            icon: (
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Painter} className='w-full h-full object-contain' />
+                </div>
+            ),
+        },
+        {
+            title: "Home Renovation & Remodeling",
+            icon: (
+                <div className='h-[20px] w-[20px]'>
+                    <img src={HomeRenovation} className='w-full h-full object-contain' />
+                </div>
+            ),
+        },
+        {
+            title: "Smart Home Installation",
+            icon: (
+                <div className='h-[20px] w-[20px]'>
+                    <img src={SmartHome} className='w-full h-full object-contain' />
+                </div>
+            ),
+        },
+        {
+            title: "Roofing",
+            icon: (
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Roofing} className='w-full h-full object-contain' />
+                </div>
+            ),
+        },
+        {
+            title: "Flooring Specialist",
+            icon: (
+                <div className='h-[20px] w-[20px]'>
+                    <img src={Flooring} className='w-full h-full object-contain' />
                 </div>
             ),
         },
@@ -74,99 +121,160 @@ const LandingPage: React.FC = () => {
 
 
     return (
-        <section className='h-screen w-full flex items-center px-20'>
-            <div className='flex items-center w-full'>
-                <div className='pr-28 w-1/2'>
-                    <img
-                        src={Logo}
-                        alt="fixitnow logo"
-                        className='w-16'
-                    />
-                    <h1 className='mt-4 text-black text-[52px] font-semibold leading-[64px] font-poppins'>Find local home service providers</h1>
-                    <div className='font-roboto w-[400px] mt-8'>
-                        <form className='grid grid-cols-1 gap-3 w-full'>
-                            <div className='flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
-                                <input
-                                    type="text"
-                                    placeholder='Service location'
-                                    className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                />
-                                <div className='ml-3'>
-                                    <svg
-                                        width="24px"
-                                        height="24px"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        aria-label="Service location"
-                                        tabIndex={0}
-                                    >
-                                        <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z" fill="currentColor" />
-                                    </svg>
+        <>
+            <section className='w-full flex items-center px-4 pt-10 md:px-20 md:pt-20'>
+                <div className='flex items-center w-full'>
+                    <div className='w-full md:w-1/2'>
+                        <img
+                            src={Logo}
+                            alt="fixitnow logo"
+                            className='w-12 md:w-16'
+                        />
+                        <h1 className='mt-4 text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
+                        <div className='font-roboto w-full md:w-[400px] mt-8'>
+                            <form className='grid grid-cols-1 gap-3'>
+                                <div className='flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
+                                    <input
+                                        type="text"
+                                        placeholder='Service location'
+                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                    />
+                                    <div className='ml-3'>
+                                        <svg
+                                            width="24px"
+                                            height="24px"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-label="Service location"
+                                            tabIndex={0}
+                                        >
+                                            <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z" fill="currentColor" />
+                                        </svg>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='relative flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
-                                <input
-                                    type="text"
-                                    placeholder='Enter your service'
-                                    value={serviceProviderValue}
-                                    onChange={handleServiceProviderChange}
-                                    className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                />
-                                <div className='ml-3'>
-                                    <svg
-                                        width="1em"
-                                        height="1em"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        tabIndex={0}
-                                    >
-                                        <path
-                                            d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10ZM3 22a8 8 0 0 1 16 0H3Z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                </div>
-                                {/* serviceCategory list */}
-                                {
-                                    filteredServiceCategory.length > 0 &&
-                                    <ul className='absolute max-h-[220px] top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
-                                        {filteredServiceCategory.length > 0 ? (
-                                            filteredServiceCategory.map((service, index) => (
-                                                <li
-                                                    key={index}
-                                                    className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
-                                                    onClick={
-                                                        (): void => {
-                                                            setServiceProviderValue(service?.title)
-                                                            setFilteredServiceCategory([])
+                                <div className='relative flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
+                                    <input
+                                        type="text"
+                                        placeholder='Enter your service'
+                                        value={serviceProviderValue}
+                                        onChange={handleServiceProviderChange}
+                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                    />
+                                    <div className='ml-3'>
+                                        <svg
+                                            width="1em"
+                                            height="1em"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            tabIndex={0}
+                                        >
+                                            <path
+                                                d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10ZM3 22a8 8 0 0 1 16 0H3Z"
+                                                fill="currentColor"
+                                            />
+                                        </svg>
+                                    </div>
+                                    {/* serviceCategory list */}
+                                    {
+                                        filteredServiceCategory.length > 0 &&
+                                        <ul className='absolute z-10 max-h-[350px] top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                            {filteredServiceCategory.length > 0 ? (
+                                                filteredServiceCategory.map((service, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                        onClick={
+                                                            (): void => {
+                                                                setServiceProviderValue(service?.title)
+                                                                setFilteredServiceCategory([])
+                                                            }
                                                         }
-                                                    }
-                                                >
-                                                    <div>{service?.icon}</div>
-                                                    <div>{service?.title}</div>
-                                                </li>
-                                            ))
-                                        ) : (
-                                            <li className="text-gray-500 p-2">No results found</li>
-                                        )}
-                                    </ul>
-                                }
-                            </div>
-                            <div className='w-fit'>
-                                <button className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'>
-                                    view
-                                </button>
-                            </div>
-                        </form>
+                                                    >
+                                                        <div>{service?.icon}</div>
+                                                        <div>{service?.title}</div>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li className="text-gray-500 p-2">No results found</li>
+                                            )}
+                                        </ul>
+                                    }
+                                </div>
+                                <div className='w-fit'>
+                                    <button className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'>
+                                        view
+                                    </button>
+                                </div>
+                                <div className="font-roboto text-base mt-5 w-fit group relative">
+                                    <a href="#" className="group-hover:text-black transition duration-300">
+                                        Already have an account? Sign in
+                                    </a>
+                                    <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
+                                        <div
+                                            className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
+                                            style={{
+                                                transformOrigin: 'left',
+                                            }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div className='hidden md:block w-1/2'>
+                        <div className='w-full h-full'>
+                            <img
+                                src={LandingImage}
+                                draggable='false'
+                                className='w-full h-full object-contain'
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className='w-1/2'>
-                    <div className='w-full h-[570px] bg-red-300'>
+            </section>
 
+            {/* About us  */}
+
+            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+                <div className='grid grid-cols-1 items-center md:grid-cols-2 gap-10'>
+                    <div>
+                        <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>About Fixitnow</h1>
+                        <p className='text-base mt-5 font-roboto leading-[24px]'>At On Hand Services Provide, we believe that finding the right service professional should be simple, seamless, and stress-free. Our platform connects users with skilled and trusted service providers across a wide range of industries, from home repairs and maintenance to personal care, automotive services, and more.</p>
+                        <p className='text-base mt-5 font-roboto leading-[24px]'>We are dedicated to making life easier by bringing expert help right to your doorstep. Whether you need a plumber to fix a leak, a beautician for an at-home makeover, or a handyman for urgent repairs, we've got you covered.</p>
+                    </div>
+                    <div>
+                        <div className='flex items-center'>
+                            <img className='w-2 mr-5' src={RightAngleArrow} />
+                            <div>
+                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Wide Range of Services</h1>
+                                <p className='text-base font-roboto'>From home maintenance to personal care.</p>
+                            </div>
+                        </div>
+                        <div className='flex items-center mt-5'>
+                            <img className='w-2 mr-5' src={RightAngleArrow} />
+                            <div>
+                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Trusted Professionals</h1>
+                                <p className='text-base font-roboto'>Verified and reviewed service providers.</p>
+                            </div>
+                        </div>
+                        <div className='flex items-center mt-5'>
+                            <img className='w-2 mr-5' src={RightAngleArrow} />
+                            <div>
+                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Location-Based</h1>
+                                <p className='text-base font-roboto'> Connect with experts in your area.</p>
+                            </div>
+                        </div>
+                        <div className='flex items-center mt-5'>
+                            <img className='w-2 mr-5' src={RightAngleArrow} />
+                            <div>
+                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Convenient & Reliable</h1>
+                                <p className='text-base font-roboto'>Service on demand, whenever you need it.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </>
     )
 }
 
