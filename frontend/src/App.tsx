@@ -1,10 +1,10 @@
 import React from 'react'
-import Home from './components/Home'
+import LandingPage from './components/LandingPage'
 
 const App: React.FC = () => {
     return (
         <>
-            <Home />
+            <LandingPage />
         </>
     )
 }

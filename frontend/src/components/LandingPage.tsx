@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import Logo from '../images/fixitnow-logo-black.png'
+import LogoBlack from '../images/fixitnow-logo-black.png'
+import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
 import Cleaner from '../images/cleaner.png'
 import Plumber from '../images/plumber.png'
@@ -14,94 +15,57 @@ import LandingImage from '../images/landingImg.svg'
 import RightAngleArrow from '../images/right-angle-arrow.png'
 import AboutImg from '../images/about.svg'
 import KeyFeatures from '../images/features.svg'
+import LoginForm from './LoginForm'
 
 const LandingPage: React.FC = () => {
 
+    const currentYear = new Date().getFullYear();
+
     type ServiceCategoryType = {
-        icon: JSX.Element;
+        icon: string;
         title: string;
     };
 
     const serviceCategory = [
         {
             title: "Cleaning",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Cleaner} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Cleaner
         },
         {
             title: "Plumbing",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Plumber} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Plumber
         },
         {
             title: "Electrician",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Electrician} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Electrician
         },
         {
             title: "Carpentry",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Carpenter} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Carpenter
         },
         {
             title: "Garden",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Gardener} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Gardener
         },
         {
             title: "Painter",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Painter} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Painter
         },
         {
-            title: "Home Renovation & Remodeling",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={HomeRenovation} className='w-full h-full object-contain' />
-                </div>
-            ),
+            title: "Home Renovation",
+            icon: HomeRenovation
         },
         {
             title: "Smart Home Installation",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={SmartHome} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: SmartHome
         },
         {
             title: "Roofing",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Roofing} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Roofing
         },
         {
             title: "Flooring Specialist",
-            icon: (
-                <div className='h-[20px] w-[20px]'>
-                    <img src={Flooring} className='w-full h-full object-contain' />
-                </div>
-            ),
+            icon: Flooring
         },
     ];
 
@@ -146,13 +110,20 @@ const LandingPage: React.FC = () => {
         setActiveId(activeId === id ? null : id);
     };
 
+
+    // login form modal
+    const [loginFormModal, setLoginFormModal] = useState<boolean>(false);
+    const closeLoginModal = () => {
+        setLoginFormModal(!loginFormModal);
+    }
+
     return (
         <>
             <section className='w-full flex items-center px-4 pt-10 md:px-20 md:pt-20'>
                 <div className='flex items-center w-full'>
                     <div className='w-full md:w-1/2'>
                         <img
-                            src={Logo}
+                            src={LogoBlack}
                             alt="fixitnow logo"
                             className='w-12 md:w-16'
                         />
@@ -216,7 +187,11 @@ const LandingPage: React.FC = () => {
                                                             }
                                                         }
                                                     >
-                                                        <div>{service?.icon}</div>
+                                                        <div>
+                                                            <div className='h-[20px] w-[20px]'>
+                                                                <img src={service?.icon} className='w-full h-full object-contain' />
+                                                            </div>
+                                                        </div>
                                                         <div>{service?.title}</div>
                                                     </li>
                                                 ))
@@ -231,10 +206,13 @@ const LandingPage: React.FC = () => {
                                         view
                                     </button>
                                 </div>
-                                <div className="font-roboto text-base mt-5 w-fit group relative">
-                                    <a href="#" className="group-hover:text-black transition duration-300">
+                                <div
+                                    onClick={closeLoginModal}
+                                    className="text-base mt-5 w-fit group relative cursor-pointer"
+                                >
+                                    <div className="group-hover:text-black transition duration-300">
                                         Already have an account? Sign in
-                                    </a>
+                                    </div>
                                     <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
                                         <div
                                             className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
@@ -275,6 +253,26 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
+            {/* services section */}
+            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Our Services</h1>
+                <div className='grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-10 mt-10'>
+                    {
+                        serviceCategory.map((service, index) =>
+                            <div key={index} className='border border-[#CCC] hover:border-black cursor-pointer rounded-md py-3 group'>
+                                <div className='h-[80px] w-[50px] mx-auto'>
+                                    <img src={service?.icon} className='w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110' />
+                                </div>
+                                <div className='text-center text-sm mt-3'>
+                                    {service?.title}
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+            </section>
+
+            {/* Key features */}
             <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
@@ -291,11 +289,10 @@ const LandingPage: React.FC = () => {
                                         src={RightAngleArrow}
                                         alt="Arrow"
                                     />
-                                    <h1 className="text-xl md:text-2xl font-poppins font-medium">
+                                    <h1 className="text-lg md:text-2xl font-poppins font-medium">
                                         {features.title}
                                     </h1>
                                 </div>
-
                                 <div
                                     className={`ml-7 mt-1 overflow-hidden transition-all duration-500 ease-in-out ${activeId === features.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
                                         }`}
@@ -312,6 +309,22 @@ const LandingPage: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Footer */}
+            <footer className='bg-black w-full px-4 md:px-20 py-5 mt-10 md:mt-20'>
+                <div className='block md:flex items-center justify-between'>
+                    <div className='flex md:block items-center justify-center'>
+                        <img className='w-10' src={LogoWhite} />
+                    </div>
+                    <div className='text-white text-sm md:text-base text-center md:text-right mt-5 md:mt-0'>
+                        <p>© {currentYear} fixitnow, All Rights Reserved</p>
+                    </div>
+                </div>
+            </footer>
+
+            {
+                loginFormModal && <LoginForm closeClick={closeLoginModal} />
+            }
         </>
     )
 }
