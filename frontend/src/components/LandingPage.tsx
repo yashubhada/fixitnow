@@ -13,6 +13,7 @@ import Flooring from '../images/flooring.png'
 import LandingImage from '../images/landingImg.svg'
 import RightAngleArrow from '../images/right-angle-arrow.png'
 import AboutImg from '../images/about.svg'
+import KeyFeatures from '../images/features.svg'
 
 const LandingPage: React.FC = () => {
 
@@ -120,6 +121,30 @@ const LandingPage: React.FC = () => {
         console.log(filteredServiceCategory);
     }
 
+    // Key features
+    interface KeyFeatures {
+        id: number;
+        title: string;
+        description: string;
+    };
+
+    const keyFeatures: KeyFeatures[] = [
+        { id: 1, title: 'Find Trusted Service Providers', description: 'Say goodbye to endless searches and uncertainty. With On Hand Services Provide, you get access to verified professionals in your area. Every service provider is reviewed and rated by real users, ensuring you always get the best service.' },
+        { id: 2, title: 'Book Services Anytime, Anywhere', description: 'Life happens, and we’re here to help. Whether it’s a late-night plumbing emergency or a weekend home cleaning, our platform lets you book services on-demand, whenever you need them.' },
+        { id: 3, title: 'Seamless Communication', description: 'Connect with service providers directly through our platform. Send messages, make voice calls, and stay updated on your service requests—all in one place.' },
+        { id: 4, title: 'Location-Based Service Matching', description: 'We make it easy to find help nearby. Our platform matches you with skilled professionals closest to your location, so you can save time and get quick assistance.' },
+        { id: 5, title: 'Secure Payments', description: 'Your security is our priority. Pay for services conveniently and securely through our platform, with multiple payment options to suit your needs.' },
+        { id: 6, title: 'Wide Range of Services', description: 'From home repairs to personal care, automotive needs, and more—our platform covers it all. Whatever you need, we’ve got the right expert for the job.' },
+        { id: 7, title: 'Verified and Reliable Professionals', description: 'All service providers go through a strict verification process. We ensure only experienced and trustworthy professionals are listed on our platform, giving you peace of mind.' },
+        { id: 8, title: 'Easy Scheduling and Tracking', description: 'Schedule services at your convenience and track their progress in real-time. Our intuitive interface keeps you informed every step of the way.' },
+        { id: 9, title: 'Customer Reviews and Ratings', description: 'Make informed decisions with access to genuine customer reviews and ratings. See what others are saying about service providers before you book.' },
+        { id: 10, title: 'Affordable and Transparent Pricing', description: 'No hidden charges, no surprises. Get upfront pricing for every service and choose what works best for your budget.' }
+    ];
+    const [activeId, setActiveId] = useState<number | null>(null);
+
+    const toggleKeyFeatures = (id: number) => {
+        setActiveId(activeId === id ? null : id);
+    };
 
     return (
         <>
@@ -247,117 +272,43 @@ const LandingPage: React.FC = () => {
                         <p className='text-base mt-5 font-roboto leading-[24px]'>We are dedicated to making life easier by bringing expert help right to your doorstep. Whether you need a plumber to fix a leak, a beautician for an at-home makeover, or a handyman for urgent repairs, we've got you covered.</p>
                         <p className='text-base mt-5 font-roboto leading-[24px]'>Our mission is to empower both customers and service providers by creating a trusted space where quality meets convenience. We prioritize safety, reliability, and transparency, ensuring that every service provider on our platform is verified and reviewed by real users. With On Hand Services Provide, help is always within reach—just a few clicks away. Experience a new standard of service with us, where your needs come first, and your satisfaction is our top priority.</p>
                     </div>
-                    {/* <div>
-                        <div className='flex items-center'>
-                            <img className='w-2 mr-5' src={RightAngleArrow} />
-                            <div>
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Wide Range of Services</h1>
-                                <p className='text-base font-roboto'>From home maintenance to personal care.</p>
-                            </div>
-                        </div>
-                        <div className='flex items-center mt-5'>
-                            <img className='w-2 mr-5' src={RightAngleArrow} />
-                            <div>
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Trusted Professionals</h1>
-                                <p className='text-base font-roboto'>Verified and reviewed service providers.</p>
-                            </div>
-                        </div>
-                        <div className='flex items-center mt-5'>
-                            <img className='w-2 mr-5' src={RightAngleArrow} />
-                            <div>
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Location-Based</h1>
-                                <p className='text-base font-roboto'> Connect with experts in your area.</p>
-                            </div>
-                        </div>
-                        <div className='flex items-center mt-5'>
-                            <img className='w-2 mr-5' src={RightAngleArrow} />
-                            <div>
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Convenient & Reliable</h1>
-                                <p className='text-base font-roboto'>Service on demand, whenever you need it.</p>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </section>
 
             <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-10 mt-10'>
-                    <div className='grid grid-cols-1 gap-10'>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Find Trusted Service Providers</h1>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
+                    <div className='grid grid-cols-1 gap-5'>
+                        {keyFeatures.map(features => (
+                            <div key={features.id}>
+                                <div
+                                    className="flex items-center cursor-pointer"
+                                    onClick={() => toggleKeyFeatures(features.id)}
+                                >
+                                    <img
+                                        className={`w-2 mr-5 transform transition-transform duration-500 ${activeId === features.id ? 'rotate-90' : 'rotate-0'
+                                            }`}
+                                        src={RightAngleArrow}
+                                        alt="Arrow"
+                                    />
+                                    <h1 className="text-xl md:text-2xl font-poppins font-medium">
+                                        {features.title}
+                                    </h1>
+                                </div>
+
+                                <div
+                                    className={`ml-7 mt-1 overflow-hidden transition-all duration-500 ease-in-out ${activeId === features.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                                        }`}
+                                >
+                                    <p className="text-base md:text-lg text-justify font-roboto">
+                                        {features.description}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Say goodbye to endless searches and uncertainty. With On Hand Services Provide, you get access to verified professionals in your area. Every service provider is reviewed and rated by real users, ensuring you always get the best service.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'> Book Services Anytime, Anywhere</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Life happens, and we’re here to help. Whether it’s a late-night plumbing emergency or a weekend home cleaning, our platform lets you book services on-demand, whenever you need them.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Seamless Communication</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Connect with service providers directly through our platform. Send messages, make voice calls, and stay updated on your service requests—all in one place.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Location-Based Service Matching</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>We make it easy to find help nearby. Our platform matches you with skilled professionals closest to your location, so you can save time and get quick assistance.</p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
-                    <div className='grid grid-cols-1 gap-10'>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Secure Payments</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Your security is our priority. Pay for services conveniently and securely through our platform, with multiple payment options to suit your needs.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Verified and Reliable Professionals</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>All service providers go through a strict verification process. We ensure only experienced and trustworthy professionals are listed on our platform, giving you peace of mind.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Easy Scheduling and Tracking</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Schedule services at your convenience and track their progress in real-time. Our intuitive interface keeps you informed every step of the way.</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='flex items-center'>
-                                <img className='w-2 mr-5' src={RightAngleArrow} />
-                                <h1 className='text-xl md:text-2xl font-poppins font-semibold'>Customer Reviews and Ratings</h1>
-                            </div>
-                            <div>
-                                <p className='text-base text-justify font-roboto ml-7 mt-1'>Make informed decisions with access to genuine customer reviews and ratings. See what others are saying about service providers before you book.</p>
-                            </div>
-                        </div>
+                    <div>
+                        <img src={KeyFeatures} alt="Key features" />
                     </div>
                 </div>
             </section>
