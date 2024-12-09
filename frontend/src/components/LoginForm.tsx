@@ -50,9 +50,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ closeClick }) => {
 
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
-                    <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-fit animate-fade-in">
+                    <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
                         <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Fixitnow Login</h1>
-                        <div className='w-full md:w-[400px]'>
+                        <div className='w-full'>
                             <form className='w-full'>
                                 <div
                                     onClick={handleEmailInputRef}

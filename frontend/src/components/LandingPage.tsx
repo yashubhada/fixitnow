@@ -16,6 +16,7 @@ import RightAngleArrow from '../images/right-angle-arrow.png'
 import AboutImg from '../images/about.svg'
 import KeyFeatures from '../images/features.svg'
 import LoginForm from './LoginForm'
+import ServiceProviderList from './ServiceProviderList'
 
 const LandingPage: React.FC = () => {
 
@@ -81,8 +82,12 @@ const LandingPage: React.FC = () => {
         },
     ];
 
+    const [serviceLocationValue, setServiceLocationValue] = useState<string | undefined>("");
+    const handleServiceLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setServiceLocationValue(e.target.value);
+    }
 
-    const [serviceProviderValue, setServiceProviderValue] = useState<string | number | readonly string[] | undefined>("");
+    const [serviceProviderValue, setServiceProviderValue] = useState<string | undefined>("");
     const [filteredServiceCategory, setFilteredServiceCategory] = useState<ServiceCategoryType[]>([]);
 
     const handleServiceProviderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +99,18 @@ const LandingPage: React.FC = () => {
         } else {
             setFilteredServiceCategory([]);
         }
-        console.log(filteredServiceCategory);
+    }
+
+    // service provider list modal handling
+    const [isOpenServiceProviderListModal, setIsOpenServiceProviderListModal] = useState<boolean>(false);
+    const handleServiceProviderListModal = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+        if (serviceLocationValue !== "" && serviceProviderValue !== "") {
+            setIsOpenServiceProviderListModal(true);
+        }
+    }
+    const closeServiceProviderListModal = (): void => {
+        setIsOpenServiceProviderListModal(false);
     }
 
     // Key features
@@ -139,9 +155,12 @@ const LandingPage: React.FC = () => {
                             alt="fixitnow logo"
                             className='w-12 md:w-16'
                         />
-                        <h1 className='mt-4 text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
+                        <h1 className='mt-4 text-black text-[30px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
                         <div className='font-roboto w-full md:w-[400px] mt-8'>
-                            <form className='grid grid-cols-1 gap-3'>
+                            <form
+                                onSubmit={handleServiceProviderListModal}
+                                className='grid grid-cols-1 gap-3'
+                            >
                                 <div
                                     onClick={handleLocationInputRef}
                                     className='flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -155,11 +174,16 @@ const LandingPage: React.FC = () => {
                                             aria-label="Service location"
                                             className='focus:outline-none'
                                         >
-                                            <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z" fill="currentColor" />
+                                            <path
+                                                d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
+                                                fill="currentColor"
+                                            />
                                         </svg>
                                     </div>
                                     <input
                                         type="text"
+                                        value={serviceLocationValue}
+                                        onChange={handleServiceLocationChange}
                                         ref={locationInputRef}
                                         required
                                         tabIndex={1}
@@ -180,7 +204,7 @@ const LandingPage: React.FC = () => {
                                             className='focus:outline-none'
                                         >
                                             <path
-                                                d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10ZM3 22a8 8 0 0 1 16 0H3Z"
+                                                d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C10.1002 5.21537 10.3019 6.90741 9.5843 8.23385L20.293 18.9437L18.8788 20.3579L8.16982 9.64875C6.84325 10.3669 5.15069 10.1654 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.97927 13.2868L10.3935 14.7011L5.09018 20.0044C4.69966 20.3949 4.06649 20.3949 3.67597 20.0044C3.31334 19.6417 3.28744 19.0699 3.59826 18.6774L3.67597 18.5902L8.97927 13.2868Z"
                                                 fill="currentColor"
                                             />
                                         </svg>
@@ -238,7 +262,7 @@ const LandingPage: React.FC = () => {
                                     tabIndex={4}
                                     className="text-base mt-5 w-fit group relative cursor-pointer"
                                 >
-                                    <div className="group-hover:text-black transition duration-300">
+                                    <div className="text-sm md:text-base group-hover:text-black transition duration-300">
                                         Already have an account? Sign in
                                     </div>
                                     <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
@@ -352,6 +376,15 @@ const LandingPage: React.FC = () => {
 
             {
                 loginFormModal && <LoginForm closeClick={toggleLoginModal} />
+            }
+
+            {
+                isOpenServiceProviderListModal &&
+                <ServiceProviderList
+                    serviceLocation={serviceLocationValue}
+                    serviceType={serviceProviderValue}
+                    closeClick={closeServiceProviderListModal}
+                />
             }
         </>
     )
