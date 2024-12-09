@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import LogoBlack from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
@@ -20,6 +20,18 @@ import LoginForm from './LoginForm'
 const LandingPage: React.FC = () => {
 
     const currentYear = new Date().getFullYear();
+
+    // location input ref
+    const locationInputRef = useRef<HTMLInputElement>(null);
+    const handleLocationInputRef = (): void => {
+        locationInputRef.current?.focus();
+    }
+
+    // services input ref
+    const servicesInputRef = useRef<HTMLInputElement>(null);
+    const handleServicesInputRef = (): void => {
+        servicesInputRef.current?.focus();
+    }
 
     type ServiceCategoryType = {
         icon: string;
@@ -93,7 +105,7 @@ const LandingPage: React.FC = () => {
     };
 
     const keyFeatures: KeyFeatures[] = [
-        { id: 1, title: 'Find Trusted Service Providers', description: 'Say goodbye to endless searches and uncertainty. With On Hand Services Provide, you get access to verified professionals in your area. Every service provider is reviewed and rated by real users, ensuring you always get the best service.' },
+        { id: 1, title: 'Find Trusted Service Providers', description: 'Say goodbye to endless searches and uncertainty. With Fixitnow, you get access to verified professionals in your area. Every service provider is reviewed and rated by real users, ensuring you always get the best service.' },
         { id: 2, title: 'Book Services Anytime, Anywhere', description: 'Life happens, and we’re here to help. Whether it’s a late-night plumbing emergency or a weekend home cleaning, our platform lets you book services on-demand, whenever you need them.' },
         { id: 3, title: 'Seamless Communication', description: 'Connect with service providers directly through our platform. Send messages, make voice calls, and stay updated on your service requests—all in one place.' },
         { id: 4, title: 'Location-Based Service Matching', description: 'We make it easy to find help nearby. Our platform matches you with skilled professionals closest to your location, so you can save time and get quick assistance.' },
@@ -113,7 +125,7 @@ const LandingPage: React.FC = () => {
 
     // login form modal
     const [loginFormModal, setLoginFormModal] = useState<boolean>(false);
-    const closeLoginModal = () => {
+    const toggleLoginModal = (): void => {
         setLoginFormModal(!loginFormModal);
     }
 
@@ -130,40 +142,42 @@ const LandingPage: React.FC = () => {
                         <h1 className='mt-4 text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
                         <div className='font-roboto w-full md:w-[400px] mt-8'>
                             <form className='grid grid-cols-1 gap-3'>
-                                <div className='flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
-                                    <input
-                                        type="text"
-                                        placeholder='Service location'
-                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                    />
-                                    <div className='ml-3'>
+                                <div
+                                    onClick={handleLocationInputRef}
+                                    className='flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                >
+                                    <div className='mr-3'>
                                         <svg
-                                            width="24px"
-                                            height="24px"
+                                            width="20px"
+                                            height="20px"
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             aria-label="Service location"
-                                            tabIndex={0}
+                                            className='focus:outline-none'
                                         >
                                             <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z" fill="currentColor" />
                                         </svg>
                                     </div>
-                                </div>
-                                <div className='relative flex items-center justify-between py-[10px] pl-7 pr-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
                                     <input
                                         type="text"
-                                        placeholder='Enter your service'
-                                        value={serviceProviderValue}
-                                        onChange={handleServiceProviderChange}
+                                        ref={locationInputRef}
+                                        required
+                                        tabIndex={1}
+                                        placeholder='Service location'
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                     />
-                                    <div className='ml-3'>
+                                </div>
+                                <div
+                                    onClick={handleServicesInputRef}
+                                    className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                >
+                                    <div className='mr-3'>
                                         <svg
-                                            width="1em"
-                                            height="1em"
+                                            width="20px"
+                                            height="20px"
                                             viewBox="0 0 24 24"
                                             fill="none"
-                                            tabIndex={0}
+                                            className='focus:outline-none'
                                         >
                                             <path
                                                 d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10ZM3 22a8 8 0 0 1 16 0H3Z"
@@ -171,6 +185,16 @@ const LandingPage: React.FC = () => {
                                             />
                                         </svg>
                                     </div>
+                                    <input
+                                        type="text"
+                                        ref={servicesInputRef}
+                                        required
+                                        tabIndex={2}
+                                        placeholder='Enter your service'
+                                        value={serviceProviderValue}
+                                        onChange={handleServiceProviderChange}
+                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                    />
                                     {/* serviceCategory list */}
                                     {
                                         filteredServiceCategory.length > 0 &&
@@ -202,12 +226,16 @@ const LandingPage: React.FC = () => {
                                     }
                                 </div>
                                 <div className='w-fit'>
-                                    <button className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'>
+                                    <button
+                                        tabIndex={3}
+                                        className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'
+                                    >
                                         view
                                     </button>
                                 </div>
                                 <div
-                                    onClick={closeLoginModal}
+                                    onClick={toggleLoginModal}
+                                    tabIndex={4}
                                     className="text-base mt-5 w-fit group relative cursor-pointer"
                                 >
                                     <div className="group-hover:text-black transition duration-300">
@@ -246,7 +274,7 @@ const LandingPage: React.FC = () => {
                     </div>
                     <div className='text-justify'>
                         <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>About Fixitnow</h1>
-                        <p className='text-base mt-5 font-roboto leading-[24px]'>At On Hand Services Provide, we believe that finding the right service professional should be simple, seamless, and stress-free. Our platform connects users with skilled and trusted service providers across a wide range of industries, from home repairs and maintenance to personal care, automotive services, and more.</p>
+                        <p className='text-base mt-5 font-roboto leading-[24px]'>At Fixitnow, we believe that finding the right service professional should be simple, seamless, and stress-free. Our platform connects users with skilled and trusted service providers across a wide range of industries, from home repairs and maintenance to personal care, automotive services, and more.</p>
                         <p className='text-base mt-5 font-roboto leading-[24px]'>We are dedicated to making life easier by bringing expert help right to your doorstep. Whether you need a plumber to fix a leak, a beautician for an at-home makeover, or a handyman for urgent repairs, we've got you covered.</p>
                         <p className='text-base mt-5 font-roboto leading-[24px]'>Our mission is to empower both customers and service providers by creating a trusted space where quality meets convenience. We prioritize safety, reliability, and transparency, ensuring that every service provider on our platform is verified and reviewed by real users. With On Hand Services Provide, help is always within reach—just a few clicks away. Experience a new standard of service with us, where your needs come first, and your satisfaction is our top priority.</p>
                     </div>
@@ -323,7 +351,7 @@ const LandingPage: React.FC = () => {
             </footer>
 
             {
-                loginFormModal && <LoginForm closeClick={closeLoginModal} />
+                loginFormModal && <LoginForm closeClick={toggleLoginModal} />
             }
         </>
     )
