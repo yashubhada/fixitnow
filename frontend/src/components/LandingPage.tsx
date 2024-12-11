@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import LogoBlack from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
@@ -16,9 +16,13 @@ import RightAngleArrow from '../images/right-angle-arrow.png'
 import AboutImg from '../images/about.svg'
 import KeyFeatures from '../images/features.svg'
 import LoginForm from './LoginForm'
+import SignupForm from './SignupForm'
 import ServiceProviderList from './ServiceProviderList'
+import { UserContext } from '../context/UserContext';
 
 const LandingPage: React.FC = () => {
+
+    const { toggleLoginModal, loginFormModal, isSignupForm } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -39,7 +43,7 @@ const LandingPage: React.FC = () => {
         title: string;
     };
 
-    const serviceCategory = [
+    const serviceCategory:ServiceCategoryType[] = [
         {
             title: "Cleaning",
             icon: Cleaner
@@ -137,13 +141,6 @@ const LandingPage: React.FC = () => {
     const toggleKeyFeatures = (id: number) => {
         setActiveId(activeId === id ? null : id);
     };
-
-
-    // login form modal
-    const [loginFormModal, setLoginFormModal] = useState<boolean>(false);
-    const toggleLoginModal = (): void => {
-        setLoginFormModal(!loginFormModal);
-    }
 
     return (
         <>
@@ -375,7 +372,10 @@ const LandingPage: React.FC = () => {
             </footer>
 
             {
-                loginFormModal && <LoginForm closeClick={toggleLoginModal} />
+                loginFormModal && <LoginForm />
+            }
+            {
+                isSignupForm && <SignupForm />
             }
 
             {

@@ -1,9 +1,15 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import { UserContext } from '../context/UserContext';
 
-const LoginForm: React.FC = () => {
+const SignupForm: React.FC = () => {
 
-    const { toggleLoginModal, toggleSignupForm } = useContext(UserContext);
+    const { toggleSignupForm, toggleLoginModal } = useContext(UserContext);
+
+    // email input ref
+    const fullnameInputRef = useRef<HTMLInputElement>(null);
+    const handleFullnameInputRef = (): void => {
+        fullnameInputRef.current?.focus();
+    }
 
     // email input ref
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -16,6 +22,13 @@ const LoginForm: React.FC = () => {
     const handlePasswordInputRef = (): void => {
         passwordInputRef.current?.focus();
     }
+
+    // radio button
+    const [selectedValue, setSelectedValue] = useState<string>('serviceTaker');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedValue(e.target.value);
+    };
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -49,12 +62,39 @@ const LoginForm: React.FC = () => {
             {/* Modal Content */}
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
-                    <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome back</h1>
+                    <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome to Fixitnow</h1>
                     <div className='w-full'>
                         <form className='w-full'>
                             <div
-                                onClick={handleEmailInputRef}
+                                onClick={handleFullnameInputRef}
                                 className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                            >
+                                <div className='mr-3'>
+                                    <svg
+                                        width="24px"
+                                        height="24px"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        className='focus:outline-none'
+                                    >
+                                        <path
+                                            d="M20 22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    ref={fullnameInputRef}
+                                    placeholder='Enter your full name'
+                                    required
+                                    tabIndex={1}
+                                    className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                />
+                            </div>
+                            <div
+                                onClick={handleEmailInputRef}
+                                className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                             >
                                 <div className='mr-3'>
                                     <svg
@@ -71,7 +111,7 @@ const LoginForm: React.FC = () => {
                                     </svg>
                                 </div>
                                 <input
-                                    type="email"
+                                    type="text"
                                     ref={emailInputRef}
                                     placeholder='Enter your email'
                                     required
@@ -97,7 +137,6 @@ const LoginForm: React.FC = () => {
                                             fill="currentColor"
                                         />
                                     </svg>
-
                                 </div>
                                 <input
                                     type={
@@ -144,11 +183,58 @@ const LoginForm: React.FC = () => {
                                     }
                                 </div>
                             </div>
+                            <div className='mt-5 py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md'>
+                                <span className='block w-fit text-base text-gray-600 font-semibold mb-2'>
+                                    Select Your Role
+                                </span>
+                                <div className="flex items-center space-x-5">
+                                    <div className="flex items-center">
+                                        <div className="relative flex items-center justify-center h-5 w-5 border border-black rounded-full">
+                                            <input
+                                                type="radio"
+                                                id="serviceTaker"
+                                                name="options"
+                                                value="serviceTaker"
+                                                checked={selectedValue === 'serviceTaker'}
+                                                onChange={handleChange}
+                                                className="appearance-none w-full h-full opacity-0 absolute"
+                                            />
+                                            <div
+                                                className={`absolute w-3 h-3 rounded-full border-2 transition-all ${selectedValue === 'serviceTaker' ? 'bg-black border-black' : 'bg-transparent border-black'
+                                                    }`}
+                                            ></div>
+                                        </div>
+                                        <label htmlFor="serviceTaker" className="ml-2 text-sm font-medium text-gray-900">
+                                            Service Taker
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <div className="relative flex items-center justify-center h-5 w-5 border border-black rounded-full">
+                                            <input
+                                                type="radio"
+                                                id="serviceProvider"
+                                                name="options"
+                                                value="serviceProvider"
+                                                checked={selectedValue === 'serviceProvider'}
+                                                onChange={handleChange}
+                                                className="appearance-none w-full h-full opacity-0 absolute"
+                                            />
+                                            <div
+                                                className={`absolute w-3 h-3 rounded-full border-2 transition-all ${selectedValue === 'serviceProvider' ? 'bg-black border-black' : 'bg-transparent border-black'
+                                                    }`}
+                                            ></div>
+                                        </div>
+                                        <label htmlFor="serviceProvider" className="ml-2 text-sm font-medium text-gray-900">
+                                            Service Provider
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <button
                                 tabIndex={3}
                                 className='w-full mt-5 font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none'
                             >
-                                Login
+                                Signup
                             </button>
                             <div className='my-7 relative'>
                                 <div className='w-full p-[0.1px] bg-[#3333]'></div>
@@ -156,18 +242,17 @@ const LoginForm: React.FC = () => {
                                     Or
                                 </div>
                             </div>
-                            <div
-                                onClick={toggleSignupForm}
-                                className="text-center text-base"
+                            <div className="text-center text-base"
+                                onClick={toggleLoginModal}
                             >
                                 <span className='cursor-pointer'>
-                                    Don't have an account? Sign up
+                                    Already have an account? Sign in
                                 </span>
                             </div>
                         </form>
                     </div>
                     <div
-                        onClick={toggleLoginModal}
+                        onClick={toggleSignupForm}
                         className='bg-black p-1 rounded-full absolute -top-3 -right-3 cursor-pointer'
                     >
                         <svg
@@ -189,4 +274,4 @@ const LoginForm: React.FC = () => {
     )
 }
 
-export default LoginForm
+export default SignupForm
