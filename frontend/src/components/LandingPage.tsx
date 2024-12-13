@@ -127,14 +127,12 @@ const LandingPage: React.FC = () => {
     const keyFeatures: KeyFeatures[] = [
         { id: 1, title: 'Find Trusted Service Providers', description: 'Say goodbye to endless searches and uncertainty. With Fixitnow, you get access to verified professionals in your area. Every service provider is reviewed and rated by real users, ensuring you always get the best service.' },
         { id: 2, title: 'Book Services Anytime, Anywhere', description: 'Life happens, and we’re here to help. Whether it’s a late-night plumbing emergency or a weekend home cleaning, our platform lets you book services on-demand, whenever you need them.' },
-        { id: 3, title: 'Seamless Communication', description: 'Connect with service providers directly through our platform. Send messages, make voice calls, and stay updated on your service requests—all in one place.' },
-        { id: 4, title: 'Location-Based Service Matching', description: 'We make it easy to find help nearby. Our platform matches you with skilled professionals closest to your location, so you can save time and get quick assistance.' },
-        { id: 5, title: 'Secure Payments', description: 'Your security is our priority. Pay for services conveniently and securely through our platform, with multiple payment options to suit your needs.' },
-        { id: 6, title: 'Wide Range of Services', description: 'From home repairs to personal care, automotive needs, and more—our platform covers it all. Whatever you need, we’ve got the right expert for the job.' },
-        { id: 7, title: 'Verified and Reliable Professionals', description: 'All service providers go through a strict verification process. We ensure only experienced and trustworthy professionals are listed on our platform, giving you peace of mind.' },
-        { id: 8, title: 'Easy Scheduling and Tracking', description: 'Schedule services at your convenience and track their progress in real-time. Our intuitive interface keeps you informed every step of the way.' },
-        { id: 9, title: 'Customer Reviews and Ratings', description: 'Make informed decisions with access to genuine customer reviews and ratings. See what others are saying about service providers before you book.' },
-        { id: 10, title: 'Affordable and Transparent Pricing', description: 'No hidden charges, no surprises. Get upfront pricing for every service and choose what works best for your budget.' }
+        { id: 3, title: 'Location-Based Service Matching', description: 'We make it easy to find help nearby. Our platform matches you with skilled professionals closest to your location, so you can save time and get quick assistance.' },
+        { id: 4, title: 'Secure Payments', description: 'Your security is our priority. Pay for services conveniently and securely through our platform, with multiple payment options to suit your needs.' },
+        { id: 5, title: 'Wide Range of Services', description: 'From home repairs to personal care, automotive needs, and more—our platform covers it all. Whatever you need, we’ve got the right expert for the job.' },
+        { id: 6, title: 'Verified and Reliable Professionals', description: 'All service providers go through a strict verification process. We ensure only experienced and trustworthy professionals are listed on our platform, giving you peace of mind.' },
+        { id: 7, title: 'Customer Reviews and Ratings', description: 'Make informed decisions with access to genuine customer reviews and ratings. See what others are saying about service providers before you book.' },
+        { id: 8, title: 'Affordable and Transparent Pricing', description: 'No hidden charges, no surprises. Get upfront pricing for every service and choose what works best for your budget.' }
     ];
     const [activeId, setActiveId] = useState<number | null>(null);
 
@@ -201,7 +199,7 @@ const LandingPage: React.FC = () => {
                                             className='focus:outline-none'
                                         >
                                             <path
-                                                d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C10.1002 5.21537 10.3019 6.90741 9.5843 8.23385L20.293 18.9437L18.8788 20.3579L8.16982 9.64875C6.84325 10.3669 5.15069 10.1654 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.97927 13.2868L10.3935 14.7011L5.09018 20.0044C4.69966 20.3949 4.06649 20.3949 3.67597 20.0044C3.31334 19.6417 3.28744 19.0699 3.59826 18.6774L3.67597 18.5902L8.97927 13.2868Z"
+                                                d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C9.96652 5.08171 10.2407 6.51202 9.80178 7.74535L20.6465 18.5902L18.5252 20.7115L7.67936 9.86709C6.44627 10.3055 5.01649 10.0312 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.62572 12.9333L10.747 15.0546L5.79729 20.0044C5.2115 20.5902 4.26175 20.5902 3.67597 20.0044C3.12464 19.453 3.09221 18.5793 3.57867 17.99L3.67597 17.883L8.62572 12.9333Z"
                                                 fill="currentColor"
                                             />
                                         </svg>
