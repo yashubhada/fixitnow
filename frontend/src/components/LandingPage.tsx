@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
         title: string;
     };
 
-    const serviceCategory:ServiceCategoryType[] = [
+    const serviceCategory: ServiceCategoryType[] = [
         {
             title: "Cleaning",
             icon: Cleaner
@@ -142,6 +142,79 @@ const LandingPage: React.FC = () => {
 
     return (
         <>
+            {/* if user is login */}
+            <section className='fixed top-3 right-3 w-[130px] z-10'>
+                <div className='relative group w-full flex justify-end'>
+                    <div className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                        <svg
+                            width="24px"
+                            height="24px"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-label="Service location"
+                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                        >
+                            <path
+                                d="M14 21L12 23L10 21H4.99509C3.89323 21 3 20.1074 3 19.0049V4.99509C3 3.89323 3.89262 3 4.99509 3H19.0049C20.1068 3 21 3.89262 21 4.99509V19.0049C21 20.1068 20.1074 21 19.0049 21H14ZM6.35687 18H17.8475C16.5825 16.1865 14.4809 15 12.1022 15C9.72344 15 7.62182 16.1865 6.35687 18ZM12 13C13.933 13 15.5 11.433 15.5 9.5C15.5 7.567 13.933 6 12 6C10.067 6 8.5 7.567 8.5 9.5C8.5 11.433 10.067 13 12 13Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <div className='text-lg font-medium'>
+                            Account
+                        </div>
+                    </div>
+                    <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                        <svg
+                                            width="20px"
+                                            height="20px"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-label="Service location"
+                                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                        >
+                                            <path
+                                                d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.25022 4 6.82447 5.38734 5.38451 7.50024L8 7.5V9.5H2V3.5H4L3.99989 5.99918C5.82434 3.57075 8.72873 2 12 2ZM13 7L12.9998 11.585L16.2426 14.8284L14.8284 16.2426L10.9998 12.413L11 7H13Z"
+                                                fill="currentColor"
+                                            />
+                                        </svg>
+                                        <div className='text-lg font-medium'>
+                                            History
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                        <svg
+                                            width="20px"
+                                            height="20px"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            aria-label="Service location"
+                                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                        >
+                                            <path
+                                                d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V6H18V4H6V20H18V18H20V21C20 21.5523 19.5523 22 19 22H5ZM18 16V13H11V11H18V8L23 12L18 16Z"
+                                                fill="currentColor"
+                                            />
+                                        </svg>
+                                        <div className='text-lg font-medium'>
+                                            Logout
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            {/* hero section */}
             <section className='w-full flex items-center px-4 pt-10 md:px-20 md:pt-20'>
                 <div className='flex items-center w-full'>
                     <div className='w-full md:w-1/2'>
