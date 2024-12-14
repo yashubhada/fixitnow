@@ -141,7 +141,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, se
 
     return (
         <>
-            <div className="fixed top-0 left-0 h-screen w-full overflow-hidden">
+            <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
                 {/* Background Overlay */}
                 <div className="absolute inset-0 bg-black opacity-50"></div>
 
