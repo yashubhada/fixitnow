@@ -201,7 +201,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, se
                                 {
                                     provideresInfo.map((provider, idx) =>
                                         <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
-                                            <div className='w-28 h-24 md:w-36 md:h-32 rounded overflow-hidden'>
+                                            <div className='w-28 h-24 md:w-36 md:h-36 rounded md:rounded-full overflow-hidden'>
                                                 <img
                                                     src={UserImage}
                                                     className='w-full h-full object-cover'

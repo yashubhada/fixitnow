@@ -23,19 +23,19 @@ const ServiceModal: React.FC = () => {
 
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center p-10">
-                    <div className="relative bg-white grid grid-cols-1 md:grid-cols-2 items-center rounded-md z-10 w-full overflow-hidden animate-fade-in">
-                        <div>
+                    <div className="relative bg-white flex items-center gap-x-5 rounded-md z-10 w-full h-[600px] overflow-hidden animate-fade-in">
+                        <div className='w-2/3 h-full'>
                             <iframe
-                                className='w-full h-[600px] border-0'
+                                className='w-full h-full border-0'
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21599.061544888482!2d71.2076751432344!3d21.604897466143488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395880c72d516845%3A0x4e950cffb505bb12!2sAmreli%2C%20Gujarat%20365601!5e0!3m2!1sen!2sin!4v1734238312174!5m2!1sen!2sin"
                                 allowFullScreen={true}
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
                         </div>
-                        <div className='w-full p-5'>
+                        <div>
                             <div className='flex items-center gap-x-3 rounded'>
-                                <div className='w-28 h-24 md:w-60 md:h-48 rounded overflow-hidden'>
+                                <div className='w-28 h-24 md:w-32 md:h-32 rounded md:rounded-full overflow-hidden'>
                                     <img
                                         src={UserImage}
                                         className='w-full h-full object-cover'
@@ -92,6 +92,15 @@ const ServiceModal: React.FC = () => {
                                         <div className="text-gray-500 text-sm md:text-base">(4.0)</div>
                                     </div>
                                 </div>
+                            </div>
+                            <div className='bg-gray-300 p-[1px] rounded-full my-10'></div>
+                            <div className="w-full h-10 flex items-center justify-center p-3 rounded-md border border-[#b3b3b3] select-none cursor-pointer group overflow-hidden relative">
+                                <p className="text-base text-gray-700 absolute transition-all duration-500 ease-in-out group-hover:-translate-y-[200%]">
+                                    Hover to know your request code
+                                </p>
+                                <p className="text-base text-gray-700 absolute translate-y-[200%] transition-all duration-500 ease-in-out group-hover:translate-y-0">
+                                    Your request code is <span className='text-gray-950'>123456</span>
+                                </p>
                             </div>
                         </div>
                     </div>
