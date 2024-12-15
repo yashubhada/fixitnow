@@ -19,6 +19,7 @@ import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext';
+import ServiceModal from './ServiceModal'
 
 const LandingPage: React.FC = () => {
 
@@ -457,6 +458,8 @@ const LandingPage: React.FC = () => {
                     closeClick={closeServiceProviderListModal}
                 />
             }
+
+            <ServiceModal />
         </>
     )
 }
