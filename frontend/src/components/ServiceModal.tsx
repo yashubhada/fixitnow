@@ -29,7 +29,7 @@ const ServiceModal: React.FC = () => {
 
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center p-5 md:p-10">
-                    <div className="relative bg-white block md:flex items-center gap-x-5 rounded-md z-10 w-full h-[500px] md:h-full overflow-hidden animate-fade-in">
+                    <div className="relative bg-white block md:flex items-center gap-x-5 rounded-md z-10 w-full h-[500px] md:h-[600px] overflow-hidden animate-fade-in">
                         <div className='w-full md:w-2/3 h-full'>
                             <iframe
                                 className='w-full h-full border-0'

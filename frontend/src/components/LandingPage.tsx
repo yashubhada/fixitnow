@@ -141,77 +141,105 @@ const LandingPage: React.FC = () => {
         setActiveId(activeId === id ? null : id);
     };
 
+    // User is login or not
+
+    const [isLogin, setIsLogin] = useState<boolean>(false);
+
     return (
         <>
             {/* if user is login */}
             <section className='fixed top-3 right-3 w-[130px] z-10'>
                 <div className='relative group w-full flex justify-end'>
-                    <div className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                        <svg
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            aria-label="Service location"
-                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                        >
-                            <path
-                                d="M14 21L12 23L10 21H4.99509C3.89323 21 3 20.1074 3 19.0049V4.99509C3 3.89323 3.89262 3 4.99509 3H19.0049C20.1068 3 21 3.89262 21 4.99509V19.0049C21 20.1068 20.1074 21 19.0049 21H14ZM6.35687 18H17.8475C16.5825 16.1865 14.4809 15 12.1022 15C9.72344 15 7.62182 16.1865 6.35687 18ZM12 13C13.933 13 15.5 11.433 15.5 9.5C15.5 7.567 13.933 6 12 6C10.067 6 8.5 7.567 8.5 9.5C8.5 11.433 10.067 13 12 13Z"
-                                fill="currentColor"
-                            />
-                        </svg>
-                        <div className='text-lg font-medium'>
-                            Account
-                        </div>
-                    </div>
-                    <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
-                        <ul>
-                            <li>
-                                <a href="#">
-                                    <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                                        <svg
-                                            width="20px"
-                                            height="20px"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            aria-label="Service location"
-                                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                        >
-                                            <path
-                                                d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.25022 4 6.82447 5.38734 5.38451 7.50024L8 7.5V9.5H2V3.5H4L3.99989 5.99918C5.82434 3.57075 8.72873 2 12 2ZM13 7L12.9998 11.585L16.2426 14.8284L14.8284 16.2426L10.9998 12.413L11 7H13Z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                        <div className='text-lg font-medium'>
-                                            History
-                                        </div>
+                    {
+                        isLogin
+                            ?
+                            <>
+                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                    <svg
+                                        width="24px"
+                                        height="24px"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                    >
+                                        <path
+                                            d="M14 21L12 23L10 21H4.99509C3.89323 21 3 20.1074 3 19.0049V4.99509C3 3.89323 3.89262 3 4.99509 3H19.0049C20.1068 3 21 3.89262 21 4.99509V19.0049C21 20.1068 20.1074 21 19.0049 21H14ZM6.35687 18H17.8475C16.5825 16.1865 14.4809 15 12.1022 15C9.72344 15 7.62182 16.1865 6.35687 18ZM12 13C13.933 13 15.5 11.433 15.5 9.5C15.5 7.567 13.933 6 12 6C10.067 6 8.5 7.567 8.5 9.5C8.5 11.433 10.067 13 12 13Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <div className='text-lg font-medium'>
+                                        Account
                                     </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                                        <svg
-                                            width="20px"
-                                            height="20px"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            aria-label="Service location"
-                                            className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                        >
-                                            <path
-                                                d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V6H18V4H6V20H18V18H20V21C20 21.5523 19.5523 22 19 22H5ZM18 16V13H11V11H18V8L23 12L18 16Z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                        <div className='text-lg font-medium'>
-                                            Logout
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                                </div>
+                                <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
+                                    <ul>
+                                        <li>
+                                            <a href="#">
+                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                                    <svg
+                                                        width="20px"
+                                                        height="20px"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                                    >
+                                                        <path
+                                                            d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.25022 4 6.82447 5.38734 5.38451 7.50024L8 7.5V9.5H2V3.5H4L3.99989 5.99918C5.82434 3.57075 8.72873 2 12 2ZM13 7L12.9998 11.585L16.2426 14.8284L14.8284 16.2426L10.9998 12.413L11 7H13Z"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <div className='text-lg font-medium'>
+                                                        History
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                                    <svg
+                                                        width="20px"
+                                                        height="20px"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                                    >
+                                                        <path
+                                                            d="M4 18H6V20H18V4H6V6H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V18ZM6 11H13V13H6V16L1 12L6 8V11Z"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                    <div className='text-lg font-medium'>
+                                                        Logout
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </>
+                            :
+                            <div
+                                onClick={toggleLoginModal}
+                                className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
+                            >
+                                <svg
+                                    width="24px"
+                                    height="24px"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                >
+                                    <path
+                                        d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                                <div className='text-lg font-medium'>
+                                    Login
+                                </div>
+                            </div>
+                    }
                 </div>
             </section>
 
@@ -283,7 +311,7 @@ const LandingPage: React.FC = () => {
                                         ref={servicesInputRef}
                                         required
                                         tabIndex={2}
-                                        placeholder='Enter your service'
+                                        placeholder='Service type (e.g., Electrician)'
                                         value={serviceProviderValue}
                                         onChange={handleServiceProviderChange}
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -431,6 +459,109 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
+            {/* Contact us */}
+            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Contact us</h1>
+                <div className='w-full md:w-1/2 mt-10'>
+                    <form className='w-full'>
+                        <div
+                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <div className='mr-3'>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className='w-5 focus:outline-none'
+                                >
+                                    <path
+                                        d="M20 22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder='Enter your full name'
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                        </div>
+                        <div
+                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <div className='mr-3'>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className='w-5 focus:outline-none'
+                                >
+                                    <path
+                                        d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="email"
+                                placeholder='Enter your email'
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                        </div>
+                        <div
+                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <div className='mr-3'>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className='w-5 focus:outline-none'
+                                >
+                                    <path
+                                        d="M19 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2H17C17.5523 2 18 2.44772 18 3V15H22V19C22 20.6569 20.6569 22 19 22ZM18 17V19C18 19.5523 18.4477 20 19 20C19.5523 20 20 19.5523 20 19V17H18ZM6 7V9H14V7H6ZM6 11V13H14V11H6ZM6 15V17H11V15H6Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder='Enter your subject (e.g., Service Issue, General Inquiry)'
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                        </div>
+                        <div
+                            className='flex items-start justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <div className='mr-3'>
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className='w-5 focus:outline-none'
+                                >
+                                    <path
+                                        d="M6.45455 19L2 22.5V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V18C22 18.5523 21.5523 19 21 19H6.45455ZM7 10V12H9V10H7ZM11 10V12H13V10H11ZM15 10V12H17V10H15Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </div>
+                            <textarea
+                                placeholder='Message'
+                                required
+                                rows={5}
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            >
+                            </textarea>
+                        </div>
+                        <button
+                            className='w-full md:w-fit mt-5 font-poppins py-[10px] px-6 text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none'
+                        >
+                            contact
+                        </button>
+                    </form>
+                </div>
+            </section>
+
             {/* Footer */}
             <footer className='bg-black w-full px-4 md:px-20 py-5 mt-10 md:mt-20'>
                 <div className='block md:flex items-center justify-between'>
@@ -459,7 +590,7 @@ const LandingPage: React.FC = () => {
                 />
             }
 
-            <ServiceModal />
+            {/* <ServiceModal /> */}
         </>
     )
 }
