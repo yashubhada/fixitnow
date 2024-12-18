@@ -198,7 +198,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, se
                         </div>
                         <div>
                             <h1 className='my-5 text-xl md:text-2xl font-poppins font-semibold'>Service Provider List</h1>
-                            <div className='grid grid-cols-1 gap-y-5 max-h-[250px] md:max-h-[400px] overflow-y-scroll'>
+                            <div className='grid grid-cols-1 gap-y-5 max-h-[350px] md:max-h-[400px] overflow-y-scroll'>
                                 {
                                     provideresInfo.map((provider, idx) =>
                                         <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
