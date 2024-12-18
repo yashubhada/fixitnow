@@ -27,7 +27,7 @@ const RequestLoading: React.FC = () => {
                         <div className='w-[200px] md:w-[300px] mx-auto'>
                             <img className='w-full' src={LoadingGif} draggable={false} />
                         </div>
-                        <div className='text-white text-sm md:text-base font-normal text-center'>
+                        <div className='text-white text-sm md:text-base font-normal text-center px-5'>
                             Wait for your request to be accepted by Mike's Plumbing...
                         </div>
                     </div>
