@@ -4,10 +4,11 @@ import UserImage from '../images/user-image.jpg'
 interface ServiceInformation {
     serviceLocation: string | undefined;
     serviceType: string | undefined;
+    openServiceModal: () => void;
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, serviceType, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, serviceType, openServiceModal, closeClick }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -258,7 +259,10 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, se
                                                     <div className="text-gray-500 text-sm md:text-base">({provider.rating})</div>
                                                 </div>
 
-                                                <button className="bg-black hover:bg-[#333] text-white rounded px-2 py-1 text-sm mt-1">
+                                                <button
+                                                    onClick={openServiceModal}
+                                                    className="bg-black hover:bg-[#333] text-white rounded px-2 py-1 text-sm mt-1"
+                                                >
                                                     Send Request
                                                 </button>
                                             </div>

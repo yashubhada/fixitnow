@@ -20,6 +20,7 @@ import SignupForm from './SignupForm'
 import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext';
 import ServiceModal from './ServiceModal'
+import RequestLoading from './RequestLoading'
 
 const LandingPage: React.FC = () => {
 
@@ -140,6 +141,21 @@ const LandingPage: React.FC = () => {
     const toggleKeyFeatures = (id: number) => {
         setActiveId(activeId === id ? null : id);
     };
+
+    // service modal and requset loading
+    const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
+    const [isOpenLoading, setIsOpenLoading] = useState<boolean>(false);
+
+    const handleServiceModal = (): void => {
+        setIsOpenLoading(true);
+        setIsOpenServiceProviderListModal(false);
+        setTimeout(() => {
+            setIsOpenServiceModal(true);
+            setIsOpenLoading(false);
+        }, 5000);
+    }
+
+
 
     // User is login or not
 
@@ -577,6 +593,7 @@ const LandingPage: React.FC = () => {
             {
                 loginFormModal && <LoginForm />
             }
+
             {
                 isSignupForm && <SignupForm />
             }
@@ -586,11 +603,20 @@ const LandingPage: React.FC = () => {
                 <ServiceProviderList
                     serviceLocation={serviceLocationValue}
                     serviceType={serviceProviderValue}
+                    openServiceModal={handleServiceModal}
                     closeClick={closeServiceProviderListModal}
                 />
             }
 
-            {/* <ServiceModal /> */}
+            {
+                isOpenServiceModal &&
+                <ServiceModal />
+            }
+
+            {
+                isOpenLoading &&
+                <RequestLoading />
+            }
         </>
     )
 }
