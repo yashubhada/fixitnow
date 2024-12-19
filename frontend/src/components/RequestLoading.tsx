@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import LoadingGif from '../images/loading-gif.gif';
+import LoadingAnimation from '../images/loading-animation.svg';
 
 const RequestLoading: React.FC = () => {
 
@@ -24,8 +24,8 @@ const RequestLoading: React.FC = () => {
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center">
                     <div>
-                        <div className='w-[200px] md:w-[300px] mx-auto'>
-                            <img className='w-full' src={LoadingGif} draggable={false} />
+                        <div className='w-[200px] md:w-[200px] mx-auto'>
+                            <img className='w-full' src={LoadingAnimation} draggable={false} />
                         </div>
                         <div className='text-white text-sm md:text-base font-normal text-center px-5'>
                             Wait for your request to be accepted by Mike's Plumbing...
