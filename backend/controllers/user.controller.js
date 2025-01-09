@@ -12,7 +12,16 @@ export const handleSignUp = async (req, res) => {
         const isUser = await User.findOne({ email });
 
         if (isUser) {
-            return res.status(409).json({ success: false, message: 'User already exists' });
+            return res.status(400).json({ success: false, message: 'User already exists' });
+        }
+
+        if (userRole === 'Service Provider') {
+            if (!serviceType) {
+                return res.status(400).json({ success: false, message: 'Service Type is required for Service Providers' });
+            }
+            if (!serviceArea || !serviceArea.areaName || !serviceArea.coordinates) {
+                return res.status(400).json({ success: false, message: 'Service Area (Area name and Coordinates) is required for Service Providers' });
+            }
         }
 
         // Hash password before saving the user
@@ -35,19 +44,18 @@ export const handleSignUp = async (req, res) => {
     }
 }
 
-let tokenData = null;
-
 export const handleSignIn = async (req, res) => {
     try {
+        let tokenData = null;
         const { email, password } = req.body;
         const user = await User.findOne({ email });
 
-        if (!user) return res.status(409).json({ success: false, message: 'Invalid credentials' });
+        if (!user) return res.status(400).json({ success: false, message: 'Invalid credentials' });
 
         // compare hash password
-        const checkPassword = bcrypt.compare(password, user.password);
+        const checkPassword = await bcrypt.compare(password, user.password);
 
-        if (!checkPassword) return res.status(409).json({ success: false, message: 'Invalid credentials' });
+        if (!checkPassword) return res.status(400).json({ success: false, message: 'Invalid credentials' });
 
         tokenData = {
             uid: user._id,
@@ -71,7 +79,7 @@ export const handleSignIn = async (req, res) => {
             .json({ success: true, message: "Sign in successfull!" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -89,7 +97,7 @@ export const handleGetLoggedInUser = (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -102,6 +110,6 @@ export const handleLogout = (req, res) => {
         res.status(201).json({ success: true, message: "Logout successfull!" });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+        res.status(500).json({ success: false, error: err.message });
     }
 }

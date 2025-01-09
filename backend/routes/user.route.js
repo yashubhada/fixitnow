@@ -6,7 +6,7 @@ const userRouter = new Router();
 
 userRouter.post('/signup', handleSignUp);
 userRouter.post('/signin', handleSignIn);
+userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
-userRouter.post('/get-token', handleAuthentication, handleGetLoggedInUser);
 
 export default userRouter;

@@ -3,34 +3,37 @@ import mongoose from "mongoose";
 // Define the schema for the user
 const userSchema = new mongoose.Schema({
     name: {
-        type:String,
+        type: String,
     },
     email: {
         type: String,
         unique: true,
         required: true
     },
-    password: String,
+    password: {
+        type: String,
+        required: true
+    },
     userRole: {
         type: String,
         enum: ['Service Taker', 'Service Provider'],
         required: true
     },
-    serviceType: String,
+    serviceType: {
+        type: String,
+        default: null,
+    },
     serviceArea: {
-        type: {
+        areaName: {
             type: String,
-            enum: ['Point'],
-            default: 'Point',
-            required: true
+            default: null,
         },
         coordinates: {
             type: [Number],
-            required: true
+            default: null,
         }
     }
 }, { timestamps: true });
 
-// Create and export the model
 const User = mongoose.model('User', userSchema);
 export default User;

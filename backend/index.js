@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const port = 9797
+const port = 9797;
 
 app.use('/api/user', userRouter);
 

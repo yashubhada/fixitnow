@@ -1,9 +1,12 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
+import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 
 const SignupForm: React.FC = () => {
 
     const { toggleSignupForm, toggleLoginModal } = useContext(UserContext);
+
+    const baseUrl: String = "http://localhost:9797/";
 
     // email input ref
     const fullnameInputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +41,7 @@ const SignupForm: React.FC = () => {
     // radio button
     const [selectedValue, setSelectedValue] = useState<string>('serviceTaker');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUserRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedValue(e.target.value);
     };
 
@@ -66,6 +69,38 @@ const SignupForm: React.FC = () => {
         }, 0);
     };
 
+    // user data for sign up
+    const [userData, setUserData] = useState<{
+        userName: string;
+        userPassword: string;
+        userEmail: string;
+        userRole: string;
+        serviceType: string;
+        serviceArea: string;
+    }>({
+        userName: "",
+        userPassword: "",
+        userEmail: "",
+        userRole: selectedValue,
+        serviceType: "",
+        serviceArea: "",
+    });
+
+
+    const handleSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${baseUrl}api/user/signup`, userData);
+            console.log(response);
+        } catch (err) {
+            console.error("Internal error from client", err);
+        }
+    }
+
+    const handleSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUserData({ ...userData, [e.target.name]: e.target.value });
+    }
+
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             {/* Background Overlay */}
@@ -76,7 +111,7 @@ const SignupForm: React.FC = () => {
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
                     <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome to Fixitnow</h1>
                     <div className='w-full'>
-                        <form className='w-full'>
+                        <form onSubmit={handleSignUp} className='w-full'>
                             <div
                                 onClick={handleFullnameInputRef}
                                 className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -98,6 +133,9 @@ const SignupForm: React.FC = () => {
                                 <input
                                     type="text"
                                     ref={fullnameInputRef}
+                                    onChange={handleSignUpChange}
+                                    name='userName'
+                                    value={userData.userName}
                                     placeholder='Enter your full name'
                                     required
                                     tabIndex={0}
@@ -125,6 +163,9 @@ const SignupForm: React.FC = () => {
                                 <input
                                     type="email"
                                     ref={emailInputRef}
+                                    onChange={handleSignUpChange}
+                                    name='userEmail'
+                                    value={userData.userEmail}
                                     placeholder='Enter your email'
                                     required
                                     tabIndex={1}
@@ -156,6 +197,9 @@ const SignupForm: React.FC = () => {
                                     }
                                     placeholder='Enter your password'
                                     ref={passwordInputRef}
+                                    onChange={handleSignUpChange}
+                                    name='userPassword'
+                                    value={userData.userPassword}
                                     tabIndex={2}
                                     required
                                     className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -209,7 +253,7 @@ const SignupForm: React.FC = () => {
                                                 value="serviceTaker"
                                                 tabIndex={3}
                                                 checked={selectedValue === 'serviceTaker'}
-                                                onChange={handleChange}
+                                                onChange={handleUserRoleChange}
                                                 className="appearance-none w-full h-full opacity-0 absolute"
                                             />
                                             <div
@@ -230,7 +274,7 @@ const SignupForm: React.FC = () => {
                                                 value="serviceProvider"
                                                 tabIndex={4}
                                                 checked={selectedValue === 'serviceProvider'}
-                                                onChange={handleChange}
+                                                onChange={handleUserRoleChange}
                                                 className="appearance-none w-full h-full opacity-0 absolute"
                                             />
                                             <div
@@ -268,6 +312,9 @@ const SignupForm: React.FC = () => {
                                         <input
                                             type="text"
                                             ref={serviceTypeInputRef}
+                                            onChange={handleSignUpChange}
+                                            name='serviceType'
+                                            value={userData.serviceType}
                                             placeholder='Enter your service type'
                                             required
                                             tabIndex={5}
@@ -295,6 +342,9 @@ const SignupForm: React.FC = () => {
                                         <input
                                             type="text"
                                             ref={locationInputRef}
+                                            onChange={handleSignUpChange}
+                                            name='serviceArea'
+                                            value={userData.serviceArea}
                                             placeholder='Enter your service area'
                                             required
                                             tabIndex={6}
@@ -305,6 +355,7 @@ const SignupForm: React.FC = () => {
                             }
                             <button
                                 tabIndex={3}
+                                type="submit"
                                 className='w-full mt-5 font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none'
                             >
                                 Sign up

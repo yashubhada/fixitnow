@@ -155,8 +155,6 @@ const LandingPage: React.FC = () => {
         }, 5000);
     }
 
-
-
     // User is login or not
 
     const [isLogin, setIsLogin] = useState<boolean>(false);
