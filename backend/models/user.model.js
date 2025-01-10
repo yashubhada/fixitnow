@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     userRole: {
         type: String,
-        enum: ['Service Taker', 'Service Provider'],
+        enum: ['serviceTaker', 'serviceProvider'],
         required: true
     },
     serviceType: {
@@ -24,15 +24,9 @@ const userSchema = new mongoose.Schema({
         default: null,
     },
     serviceArea: {
-        areaName: {
-            type: String,
-            default: null,
-        },
-        coordinates: {
-            type: [Number],
-            default: null,
-        }
-    }
+        type: String,
+        default: null,
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

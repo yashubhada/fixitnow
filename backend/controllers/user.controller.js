@@ -15,12 +15,12 @@ export const handleSignUp = async (req, res) => {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
-        if (userRole === 'Service Provider') {
+        if (userRole === 'serviceProvider') {
             if (!serviceType) {
                 return res.status(400).json({ success: false, message: 'Service Type is required for Service Providers' });
             }
-            if (!serviceArea || !serviceArea.areaName || !serviceArea.coordinates) {
-                return res.status(400).json({ success: false, message: 'Service Area (Area name and Coordinates) is required for Service Providers' });
+            if (!serviceArea) {
+                return res.status(400).json({ success: false, message: 'Service Area is required for Service Providers' });
             }
         }
 
@@ -36,11 +36,11 @@ export const handleSignUp = async (req, res) => {
             serviceArea
         });
 
-        res.status(201).json({ success: true, newUser });
+        res.status(201).json({ success: true, message: "Signup successfull!" });
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 

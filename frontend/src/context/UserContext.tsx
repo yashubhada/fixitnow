@@ -1,6 +1,18 @@
 import React, { createContext, ReactNode, useState } from "react";
 
 // Define context type
+interface ToasterTheme {
+    style: {
+        border: string;
+        padding: string;
+        color: string;
+    };
+    iconTheme: {
+        primary: string;
+        secondary: string;
+    };
+}
+
 interface UserContextType {
     isSignupForm: boolean;
     setIsSignupForm: (isSignupForm: boolean) => void;
@@ -8,6 +20,7 @@ interface UserContextType {
     loginFormModal: boolean;
     setLoginFormModal: (loginFormModal: boolean) => void;
     toggleLoginModal: () => void;
+    toasterTheme: ToasterTheme;
 }
 
 // Default context value
@@ -17,7 +30,18 @@ const defaultValue: UserContextType = {
     toggleSignupForm: () => { },
     loginFormModal: false,
     setLoginFormModal: () => { },
-    toggleLoginModal: () => { }
+    toggleLoginModal: () => { },
+    toasterTheme: {
+        style: {
+            border: "",
+            padding: "",
+            color: "",
+        },
+        iconTheme: {
+            primary: "",
+            secondary: "",
+        },
+    },
 };
 
 // Create context
@@ -32,6 +56,19 @@ interface UserContextProviderProps {
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     children,
 }) => {
+
+    // Toaster theme
+    const toasterTheme: ToasterTheme = {
+        style: {
+            border: "1px solid #000",
+            padding: "10px 15px",
+            color: "#000",
+        },
+        iconTheme: {
+            primary: "#000",
+            secondary: "#FFF",
+        },
+    };
 
     // sign up component
     const [isSignupForm, setIsSignupForm] = useState(false);
@@ -57,6 +94,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
                 loginFormModal,
                 setLoginFormModal,
                 toggleLoginModal,
+                toasterTheme
             }}
         >
             {children}
