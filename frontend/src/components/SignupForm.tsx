@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import axios from 'axios';
-import { toast, Toaster } from 'react-hot-toast'
 import { UserContext } from '../context/UserContext';
 
 const SignupForm: React.FC = () => {
 
-    const { toggleSignupForm, toggleLoginModal, toasterTheme } = useContext(UserContext);
-
-    const baseUrl: String = "http://localhost:9797/";
+    const { baseUrl, toggleSignupForm, toggleLoginModal, showToast } = useContext(UserContext);
 
     // email input ref
     const fullnameInputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +64,7 @@ const SignupForm: React.FC = () => {
 
     // radio button
     const [selectedValue, setSelectedValue] = useState<string>('serviceTaker');
-    const [isSignInFormLoading, setIsSignInFormLoading] = useState<boolean>(false);
+    const [isSignUpFormLoading, setIsSignUpFormLoading] = useState<boolean>(false);
 
     const [userData, setUserData] = useState<{
         name: string;
@@ -97,24 +94,27 @@ const SignupForm: React.FC = () => {
 
     const handleSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        setIsSignInFormLoading(true);
+        setIsSignUpFormLoading(true);
         try {
             if (userData.password.length < 8) {
-                return toast.error("Password length must be 8 characters or longer", toasterTheme);
+                return showToast("Password length must be 8 characters or longer", "error");
             }
             const response = await axios.post(`${baseUrl}api/user/signup`, userData);
-            toast.success(response.data.message, toasterTheme);
+            showToast(response.data.message, "success");
+            if (response.data.success) {
+                toggleLoginModal();
+            }
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 // Check for Axios-specific errors
                 if (err.response) {
                     if (err.status === 400) {
-                        toast.error(err.response.data.message, toasterTheme);
+                        showToast(err.response.data.message, "error");
                     }
                 }
             }
         } finally {
-            setIsSignInFormLoading(false);
+            setIsSignUpFormLoading(false);
         }
     }
 
@@ -128,7 +128,6 @@ const SignupForm: React.FC = () => {
 
     return (
         <>
-            <Toaster />
             <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
                 {/* Background Overlay */}
                 <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -381,10 +380,10 @@ const SignupForm: React.FC = () => {
                                 <button
                                     type="submit"
                                     className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                                    disabled={isSignInFormLoading}
+                                    disabled={isSignUpFormLoading}
                                 >
                                     {
-                                        isSignInFormLoading
+                                        isSignUpFormLoading
                                             ?
                                             <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle

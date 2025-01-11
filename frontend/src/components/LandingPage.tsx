@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import LogoBlack from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
@@ -24,7 +24,7 @@ import RequestLoading from './RequestLoading'
 
 const LandingPage: React.FC = () => {
 
-    const { toggleLoginModal, loginFormModal, isSignupForm } = useContext(UserContext);
+    const { toggleLoginModal, loginFormModal, isSignupForm, isUserLogin } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -154,19 +154,13 @@ const LandingPage: React.FC = () => {
             setIsOpenLoading(false);
         }, 5000);
     }
-
-    // User is login or not
-
-    const [isLogin, setIsLogin] = useState<boolean>(false);
-    
-
     return (
         <>
             {/* if user is login */}
             <section className='fixed top-3 right-3 w-[130px] z-10'>
                 <div className='relative group w-full flex justify-end'>
                     {
-                        isLogin
+                        isUserLogin
                             ?
                             <>
                                 <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
@@ -259,7 +253,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* hero section */}
-            <section className='w-full flex items-center px-4 pt-10 md:px-20 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto flex items-center px-4 pt-10 md:px-10 md:pt-20'>
                 <div className='flex items-center w-full'>
                     <div className='w-full md:w-1/2'>
                         <img
@@ -403,7 +397,7 @@ const LandingPage: React.FC = () => {
 
             {/* About us  */}
 
-            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
                 <div className='grid grid-cols-1 md:grid-cols-2 items-center gap-10'>
                     <div className=''>
                         <img src={AboutImg} />
@@ -418,7 +412,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* services section */}
-            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Our Services</h1>
                 <div className='grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-10 mt-10'>
                     {
@@ -437,7 +431,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* Key features */}
-            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
                     <div className='grid grid-cols-1 gap-5'>
@@ -475,9 +469,9 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* Contact us */}
-            <section className='w-full px-4 pt-10 md:px-20 md:pt-20'>
-                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Contact us</h1>
-                <div className='w-full md:w-1/2 mt-10'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins text-center'>Contact us</h1>
+                <div className='w-full md:w-1/2 mt-10 mx-auto'>
                     <form className='w-full'>
                         <div
                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -578,8 +572,8 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* Footer */}
-            <footer className='bg-black w-full px-4 md:px-20 py-5 mt-10 md:mt-20'>
-                <div className='block md:flex items-center justify-between'>
+            <footer className='bg-black w-full px-4 md:px-10 py-5 mt-10 md:mt-20'>
+                <div className='max-w-[1360px] mx-auto block md:flex items-center justify-between'>
                     <div className='flex md:block items-center justify-center'>
                         <img className='w-10' src={LogoWhite} />
                     </div>

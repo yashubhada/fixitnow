@@ -27,7 +27,7 @@ export const handleSignUp = async (req, res) => {
         // Hash password before saving the user
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await User.create({
+        await User.create({
             name,
             email,
             password: hashedPassword,
@@ -66,7 +66,7 @@ export const handleSignIn = async (req, res) => {
         const generateToken = jwt.sign(
             tokenData,
             process.env.SECRET_FIXITNOW_TOKEN,
-            { expiresIn: '1m' }
+            { expiresIn: '1h' }
         );
 
         res
