@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const LoginForm: React.FC = () => {
 
-    const { baseUrl, toggleLoginModal, toggleSignupForm, showToast, handleUserLogin } = useContext(UserContext);
+    const { baseUrl, toggleLoginModal, toggleSignupForm, showToast, getLoggedInUserData } = useContext(UserContext);
 
     // email input ref
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -60,7 +60,7 @@ const LoginForm: React.FC = () => {
             const response = await axios.post(`${baseUrl}api/user/signin`, userData, { withCredentials: true });
             showToast(response.data.message, "success");
             if (response.data.success) {
-                await handleUserLogin();
+                await getLoggedInUserData();
                 toggleLoginModal();
             }
         } catch (err) {

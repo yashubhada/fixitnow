@@ -21,10 +21,11 @@ import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext';
 import ServiceModal from './ServiceModal'
 import RequestLoading from './RequestLoading'
+import axios from 'axios'
 
 const LandingPage: React.FC = () => {
 
-    const { toggleLoginModal, loginFormModal, isSignupForm, isUserLogin } = useContext(UserContext);
+    const { baseUrl, toggleLoginModal, loginFormModal, isSignupForm, getLoggedInUserData, userData, handleLogout } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -154,13 +155,21 @@ const LandingPage: React.FC = () => {
             setIsOpenLoading(false);
         }, 5000);
     }
+
+    const fetchUserData = async () => {
+        await getLoggedInUserData();
+    }
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
     return (
         <>
             {/* if user is login */}
             <section className='fixed top-3 right-3 w-[130px] z-10'>
                 <div className='relative group w-full flex justify-end'>
                     {
-                        isUserLogin
+                        userData
                             ?
                             <>
                                 <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
@@ -177,7 +186,7 @@ const LandingPage: React.FC = () => {
                                         />
                                     </svg>
                                     <div className='text-lg font-medium'>
-                                        Account
+                                        {userData.user.name}
                                     </div>
                                 </div>
                                 <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
@@ -204,7 +213,7 @@ const LandingPage: React.FC = () => {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="#" onClick={handleLogout}>
                                                 <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
                                                     <svg
                                                         width="20px"

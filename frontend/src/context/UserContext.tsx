@@ -12,11 +12,10 @@ interface UserContextType {
     setLoginFormModal: (loginFormModal: boolean) => void;
     toggleLoginModal: () => void;
     showToast: (message: string, type: "success" | "error") => void;
-    isUserLogin: boolean;
-    setIsUserLogin: (isUserLogin: boolean) => void;
-    handleUserLogin: () => void;
-    handleUserLogout: () => void;
-    getLoggedInUserData: () => any;
+    userData: any;
+    setUserData: (userData: any) => void;
+    getLoggedInUserData: () => void;
+    handleLogout: () => void;
 }
 
 // Default context value
@@ -29,11 +28,10 @@ const defaultValue: UserContextType = {
     setLoginFormModal: () => { },
     toggleLoginModal: () => { },
     showToast: () => { },
-    isUserLogin: false,
-    setIsUserLogin: () => { },
-    handleUserLogin: () => { },
-    handleUserLogout: () => { },
-    getLoggedInUserData: () => { },
+    userData: null,
+    setUserData: () => { },
+    getLoggedInUserData: async () => { },
+    handleLogout: async () => { },
 };
 
 // Create context
@@ -59,46 +57,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         }
     };
 
-    // user is sign in or not
-
-    const [isUserLogin, setIsUserLogin] = useState<boolean>(false);
-    const handleUserLogin = () => {
-        setIsUserLogin(true);
-    }
-    const handleUserLogout = () => {
-        setIsUserLogin(false);
-    }
-
-    // get logged in user information
-    const getLoggedInUserData = async () => {
-        try {
-            // Check if the user is logged in
-            if (!isUserLogin) {
-                showToast("Please login", "error");
-                return null; // Return early if the user is not logged in
-            }
-            const response = await axios.post(
-                `${baseUrl}api/user/getLoggedInUser`,
-                {}, // Empty payload
-                { withCredentials: true }
-            );
-            return response.data;
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                // Handle Axios-specific errors
-                if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message || "An error occurred", "error");
-                    }
-                }
-            } else {
-                console.error("Unexpected error:", err);
-            }
-
-            return null; // Return null in case of an error
-        }
-    };
-
 
     // Signup form state
     const [isSignupForm, setIsSignupForm] = useState(false);
@@ -114,6 +72,54 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         setIsSignupForm(false);
     };
 
+    const [userData, setUserData] = useState<any>(null);
+    const getLoggedInUserData = async () => {
+        try {
+            const response = await axios.post(
+                `${baseUrl}api/user/getLoggedInUser`,
+                {}, // Empty payload
+                { withCredentials: true }
+            );
+            setUserData(response.data);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                // Handle Axios-specific errors
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        showToast(err.response.data.message || "An error occurred", "error");
+                    }
+                }
+            } else {
+                console.error("Unexpected error:", err);
+            }
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            const response = await axios.post(
+                `${baseUrl}api/user/logout`,
+                {}, // Empty payload
+                { withCredentials: true }
+            );
+            if (response.data.success) {
+                showToast("Logout successfully!", "success");
+                setUserData(null);
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                // Handle Axios-specific errors
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        showToast(err.response.data.message || "An error occurred", "error");
+                    }
+                }
+            } else {
+                console.error("Unexpected error:", err);
+            }
+        }
+    }
+
     return (
         <UserContext.Provider
             value={{
@@ -125,11 +131,10 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 setLoginFormModal,
                 toggleLoginModal,
                 showToast,
-                isUserLogin,
-                setIsUserLogin,
-                handleUserLogin,
-                handleUserLogout,
+                userData,
+                setUserData,
                 getLoggedInUserData,
+                handleLogout
             }}
         >
             {children}
