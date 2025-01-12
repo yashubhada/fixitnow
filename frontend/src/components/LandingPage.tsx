@@ -21,11 +21,10 @@ import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext';
 import ServiceModal from './ServiceModal'
 import RequestLoading from './RequestLoading'
-import axios from 'axios'
 
 const LandingPage: React.FC = () => {
 
-    const { baseUrl, toggleLoginModal, loginFormModal, isSignupForm, getLoggedInUserData, userData, handleLogout } = useContext(UserContext);
+    const { toggleLoginModal, loginFormModal, isSignupForm, getLoggedInUserData, userData, handleLogout } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
