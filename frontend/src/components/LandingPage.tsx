@@ -21,6 +21,7 @@ import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext';
 import ServiceModal from './ServiceModal'
 import RequestLoading from './RequestLoading'
+import LocationSearch from './LocationSearch'
 
 const LandingPage: React.FC = () => {
 
