@@ -2,12 +2,23 @@ import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
 
 dotenv.config();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const handleSignUp = async (req, res) => {
     try {
         const { name, email, password, userRole, serviceType, serviceArea } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Please choose your avatar image' });
+        }
 
         const isUser = await User.findOne({ email });
 
@@ -27,14 +38,23 @@ export const handleSignUp = async (req, res) => {
         // Hash password before saving the user
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create({
-            name,
-            email,
-            password: hashedPassword,
-            userRole,
-            serviceType,
-            serviceArea
-        });
+        cloudinary.uploader.upload(req.file.path,
+            { folder: 'fixitnow' },
+            async (err, result) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: err.message });
+                }
+                await User.create({
+                    name,
+                    email,
+                    password: hashedPassword,
+                    avtarImage: result.secure_url,
+                    userRole,
+                    serviceType,
+                    serviceArea
+                });
+            }
+        );
 
         res.status(201).json({ success: true, message: "Signup successfull!" });
 
@@ -92,7 +112,6 @@ export const handleGetLoggedInUser = (req, res) => {
         }
         return res.status(200).json({
             success: true,
-            token,
             user: req.user || null
         });
 

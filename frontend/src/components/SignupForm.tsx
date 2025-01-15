@@ -36,6 +36,12 @@ const SignupForm: React.FC = () => {
         locationInputRef.current?.focus();
     }
 
+    // file input ref
+    const imageInputRef = useRef<HTMLInputElement>(null);
+    const handleImageInputRef = (): void => {
+        imageInputRef.current?.click();
+    }
+
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
         document.body.style.overflow = 'hidden';
@@ -60,16 +66,20 @@ const SignupForm: React.FC = () => {
         }, 0);
     };
 
-    // user data for sign up
-
     // radio button
     const [selectedValue, setSelectedValue] = useState<string>('serviceTaker');
     const [isSignUpFormLoading, setIsSignUpFormLoading] = useState<boolean>(false);
+
+    // image chage
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+    // user data for sign up
 
     const [userData, setUserData] = useState<{
         name: string;
         password: string;
         email: string;
+        userUploadImage: File | null;
         userRole: string;
         serviceType: string | null;
         serviceArea: string | null;
@@ -77,6 +87,7 @@ const SignupForm: React.FC = () => {
         name: "",
         password: "",
         email: "",
+        userUploadImage: null,
         userRole: selectedValue,
         serviceType: null,
         serviceArea: null,
@@ -92,6 +103,26 @@ const SignupForm: React.FC = () => {
         }));
     };
 
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            const fileType = file.type;
+            const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
+
+            if (validExtensions.includes(fileType)) {
+                setSelectedImage(file);
+
+                // Update userData state
+                setUserData((prevData) => ({
+                    ...prevData,
+                    userUploadImage: file,
+                }));
+            } else {
+                showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
+            }
+        }
+    };
+
     const handleSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setIsSignUpFormLoading(true);
@@ -99,16 +130,32 @@ const SignupForm: React.FC = () => {
             if (userData.password.length < 8) {
                 return showToast("Password length must be 8 characters or longer", "error");
             }
-            const response = await axios.post(`${baseUrl}api/user/signup`, userData);
+
+            // Create FormData instance and append the fields
+            const formData = new FormData();
+            formData.append("name", userData.name);
+            formData.append("password", userData.password);
+            formData.append("email", userData.email);
+            if (userData.userUploadImage) {
+                formData.append("userUploadImage", userData.userUploadImage);
+            }
+            formData.append("userRole", userData.userRole);
+            if (userData.serviceType) {
+                formData.append("serviceType", userData.serviceType);
+            }
+            if (userData.serviceArea) {
+                formData.append("serviceArea", userData.serviceArea);
+            }
+
+            const response = await axios.post(`${baseUrl}api/user/signup`, formData);
             showToast(response.data.message, "success");
             if (response.data.success) {
                 toggleLoginModal();
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
-                // Check for Axios-specific errors
                 if (err.response) {
-                    if (err.status === 400) {
+                    if (err.response.status === 400) {
                         showToast(err.response.data.message, "error");
                     }
                 }
@@ -116,7 +163,7 @@ const SignupForm: React.FC = () => {
         } finally {
             setIsSignUpFormLoading(false);
         }
-    }
+    };
 
     const handleSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -134,10 +181,10 @@ const SignupForm: React.FC = () => {
 
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
-                    <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
+                    <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in max-h-[530px]">
                         <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome to Fixitnow</h1>
                         <div className='w-full'>
-                            <form onSubmit={handleSignUp} className='w-full'>
+                            <form onSubmit={handleSignUp} className='w-full max-h-[421px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
                                 <div
                                     onClick={handleFullnameInputRef}
                                     className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -377,6 +424,36 @@ const SignupForm: React.FC = () => {
                                         </div>
                                     </>
                                 }
+                                <div
+                                    className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                                    onClick={handleImageInputRef}
+                                >
+                                    <div className="mr-3">
+                                        <svg
+                                            width="24px"
+                                            height="24px"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            className="focus:outline-none"
+                                        >
+                                            <path
+                                                d="M20 5H4V19L13.2923 9.70649C13.6828 9.31595 14.3159 9.31591 14.7065 9.70641L20 15.0104V5ZM2 3.9934C2 3.44476 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44495 22 3.9934V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5551 2 20.0066V3.9934ZM8 11C6.89543 11 6 10.1046 6 9C6 7.89543 6.89543 7 8 7C9.10457 7 10 7.89543 10 9C10 10.1046 9.10457 11 8 11Z"
+                                                fill="currentColor"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <label htmlFor="fileUpload" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
+                                        {selectedImage ? selectedImage.name : "Choose a file"}
+                                    </label>
+                                    <input
+                                        id="fileUpload"
+                                        ref={imageInputRef}
+                                        type="file"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                    />
+
+                                </div>
                                 <button
                                     type="submit"
                                     className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'

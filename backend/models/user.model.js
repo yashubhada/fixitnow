@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avtarImage: {
+        type: String,
+        required: true
+    },
     userRole: {
         type: String,
         enum: ['serviceTaker', 'serviceProvider'],

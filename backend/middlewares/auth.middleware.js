@@ -24,8 +24,16 @@ export const handleAuthentication = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid user' });
         }
 
+        const requestedUser = {
+            id: userData._id,
+            name: userData.name,
+            email: userData.email,
+            avtar: userData.avtarImage,
+            role:userData.userRole,
+        }
+
         // Attach user data to the request object for use in subsequent middleware/handlers
-        req.user = userData;
+        req.user = requestedUser;
 
         // Proceed to next middleware or route handler
         next();
