@@ -1,5 +1,24 @@
 import mongoose from "mongoose";
 
+const HistorySchema = new mongoose.Schema({
+    serviceProviderName: {
+        type: String,
+        required: true,
+    },
+    startingTime: {
+        type: Date,
+        required: true,
+    },
+    endingTime: {
+        type: Date,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true
+    }
+});
+
 // Define the schema for the user
 const userSchema = new mongoose.Schema({
     name: {
@@ -18,18 +37,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    userRole: {
-        type: String,
-        enum: ['serviceTaker', 'serviceProvider'],
-        required: true
-    },
-    serviceType: {
-        type: String,
-        default: null,
-    },
-    serviceArea: {
-        type: String,
-        default: null,
+    history: {
+        type: [HistorySchema],
+        default: [],
     },
 }, { timestamps: true });
 

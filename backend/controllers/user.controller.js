@@ -26,15 +26,6 @@ export const handleSignUp = async (req, res) => {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
-        if (userRole === 'serviceProvider') {
-            if (!serviceType) {
-                return res.status(400).json({ success: false, message: 'Service Type is required for Service Providers' });
-            }
-            if (!serviceArea) {
-                return res.status(400).json({ success: false, message: 'Service Area is required for Service Providers' });
-            }
-        }
-
         // Hash password before saving the user
         const hashedPassword = await bcrypt.hash(password, 8);
 
@@ -59,9 +50,6 @@ export const handleSignUp = async (req, res) => {
                     email,
                     password: hashedPassword,
                     avtarImage: result.secure_url,
-                    userRole,
-                    serviceType,
-                    serviceArea
                 });
             }
         );

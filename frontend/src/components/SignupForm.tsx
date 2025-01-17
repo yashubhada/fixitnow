@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import axios from 'axios';
+import RoleImg1 from '../images/service-provider.png'
+import RoleImg2 from '../images/user.png'
 import { UserContext } from '../context/UserContext';
 
 const SignupForm: React.FC = () => {
@@ -66,8 +68,13 @@ const SignupForm: React.FC = () => {
         }, 0);
     };
 
+    const [selectedRole, setSelectedRole] = useState('serviceTaker');
+
+    const handleRoleChange = (role: string) => {
+        setSelectedRole(role);
+    };
+
     // radio button
-    const [selectedValue, setSelectedValue] = useState<string>('serviceTaker');
     const [isSignUpFormLoading, setIsSignUpFormLoading] = useState<boolean>(false);
 
     // image chage
@@ -80,28 +87,12 @@ const SignupForm: React.FC = () => {
         password: string;
         email: string;
         userUploadImage: File | null;
-        userRole: string;
-        serviceType: string | null;
-        serviceArea: string | null;
     }>({
         name: "",
         password: "",
         email: "",
         userUploadImage: null,
-        userRole: selectedValue,
-        serviceType: null,
-        serviceArea: null,
     });
-
-    const handleUserRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newRole = e.target.value;
-        setSelectedValue(newRole);
-        setUserData((prevData) => ({
-            ...prevData,
-            userRole: newRole,
-            ...(newRole === 'serviceProvider' && { serviceType: null, serviceArea: null }),
-        }));
-    };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -139,13 +130,6 @@ const SignupForm: React.FC = () => {
             if (userData.userUploadImage) {
                 formData.append("userUploadImage", userData.userUploadImage);
             }
-            formData.append("userRole", userData.userRole);
-            if (userData.serviceType) {
-                formData.append("serviceType", userData.serviceType);
-            }
-            if (userData.serviceArea) {
-                formData.append("serviceArea", userData.serviceArea);
-            }
 
             const response = await axios.post(`${baseUrl}api/user/signup`, formData);
             showToast(response.data.message, "success");
@@ -182,9 +166,62 @@ const SignupForm: React.FC = () => {
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                     <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in max-h-[530px]">
-                        <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome to Fixitnow</h1>
+                        <div className="grid grid-cols-2 gap-5 items-stretch justify-items-center mb-5">
+                            <label
+                                className={`relative flex items-center justify-between p-6 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-all w-full ${selectedRole === 'serviceTaker' ? 'border-black bg-gray-50' : ''
+                                    }`}
+                                onClick={() => handleRoleChange('serviceTaker')}
+                            >
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    className="sr-only peer"
+                                    checked={selectedRole === 'serviceTaker'}
+                                    readOnly
+                                />
+                                <div>
+                                    <div className="w-10 h-10 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                                        <img src={RoleImg2} alt="ClientRoleImg" className="w-[25px]" />
+                                    </div>
+                                    <div className="mt-3">
+                                        <h3 className="font-semibold text-base text-center">Service Taker</h3>
+                                    </div>
+                                </div>
+                                <span className="absolute top-4 right-4 w-5 h-5 border border-gray-300 rounded-full peer-checked:bg-black peer-checked:border-black flex items-center justify-center transition-all">
+                                    <span className="w-2 h-2 bg-white rounded-full peer-checked:block hidden"></span>
+                                </span>
+                                <div className="absolute inset-0 border-2 rounded-lg border-transparent peer-checked:border-black transition-all"></div>
+                            </label>
+
+                            <label
+                                className={`relative flex items-center justify-between p-6 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-all w-full ${selectedRole === 'serviceProvider' ? 'border-black bg-gray-50' : ''
+                                    }`}
+                                onClick={() => handleRoleChange('serviceProvider')}
+                            >
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    className="sr-only peer"
+                                    checked={selectedRole === 'serviceProvider'}
+                                    readOnly
+                                />
+                                <div>
+                                    <div className="w-10 h-10 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                                        <img src={RoleImg1} alt="FreeLancerRoleImg" className="w-[25px]" />
+                                    </div>
+                                    <div className="mt-3">
+                                        <h3 className="font-semibold text-base text-center">Service Provider</h3>
+                                    </div>
+                                </div>
+                                <span className="absolute top-4 right-4 w-5 h-5 border border-gray-300 rounded-full peer-checked:bg-black peer-checked:border-black flex items-center justify-center transition-all">
+                                    <span className="w-2 h-2 bg-white rounded-full peer-checked:block hidden"></span>
+                                </span>
+                                <div className="absolute inset-0 border-2 rounded-lg border-transparent peer-checked:border-black transition-all"></div>
+                            </label>
+                        </div>
+
                         <div className='w-full'>
-                            <form onSubmit={handleSignUp} className='w-full max-h-[421px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
+                            <form onSubmit={handleSignUp} className='w-full max-h-[350px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
                                 <div
                                     onClick={handleFullnameInputRef}
                                     className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -312,118 +349,6 @@ const SignupForm: React.FC = () => {
                                         }
                                     </div>
                                 </div>
-                                <div className='mt-5 py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md'>
-                                    <span className='block w-fit text-base text-gray-600 font-semibold mb-2'>
-                                        Select Your Role
-                                    </span>
-                                    <div className="flex items-center space-x-5">
-                                        <div className="flex items-center">
-                                            <label htmlFor='serviceTaker' className="relative flex items-center justify-center h-5 w-5 border border-black rounded-full cursor-pointer">
-                                                <input
-                                                    type="radio"
-                                                    id="serviceTaker"
-                                                    name="options"
-                                                    value="serviceTaker"
-                                                    checked={selectedValue === 'serviceTaker'}
-                                                    onChange={handleUserRoleChange}
-                                                    className="appearance-none w-full h-full opacity-0 absolute"
-                                                />
-                                                <div
-                                                    className={`absolute w-3 h-3 rounded-full border transition-all ${selectedValue === 'serviceTaker' ? 'bg-black border-black' : 'bg-transparent border-black'
-                                                        }`}
-                                                ></div>
-                                            </label>
-                                            <label htmlFor="serviceTaker" className="ml-2 text-sm font-medium text-gray-900 cursor-pointer">
-                                                Service Taker
-                                            </label>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <label htmlFor='serviceProvider' className="relative flex items-center justify-center h-5 w-5 border border-black rounded-full cursor-pointer">
-                                                <input
-                                                    type="radio"
-                                                    id="serviceProvider"
-                                                    name="options"
-                                                    value="serviceProvider"
-                                                    checked={selectedValue === 'serviceProvider'}
-                                                    onChange={handleUserRoleChange}
-                                                    className="appearance-none w-full h-full opacity-0 absolute"
-                                                />
-                                                <div
-                                                    className={`absolute w-3 h-3 rounded-full border transition-all ${selectedValue === 'serviceProvider' ? 'bg-black border-black' : 'bg-transparent border-black'
-                                                        }`}
-                                                ></div>
-                                            </label>
-                                            <label htmlFor="serviceProvider" className="ml-2 text-sm font-medium text-gray-900 cursor-pointer">
-                                                Service Provider
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                {
-                                    selectedValue === 'serviceProvider' &&
-                                    <>
-                                        <div
-                                            onClick={handleServiceTypeInputRef}
-                                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                        >
-                                            <div className='mr-3'>
-                                                <svg
-                                                    width="24px"
-                                                    height="24px"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    className='focus:outline-none'
-                                                >
-                                                    <path
-                                                        d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C9.96652 5.08171 10.2407 6.51202 9.80178 7.74535L20.6465 18.5902L18.5252 20.7115L7.67936 9.86709C6.44627 10.3055 5.01649 10.0312 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.62572 12.9333L10.747 15.0546L5.79729 20.0044C5.2115 20.5902 4.26175 20.5902 3.67597 20.0044C3.12464 19.453 3.09221 18.5793 3.57867 17.99L3.67597 17.883L8.62572 12.9333Z"
-                                                        fill="currentColor"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                ref={serviceTypeInputRef}
-                                                onChange={handleSignUpChange}
-                                                name='serviceType'
-                                                value={userData.serviceType || ''}
-                                                autoComplete='off'
-                                                placeholder='Enter your service type'
-                                                required
-                                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                            />
-                                        </div>
-                                        <div
-                                            onClick={handleLocationInputRef}
-                                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                        >
-                                            <div className='mr-3'>
-                                                <svg
-                                                    width="24px"
-                                                    height="24px"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    className='focus:outline-none'
-                                                >
-                                                    <path
-                                                        d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
-                                                        fill="currentColor"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                ref={locationInputRef}
-                                                onChange={handleSignUpChange}
-                                                name='serviceArea'
-                                                value={userData.serviceArea || ''}
-                                                autoComplete='off'
-                                                placeholder='Enter your service area'
-                                                required
-                                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                            />
-                                        </div>
-                                    </>
-                                }
                                 <div
                                     className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
                                     onClick={handleImageInputRef}

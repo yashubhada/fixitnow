@@ -29,7 +29,7 @@ export const handleAuthentication = async (req, res, next) => {
             name: userData.name,
             email: userData.email,
             avtar: userData.avtarImage,
-            role:userData.userRole,
+            history: userData.history,
         }
 
         // Attach user data to the request object for use in subsequent middleware/handlers
