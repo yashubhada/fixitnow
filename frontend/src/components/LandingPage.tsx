@@ -25,7 +25,7 @@ import Address from './address.json'
 
 const LandingPage: React.FC = () => {
 
-    const { toggleLoginModal, loginFormModal, isSignupForm, getLoggedInUserData, userData, handleLogout } = useContext(UserContext);
+    const { openLoginModal, loginFormModal, isSignupForm, getLoggedInUserData, userData, handleLogout } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -179,9 +179,13 @@ const LandingPage: React.FC = () => {
     }
 
     useEffect(() => {
-        setIsPageLoading(true);
-        getLoggedInUserData();
-        setIsPageLoading(false);
+        const fetchData = async () => {
+            setIsPageLoading(true);
+            await getLoggedInUserData();
+            setIsPageLoading(false);
+        };
+
+        fetchData();
     }, []);
 
     if (isPageLoading) {
@@ -265,7 +269,7 @@ const LandingPage: React.FC = () => {
                                 </>
                                 :
                                 <div
-                                    onClick={toggleLoginModal}
+                                    onClick={openLoginModal}
                                     className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
                                 >
                                     <svg
@@ -441,7 +445,7 @@ const LandingPage: React.FC = () => {
                                         </button>
                                     </div>
                                     <div
-                                        onClick={toggleLoginModal}
+                                        onClick={openLoginModal}
                                         tabIndex={4}
                                         className="text-base mt-5 w-fit group relative cursor-pointer"
                                     >

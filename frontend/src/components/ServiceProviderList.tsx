@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import UserImage from '../images/user-image.jpg'
+import { UserContext } from '../context/UserContext';
 
 interface ServiceInformation {
     serviceAddress: string | undefined;
@@ -9,6 +10,8 @@ interface ServiceInformation {
 }
 
 const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, openServiceModal, closeClick }) => {
+
+    const { getLoggedInUserData, userData, openLoginModal } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -21,6 +24,15 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
             document.body.style.paddingRight = '';
         }
     }, []);
+
+    useEffect(() => {
+        getLoggedInUserData();
+    }), [];
+
+    if (!userData) {
+        closeClick();
+        openLoginModal();
+    }
 
     const provideresInfo = [
         {

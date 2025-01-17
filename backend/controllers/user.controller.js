@@ -36,7 +36,7 @@ export const handleSignUp = async (req, res) => {
         }
 
         // Hash password before saving the user
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 8);
 
         cloudinary.uploader.upload(req.file.path,
             {

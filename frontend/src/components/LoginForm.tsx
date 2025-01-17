@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const LoginForm: React.FC = () => {
 
-    const { baseUrl, toggleLoginModal, toggleSignupForm, showToast, getLoggedInUserData } = useContext(UserContext);
+    const { baseUrl, closeLoginModal, openSignupForm, showToast, getLoggedInUserData } = useContext(UserContext);
 
     // email input ref
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -61,7 +61,7 @@ const LoginForm: React.FC = () => {
             showToast(response.data.message, "success");
             if (response.data.success) {
                 await getLoggedInUserData();
-                toggleLoginModal();
+                closeLoginModal();
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -229,7 +229,7 @@ const LoginForm: React.FC = () => {
                                     </div>
                                 </div>
                                 <div
-                                    onClick={toggleSignupForm}
+                                    onClick={openSignupForm}
                                     className="text-center text-base"
                                 >
                                     <span className='cursor-pointer'>
@@ -239,7 +239,7 @@ const LoginForm: React.FC = () => {
                             </form>
                         </div>
                         <div
-                            onClick={toggleLoginModal}
+                            onClick={closeLoginModal}
                             className='bg-black p-1 rounded-full absolute -top-3 -right-3 cursor-pointer'
                         >
                             <svg

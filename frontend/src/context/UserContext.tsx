@@ -7,10 +7,12 @@ interface UserContextType {
     baseUrl: string;
     isSignupForm: boolean;
     setIsSignupForm: (isSignupForm: boolean) => void;
-    toggleSignupForm: () => void;
+    openSignupForm: () => void;
+    closeSignupForm: () => void;
     loginFormModal: boolean;
     setLoginFormModal: (loginFormModal: boolean) => void;
-    toggleLoginModal: () => void;
+    openLoginModal: () => void;
+    closeLoginModal: () => void;
     showToast: (message: string, type: "success" | "error") => void;
     userData: any;
     setUserData: (userData: any) => void;
@@ -23,10 +25,12 @@ const defaultValue: UserContextType = {
     baseUrl: "",
     isSignupForm: false,
     setIsSignupForm: () => { },
-    toggleSignupForm: () => { },
+    openSignupForm: () => { },
+    closeSignupForm: () => { },
     loginFormModal: false,
     setLoginFormModal: () => { },
-    toggleLoginModal: () => { },
+    openLoginModal: () => { },
+    closeLoginModal: () => { },
     showToast: () => { },
     userData: null,
     setUserData: () => { },
@@ -58,18 +62,25 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     };
 
 
-    // Signup form state
     const [isSignupForm, setIsSignupForm] = useState(false);
-    const toggleSignupForm = () => {
-        setIsSignupForm((prev) => !prev);
+    const [loginFormModal, setLoginFormModal] = useState(false);
+    
+    // Signup form state
+    const openSignupForm = () => {
+        setIsSignupForm(true);
         setLoginFormModal(false);
+    };
+    const closeSignupForm = () => {
+        setIsSignupForm(false);
     };
 
     // Login form state
-    const [loginFormModal, setLoginFormModal] = useState(false);
-    const toggleLoginModal = () => {
-        setLoginFormModal((prev) => !prev);
+    const openLoginModal = () => {
+        setLoginFormModal(true);
         setIsSignupForm(false);
+    };
+    const closeLoginModal = () => {
+        setLoginFormModal(false);
     };
 
     const [userData, setUserData] = useState<any>(null);
@@ -126,10 +137,12 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 baseUrl,
                 isSignupForm,
                 setIsSignupForm,
-                toggleSignupForm,
+                openSignupForm,
+                closeSignupForm,
                 loginFormModal,
                 setLoginFormModal,
-                toggleLoginModal,
+                openLoginModal,
+                closeLoginModal,
                 showToast,
                 userData,
                 setUserData,

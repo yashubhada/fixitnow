@@ -4,7 +4,7 @@ import { UserContext } from '../context/UserContext';
 
 const SignupForm: React.FC = () => {
 
-    const { baseUrl, toggleSignupForm, toggleLoginModal, showToast } = useContext(UserContext);
+    const { baseUrl, closeSignupForm, openLoginModal, showToast } = useContext(UserContext);
 
     // email input ref
     const fullnameInputRef = useRef<HTMLInputElement>(null);
@@ -150,7 +150,7 @@ const SignupForm: React.FC = () => {
             const response = await axios.post(`${baseUrl}api/user/signup`, formData);
             showToast(response.data.message, "success");
             if (response.data.success) {
-                toggleLoginModal();
+                openLoginModal();
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -488,7 +488,7 @@ const SignupForm: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="text-center text-base"
-                                    onClick={toggleLoginModal}
+                                    onClick={openLoginModal}
                                 >
                                     <span className='cursor-pointer'>
                                         Already have an account? Sign in
@@ -497,7 +497,7 @@ const SignupForm: React.FC = () => {
                             </form>
                         </div>
                         <div
-                            onClick={toggleSignupForm}
+                            onClick={closeSignupForm}
                             className='bg-black p-1 rounded-full absolute -top-3 -right-3 cursor-pointer'
                         >
                             <svg
