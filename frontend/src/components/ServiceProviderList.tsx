@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import UserImage from '../images/user-image.jpg'
 
 interface ServiceInformation {
-    serviceLocation: string | undefined;
+    serviceAddress: string | undefined;
     serviceType: string | undefined;
     openServiceModal: () => void;
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, serviceType, openServiceModal, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, openServiceModal, closeClick }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -166,7 +166,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceLocation, se
                                 </div>
                                 <div className='text-black w-full'>
                                     <input
-                                        value={serviceLocation}
+                                        value={serviceAddress}
                                         type="text"
                                         readOnly
                                         className='outline-none border-0 w-full'

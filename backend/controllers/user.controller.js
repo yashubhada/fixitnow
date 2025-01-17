@@ -39,7 +39,17 @@ export const handleSignUp = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         cloudinary.uploader.upload(req.file.path,
-            { folder: 'fixitnow' },
+            {
+                folder: 'fixitnow',
+                transformation: [
+                    {
+                        width: 200,
+                        height: 200,
+                        crop: 'thumb',
+                        gravity: 'face',
+                    },
+                ]
+            },
             async (err, result) => {
                 if (err) {
                     return res.status(500).json({ success: false, message: err.message });

@@ -18,9 +18,10 @@ import KeyFeatures from '../images/features.svg'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import ServiceProviderList from './ServiceProviderList'
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../context/UserContext'
 import ServiceModal from './ServiceModal'
 import RequestLoading from './RequestLoading'
+import Address from './address.json'
 
 const LandingPage: React.FC = () => {
 
@@ -88,11 +89,28 @@ const LandingPage: React.FC = () => {
         },
     ];
 
-    const [serviceLocationValue, setServiceLocationValue] = useState<string | undefined>("");
-    const handleServiceLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setServiceLocationValue(e.target.value);
+    // select user Address 
+    interface AddressType {
+        address: string;
+    };
+
+    const [userAddress, setUserAddress] = useState<string>("");
+    const [filteredUserAddress, setFilteredUserAddress] = useState<AddressType[]>([]);
+
+    const handleUserAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let word = e.target.value.toLowerCase();
+        setUserAddress(word);
+        if (word !== "") {
+            let filteredData = Address.filter(ary =>
+                ary.address.toLowerCase().includes(word)
+            );
+            setFilteredUserAddress(filteredData)
+        } else {
+            setFilteredUserAddress([]);
+        }
     }
 
+    // select service type
     const [serviceProviderValue, setServiceProviderValue] = useState<string | undefined>("");
     const [filteredServiceCategory, setFilteredServiceCategory] = useState<ServiceCategoryType[]>([]);
 
@@ -100,7 +118,9 @@ const LandingPage: React.FC = () => {
         let word = e.target.value.toLowerCase();
         setServiceProviderValue(word);
         if (word !== "") {
-            let filteredData = serviceCategory.filter(service => service.title.toLowerCase().includes(word));
+            let filteredData = serviceCategory.filter(service =>
+                service.title.toLowerCase().includes(word)
+            );
             setFilteredServiceCategory(filteredData)
         } else {
             setFilteredServiceCategory([]);
@@ -111,7 +131,7 @@ const LandingPage: React.FC = () => {
     const [isOpenServiceProviderListModal, setIsOpenServiceProviderListModal] = useState<boolean>(false);
     const handleServiceProviderListModal = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        if (serviceLocationValue !== "" && serviceProviderValue !== "") {
+        if (userAddress !== "" && serviceProviderValue !== "") {
             setIsOpenServiceProviderListModal(true);
         }
     }
@@ -142,6 +162,9 @@ const LandingPage: React.FC = () => {
         setActiveId(activeId === id ? null : id);
     };
 
+    // page loading
+    const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
+
     // service modal and requset loading
     const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
     const [isOpenLoading, setIsOpenLoading] = useState<boolean>(false);
@@ -156,30 +179,51 @@ const LandingPage: React.FC = () => {
     }
 
     useEffect(() => {
+        setIsPageLoading(true);
         getLoggedInUserData();
+        setIsPageLoading(false);
     }, []);
-    return (
-        <>
-            {/* if user is login */}
-            <section className='fixed top-3 right-3 w-[130px] z-10'>
-                <div className='relative group w-full flex justify-end'>
-                    {
-                        userData
-                            ?
-                            <>
-                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                                    <div className='h-7 w-7 shadow-md rounded-full overflow-hidden'>
-                                        <img src={userData.user.avtar} className='object-cover h-full w-full' />
+
+    if (isPageLoading) {
+        return (
+            <div className='h-screen w-full flex items-center justify-center bg-white'>
+                <svg className="animate-spin h-7 w-7 text-black mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                    ></circle>
+                    <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                </svg>
+            </div>
+        )
+    } else {
+        return (
+            <>
+                {/* if user is login */}
+                <section className='fixed top-3 right-3 w-[130px] z-10'>
+                    <div className='relative group w-full flex justify-end'>
+                        {
+                            userData
+                                ?
+                                <>
+                                    <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                        <img className='w-10 h-10 shadow rounded-full bg-white' src={userData.user.avtar} />
+                                        <div className='text-lg font-medium'>
+                                            {userData.user.name}
+                                        </div>
                                     </div>
-                                    <div className='text-lg font-medium'>
-                                        {userData.user.name}
-                                    </div>
-                                </div>
-                                <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                    <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
+                                        <ul>
+                                            <li>
+                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
                                                     <svg
                                                         width="20px"
                                                         height="20px"
@@ -196,11 +240,9 @@ const LandingPage: React.FC = () => {
                                                         History
                                                     </div>
                                                 </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" onClick={handleLogout}>
-                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                            </li>
+                                            <li>
+                                                <div onClick={handleLogout} className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
                                                     <svg
                                                         width="20px"
                                                         height="20px"
@@ -217,396 +259,334 @@ const LandingPage: React.FC = () => {
                                                         Logout
                                                     </div>
                                                 </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </>
-                            :
-                            <div
-                                onClick={toggleLoginModal}
-                                className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
-                            >
-                                <svg
-                                    width="24px"
-                                    height="24px"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                >
-                                    <path
-                                        d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                                <div className='text-lg font-medium'>
-                                    Login
-                                </div>
-                            </div>
-                    }
-                </div>
-            </section>
-
-            {/* hero section */}
-            <section className='max-w-[1360px] mx-auto flex items-center px-4 pt-10 md:px-10 md:pt-20'>
-                <div className='flex items-center w-full'>
-                    <div className='w-full md:w-1/2'>
-                        <img
-                            src={LogoBlack}
-                            alt="fixitnow logo"
-                            className='w-12 md:w-16'
-                        />
-                        <h1 className='mt-4 text-black text-[30px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
-                        <div className='font-roboto w-full md:w-[400px] mt-8'>
-                            <form
-                                onSubmit={handleServiceProviderListModal}
-                                className='grid grid-cols-1 gap-3'
-                            >
-                                <div
-                                    onClick={handleLocationInputRef}
-                                    className='flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                >
-                                    <div className='mr-3'>
-                                        <svg
-                                            width="20px"
-                                            height="20px"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            aria-label="Service location"
-                                            className='focus:outline-none'
-                                        >
-                                            <path
-                                                d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        value={serviceLocationValue}
-                                        onChange={handleServiceLocationChange}
-                                        ref={locationInputRef}
-                                        required
-                                        tabIndex={1}
-                                        placeholder='Service location'
-                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                    />
-                                </div>
-                                <div
-                                    onClick={handleServicesInputRef}
-                                    className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                >
-                                    <div className='mr-3'>
-                                        <svg
-                                            width="20px"
-                                            height="20px"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            className='focus:outline-none'
-                                        >
-                                            <path
-                                                d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C9.96652 5.08171 10.2407 6.51202 9.80178 7.74535L20.6465 18.5902L18.5252 20.7115L7.67936 9.86709C6.44627 10.3055 5.01649 10.0312 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.62572 12.9333L10.747 15.0546L5.79729 20.0044C5.2115 20.5902 4.26175 20.5902 3.67597 20.0044C3.12464 19.453 3.09221 18.5793 3.57867 17.99L3.67597 17.883L8.62572 12.9333Z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        ref={servicesInputRef}
-                                        required
-                                        tabIndex={2}
-                                        placeholder='Service type (e.g., Electrician)'
-                                        value={serviceProviderValue}
-                                        onChange={handleServiceProviderChange}
-                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                    />
-                                    {/* serviceCategory list */}
-                                    {
-                                        filteredServiceCategory.length > 0 &&
-                                        <ul className='absolute z-10 max-h-[350px] top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
-                                            {filteredServiceCategory.length > 0 ? (
-                                                filteredServiceCategory.map((service, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
-                                                        onClick={
-                                                            (): void => {
-                                                                setServiceProviderValue(service?.title)
-                                                                setFilteredServiceCategory([])
-                                                            }
-                                                        }
-                                                    >
-                                                        <div>
-                                                            <div className='h-[20px] w-[20px]'>
-                                                                <img src={service?.icon} className='w-full h-full object-contain' />
-                                                            </div>
-                                                        </div>
-                                                        <div>{service?.title}</div>
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li className="text-gray-500 p-2">No results found</li>
-                                            )}
+                                            </li>
                                         </ul>
-                                    }
-                                </div>
-                                <div className='w-fit'>
-                                    <button
-                                        tabIndex={3}
-                                        className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'
-                                    >
-                                        view
-                                    </button>
-                                </div>
+                                    </div>
+                                </>
+                                :
                                 <div
                                     onClick={toggleLoginModal}
-                                    tabIndex={4}
-                                    className="text-base mt-5 w-fit group relative cursor-pointer"
+                                    className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
                                 >
-                                    <div className="text-sm md:text-base group-hover:text-black transition duration-300">
-                                        Already have an account? Sign in
-                                    </div>
-                                    <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
-                                        <div
-                                            className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
-                                            style={{
-                                                transformOrigin: 'left',
-                                            }}
-                                        ></div>
+                                    <svg
+                                        width="24px"
+                                        height="24px"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
+                                    >
+                                        <path
+                                            d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <div className='text-lg font-medium'>
+                                        Login
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                        }
                     </div>
-                    <div className='hidden md:block w-1/2'>
-                        <div className='w-full h-full'>
+                </section>
+
+                {/* hero section */}
+                <section className='max-w-[1360px] mx-auto flex items-center px-4 pt-10 md:px-10 md:pt-20'>
+                    <div className='flex items-center w-full'>
+                        <div className='w-full md:w-1/2'>
                             <img
-                                src={LandingImage}
-                                draggable='false'
-                                className='w-full h-full object-contain'
+                                src={LogoBlack}
+                                alt="fixitnow logo"
+                                className='w-12 md:w-16'
                             />
+                            <h1 className='mt-4 text-black text-[30px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
+                            <div className='font-roboto w-full md:w-[400px] mt-8'>
+                                <form
+                                    onSubmit={handleServiceProviderListModal}
+                                    className='grid grid-cols-1 gap-3'
+                                >
+                                    <div
+                                        onClick={handleLocationInputRef}
+                                        className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                    >
+                                        <div className='mr-3'>
+                                            <svg
+                                                width="20px"
+                                                height="20px"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                aria-label="Service location"
+                                                className='focus:outline-none'
+                                            >
+                                                <path
+                                                    d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={userAddress}
+                                            onChange={handleUserAddressChange}
+                                            ref={locationInputRef}
+                                            required
+                                            tabIndex={1}
+                                            placeholder='Service location'
+                                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                        />
+                                        {/* user address list */}
+                                        {
+                                            filteredUserAddress.length > 0 &&
+                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                                {filteredUserAddress.length > 0 ? (
+                                                    filteredUserAddress.map((ary, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                            onClick={
+                                                                (): void => {
+                                                                    setUserAddress(ary?.address)
+                                                                    setFilteredUserAddress([])
+                                                                }
+                                                            }
+                                                        >
+                                                            <div>
+                                                                <div className='h-[20px] w-[20px]'>
+                                                                    <svg
+                                                                        width="20px"
+                                                                        height="20px"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        aria-label="Service location"
+                                                                        className='focus:outline-none'
+                                                                    >
+                                                                        <path
+                                                                            d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
+                                                                            fill="currentColor"
+                                                                        />
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                            <div>{ary?.address}</div>
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="text-gray-500 p-2">No results found</li>
+                                                )}
+                                            </ul>
+                                        }
+                                    </div>
+                                    <div
+                                        onClick={handleServicesInputRef}
+                                        className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                    >
+                                        <div className='mr-3'>
+                                            <svg
+                                                width="20px"
+                                                height="20px"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                className='focus:outline-none'
+                                            >
+                                                <path
+                                                    d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C9.96652 5.08171 10.2407 6.51202 9.80178 7.74535L20.6465 18.5902L18.5252 20.7115L7.67936 9.86709C6.44627 10.3055 5.01649 10.0312 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.62572 12.9333L10.747 15.0546L5.79729 20.0044C5.2115 20.5902 4.26175 20.5902 3.67597 20.0044C3.12464 19.453 3.09221 18.5793 3.57867 17.99L3.67597 17.883L8.62572 12.9333Z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            ref={servicesInputRef}
+                                            required
+                                            tabIndex={2}
+                                            placeholder='Service type (e.g., Electrician)'
+                                            value={serviceProviderValue}
+                                            onChange={handleServiceProviderChange}
+                                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                        />
+                                        {/* serviceCategory list */}
+                                        {
+                                            filteredServiceCategory.length > 0 &&
+                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                                {filteredServiceCategory.length > 0 ? (
+                                                    filteredServiceCategory.map((service, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                            onClick={
+                                                                (): void => {
+                                                                    setServiceProviderValue(service?.title)
+                                                                    setFilteredServiceCategory([])
+                                                                }
+                                                            }
+                                                        >
+                                                            <div>
+                                                                <div className='h-[20px] w-[20px]'>
+                                                                    <img src={service?.icon} className='w-full h-full object-contain' />
+                                                                </div>
+                                                            </div>
+                                                            <div>{service?.title}</div>
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="text-gray-500 p-2">No results found</li>
+                                                )}
+                                            </ul>
+                                        }
+                                    </div>
+                                    <div className='w-fit'>
+                                        <button
+                                            tabIndex={3}
+                                            className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'
+                                        >
+                                            view
+                                        </button>
+                                    </div>
+                                    <div
+                                        onClick={toggleLoginModal}
+                                        tabIndex={4}
+                                        className="text-base mt-5 w-fit group relative cursor-pointer"
+                                    >
+                                        <div className="text-sm md:text-base group-hover:text-black transition duration-300">
+                                            Already have an account? Sign in
+                                        </div>
+                                        <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
+                                            <div
+                                                className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
+                                                style={{
+                                                    transformOrigin: 'left',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div className='hidden md:block w-1/2'>
+                            <div className='w-full h-full'>
+                                <img
+                                    src={LandingImage}
+                                    draggable='false'
+                                    className='w-full h-full object-contain'
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* About us  */}
+                {/* About us  */}
 
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
-                <div className='grid grid-cols-1 md:grid-cols-2 items-center gap-10'>
-                    <div className=''>
-                        <img src={AboutImg} />
+                <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 items-center gap-10'>
+                        <div className=''>
+                            <img src={AboutImg} />
+                        </div>
+                        <div className='text-justify'>
+                            <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>About Fixitnow</h1>
+                            <p className='text-base mt-5 font-roboto leading-[24px]'>At Fixitnow, we believe that finding the right service professional should be simple, seamless, and stress-free. Our platform connects users with skilled and trusted service providers across a wide range of industries, from home repairs and maintenance to personal care, automotive services, and more.</p>
+                            <p className='text-base mt-5 font-roboto leading-[24px]'>We are dedicated to making life easier by bringing expert help right to your doorstep. Whether you need a plumber to fix a leak, a beautician for an at-home makeover, or a handyman for urgent repairs, we've got you covered.</p>
+                            <p className='text-base mt-5 font-roboto leading-[24px]'>Our mission is to empower both customers and service providers by creating a trusted space where quality meets convenience. We prioritize safety, reliability, and transparency, ensuring that every service provider on our platform is verified and reviewed by real users. With On Hand Services Provide, help is always within reach—just a few clicks away. Experience a new standard of service with us, where your needs come first, and your satisfaction is our top priority.</p>
+                        </div>
                     </div>
-                    <div className='text-justify'>
-                        <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>About Fixitnow</h1>
-                        <p className='text-base mt-5 font-roboto leading-[24px]'>At Fixitnow, we believe that finding the right service professional should be simple, seamless, and stress-free. Our platform connects users with skilled and trusted service providers across a wide range of industries, from home repairs and maintenance to personal care, automotive services, and more.</p>
-                        <p className='text-base mt-5 font-roboto leading-[24px]'>We are dedicated to making life easier by bringing expert help right to your doorstep. Whether you need a plumber to fix a leak, a beautician for an at-home makeover, or a handyman for urgent repairs, we've got you covered.</p>
-                        <p className='text-base mt-5 font-roboto leading-[24px]'>Our mission is to empower both customers and service providers by creating a trusted space where quality meets convenience. We prioritize safety, reliability, and transparency, ensuring that every service provider on our platform is verified and reviewed by real users. With On Hand Services Provide, help is always within reach—just a few clicks away. Experience a new standard of service with us, where your needs come first, and your satisfaction is our top priority.</p>
+                </section>
+
+                {/* services section */}
+                <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+                    <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Our Services</h1>
+                    <div className='grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-10 mt-10'>
+                        {
+                            serviceCategory.map((service, index) =>
+                                <div key={index} className='border border-[#CCC] hover:border-black cursor-pointer rounded-md py-3 group'>
+                                    <div className='h-[80px] w-[50px] mx-auto'>
+                                        <img src={service?.icon} className='w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110' />
+                                    </div>
+                                    <div className='text-center text-sm mt-3'>
+                                        {service?.title}
+                                    </div>
+                                </div>
+                            )
+                        }
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* services section */}
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
-                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Our Services</h1>
-                <div className='grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-10 mt-10'>
-                    {
-                        serviceCategory.map((service, index) =>
-                            <div key={index} className='border border-[#CCC] hover:border-black cursor-pointer rounded-md py-3 group'>
-                                <div className='h-[80px] w-[50px] mx-auto'>
-                                    <img src={service?.icon} className='w-full h-full object-contain transform transition-transform duration-500 group-hover:scale-110' />
-                                </div>
-                                <div className='text-center text-sm mt-3'>
-                                    {service?.title}
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
-            </section>
-
-            {/* Key features */}
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
-                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
-                    <div className='grid grid-cols-1 gap-5'>
-                        {keyFeatures.map(features => (
-                            <div key={features.id}>
-                                <div
-                                    className="flex items-center cursor-pointer"
-                                    onClick={() => toggleKeyFeatures(features.id)}
-                                >
-                                    <img
-                                        className={`w-2 mr-5 transform transition-transform duration-500 ${activeId === features.id ? 'rotate-90' : 'rotate-0'
+                {/* Key features */}
+                <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+                    <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
+                        <div className='grid grid-cols-1 gap-5'>
+                            {keyFeatures.map(features => (
+                                <div key={features.id}>
+                                    <div
+                                        className="flex items-center cursor-pointer"
+                                        onClick={() => toggleKeyFeatures(features.id)}
+                                    >
+                                        <img
+                                            className={`w-2 mr-5 transform transition-transform duration-500 ${activeId === features.id ? 'rotate-90' : 'rotate-0'
+                                                }`}
+                                            src={RightAngleArrow}
+                                            alt="Arrow"
+                                        />
+                                        <h1 className="text-lg md:text-2xl font-poppins font-medium">
+                                            {features.title}
+                                        </h1>
+                                    </div>
+                                    <div
+                                        className={`ml-7 mt-1 overflow-hidden transition-all duration-500 ease-in-out ${activeId === features.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
                                             }`}
-                                        src={RightAngleArrow}
-                                        alt="Arrow"
-                                    />
-                                    <h1 className="text-lg md:text-2xl font-poppins font-medium">
-                                        {features.title}
-                                    </h1>
+                                    >
+                                        <p className="text-base md:text-lg text-justify font-roboto">
+                                            {features.description}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div
-                                    className={`ml-7 mt-1 overflow-hidden transition-all duration-500 ease-in-out ${activeId === features.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                                        }`}
-                                >
-                                    <p className="text-base md:text-lg text-justify font-roboto">
-                                        {features.description}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <img src={KeyFeatures} alt="Key features" />
-                    </div>
-                </div>
-            </section>
-
-            {/* Contact us */}
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
-                <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins text-center'>Contact us</h1>
-                <div className='w-full md:w-1/2 mt-10 mx-auto'>
-                    <form className='w-full'>
-                        <div
-                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                        >
-                            <div className='mr-3'>
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className='w-5 focus:outline-none'
-                                >
-                                    <path
-                                        d="M20 22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder='Enter your full name'
-                                required
-                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                            />
+                            ))}
                         </div>
-                        <div
-                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                        >
-                            <div className='mr-3'>
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className='w-5 focus:outline-none'
-                                >
-                                    <path
-                                        d="M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM12.0606 11.6829L5.64722 6.2377L4.35278 7.7623L12.0731 14.3171L19.6544 7.75616L18.3456 6.24384L12.0606 11.6829Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="email"
-                                placeholder='Enter your email'
-                                required
-                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                            />
+                        <div>
+                            <img src={KeyFeatures} alt="Key features" />
                         </div>
-                        <div
-                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                        >
-                            <div className='mr-3'>
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className='w-5 focus:outline-none'
-                                >
-                                    <path
-                                        d="M19 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2H17C17.5523 2 18 2.44772 18 3V15H22V19C22 20.6569 20.6569 22 19 22ZM18 17V19C18 19.5523 18.4477 20 19 20C19.5523 20 20 19.5523 20 19V17H18ZM6 7V9H14V7H6ZM6 11V13H14V11H6ZM6 15V17H11V15H6Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder='Enter your subject (e.g., Service Issue, General Inquiry)'
-                                required
-                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                            />
-                        </div>
-                        <div
-                            className='flex items-start justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                        >
-                            <div className='mr-3'>
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className='w-5 focus:outline-none'
-                                >
-                                    <path
-                                        d="M6.45455 19L2 22.5V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V18C22 18.5523 21.5523 19 21 19H6.45455ZM7 10V12H9V10H7ZM11 10V12H13V10H11ZM15 10V12H17V10H15Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </div>
-                            <textarea
-                                placeholder='Message'
-                                required
-                                rows={5}
-                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                            >
-                            </textarea>
-                        </div>
-                        <button
-                            className='w-full md:w-fit mt-5 font-poppins py-[10px] px-6 text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none'
-                        >
-                            contact
-                        </button>
-                    </form>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className='bg-black w-full px-4 md:px-10 py-5 mt-10 md:mt-20'>
-                <div className='max-w-[1360px] mx-auto block md:flex items-center justify-between'>
-                    <div className='flex md:block items-center justify-center'>
-                        <img className='w-10' src={LogoWhite} />
                     </div>
-                    <div className='text-white text-sm md:text-base text-center md:text-right mt-5 md:mt-0'>
-                        <p>© {currentYear} fixitnow, All Rights Reserved</p>
+                </section>
+
+                {/* Footer */}
+                <footer className='bg-black w-full px-4 md:px-10 py-5 mt-10 md:mt-20'>
+                    <div className='max-w-[1360px] mx-auto block md:flex items-center justify-between'>
+                        <div className='flex md:block items-center justify-center'>
+                            <img className='w-10' src={LogoWhite} />
+                        </div>
+                        <div className='text-white text-sm md:text-base text-center md:text-right mt-5 md:mt-0'>
+                            <p>© {currentYear} fixitnow, All Rights Reserved</p>
+                        </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
 
-            {
-                loginFormModal && <LoginForm />
-            }
+                {
+                    loginFormModal && <LoginForm />
+                }
 
-            {
-                isSignupForm && <SignupForm />
-            }
+                {
+                    isSignupForm && <SignupForm />
+                }
 
-            {
-                isOpenServiceProviderListModal &&
-                <ServiceProviderList
-                    serviceLocation={serviceLocationValue}
-                    serviceType={serviceProviderValue}
-                    openServiceModal={handleServiceModal}
-                    closeClick={closeServiceProviderListModal}
-                />
-            }
+                {
+                    isOpenServiceProviderListModal &&
+                    <ServiceProviderList
+                        serviceAddress={userAddress}
+                        serviceType={serviceProviderValue}
+                        openServiceModal={handleServiceModal}
+                        closeClick={closeServiceProviderListModal}
+                    />
+                }
 
-            {
-                isOpenServiceModal &&
-                <ServiceModal />
-            }
+                {
+                    isOpenServiceModal &&
+                    <ServiceModal />
+                }
 
-            {
-                isOpenLoading &&
-                <RequestLoading />
-            }
-        </>
-    )
+                {
+                    isOpenLoading &&
+                    <RequestLoading />
+                }
+            </>
+        )
+    }
 }
 
 export default LandingPage
