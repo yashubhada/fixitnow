@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Provider from "../models/provider.modal.js";
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
@@ -12,11 +13,11 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const handleSignUp = async (req, res) => {
+export const handleUserSignUp = async (req, res) => {
     try {
-        const { name, email, password, userRole, serviceType, serviceArea } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!req.file) {
+        if (!req.file.avatar) {
             return res.status(400).json({ success: false, message: 'Please choose your avatar image' });
         }
 
@@ -29,9 +30,9 @@ export const handleSignUp = async (req, res) => {
         // Hash password before saving the user
         const hashedPassword = await bcrypt.hash(password, 8);
 
-        cloudinary.uploader.upload(req.file.path,
+        cloudinary.uploader.upload(req.files.avatar[0].path,
             {
-                folder: 'fixitnow',
+                folder: 'fixitnow/avatars',
                 transformation: [
                     {
                         width: 200,
@@ -43,6 +44,7 @@ export const handleSignUp = async (req, res) => {
             },
             async (err, result) => {
                 if (err) {
+                    console.error(err);
                     return res.status(500).json({ success: false, message: err.message });
                 }
                 await User.create({
@@ -53,6 +55,62 @@ export const handleSignUp = async (req, res) => {
                 });
             }
         );
+
+        res.status(201).json({ success: true, message: "Signup successfull!" });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+export const handleProviderSignUp = async (req, res) => {
+    try {
+        const { name, email, service, price, address, password } = req.body;
+
+        if (!req.files.avatar) {
+            return res.status(400).json({ success: false, message: 'Please choose your avatar image' });
+        }
+
+        if (!req.files.identityProof) {
+            return res.status(400).json({ success: false, message: 'Please choose your identity proof' });
+        }
+
+        const isProvider = await Provider.findOne({ email });
+
+        if (isProvider) {
+            return res.status(400).json({ success: false, message: 'Service provider already exists' });
+        }
+
+        // Hash password before saving the user
+        const hashedPassword = await bcrypt.hash(password, 8);
+
+        const avatarUpload = await cloudinary.uploader.upload(req.files.avatar[0].path, {
+            folder: 'fixitnow/avatars',
+            transformation: [
+                {
+                    width: 200,
+                    height: 200,
+                    crop: 'thumb',
+                    gravity: 'face',
+                },
+            ],
+        });
+
+        const identityProofUpload = await cloudinary.uploader.upload(req.files.identityProof[0].path, {
+            folder: 'fixitnow/identityProofs',
+        });
+
+        await Provider.create({
+            name,
+            email,
+            service,
+            price,
+            address,
+            password: hashedPassword,
+            avatarImage: avatarUpload.secure_url,
+            identityProof: identityProofUpload.secure_url,
+        });
 
         res.status(201).json({ success: true, message: "Signup successfull!" });
 

@@ -1,24 +1,5 @@
 import mongoose from "mongoose";
 
-const HistorySchema = new mongoose.Schema({
-    serviceProviderName: {
-        type: String,
-        required: true,
-    },
-    startingTime: {
-        type: Date,
-        required: true,
-    },
-    endingTime: {
-        type: Date,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true
-    }
-});
-
 // Define the schema for the user
 const userSchema = new mongoose.Schema({
     name: {
@@ -37,10 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    history: {
-        type: [HistorySchema],
-        default: [],
-    },
+    userRole: {
+        type: String,
+        default: 'serviceTaker'
+    }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
