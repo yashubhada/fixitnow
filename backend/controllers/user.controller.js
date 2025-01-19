@@ -18,44 +18,41 @@ export const handleUserSignUp = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        if (!req.file) {
-            return res.status(400).json({ success: false, message: 'Avatar image is required' });
-        }
-
         const isUser = await User.findOne({ email });
 
         if (isUser) {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Avatar image is required' });
+        }
+
         // Hash password before saving the user
         const hashedPassword = await bcrypt.hash(password, 8);
 
-        await cloudinary.uploader.upload(req.file.path,
-            {
-                folder: 'fixitnow',
-                transformation: [
-                    {
-                        width: 200,
-                        height: 200,
-                        crop: 'thumb',
-                        gravity: 'face',
-                    },
-                ]
-            },
-            async (err, result) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ success: false, message: err.message });
-                }
-                await User.create({
-                    name,
-                    email,
-                    password: hashedPassword,
-                    avatarImage: result.secure_url,
-                });
-            }
-        );
+        const avatarUpload = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'fixitnow',
+            transformation: [
+                {
+                    width: 200,
+                    height: 200,
+                    crop: 'thumb',
+                    gravity: 'face',
+                },
+            ]
+        });
+
+        // Delete the file after uploading to Cloudinary
+        fs.unlinkSync(req.file.path);
+
+        // Save user data to the database
+        await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            avatar: avatarUpload.secure_url,
+        });
 
         res.status(201).json({ success: true, message: "Signup successfull!" });
 
@@ -69,18 +66,18 @@ export const handleProviderSignUp = async (req, res) => {
     try {
         const { name, email, service, price, address, password } = req.body;
 
+        const isProvider = await Provider.findOne({ email });
+
+        if (isProvider) {
+            return res.status(400).json({ success: false, message: 'Service provider already exists' });
+        }
+
         // Validate the uploaded files
         if (!req.files || !req.files.avatar || !req.files.identityProof) {
             return res.status(400).json({
                 success: false,
                 message: 'Avatar and Identity Proof are required.',
             });
-        }
-
-        const isProvider = await Provider.findOne({ email });
-
-        if (isProvider) {
-            return res.status(400).json({ success: false, message: 'Service provider already exists' });
         }
 
         // Upload files to Cloudinary
