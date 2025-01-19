@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios';
 import RoleImg1 from '../images/service-provider.png'
 import RoleImg2 from '../images/user.png'
@@ -7,30 +7,6 @@ import { UserContext } from '../context/UserContext';
 const SignupForm: React.FC = () => {
 
     const { baseUrl, closeSignupForm, openLoginModal, showToast } = useContext(UserContext);
-
-    // email input ref
-    const fullnameInputRef = useRef<HTMLInputElement>(null);
-    const handleFullnameInputRef = (): void => {
-        fullnameInputRef.current?.focus();
-    }
-
-    // email input ref
-    const emailInputRef = useRef<HTMLInputElement>(null);
-    const handleEmailInputRef = (): void => {
-        emailInputRef.current?.focus();
-    }
-
-    // password input ref
-    const passwordInputRef = useRef<HTMLInputElement>(null);
-    const handlePasswordInputRef = (): void => {
-        passwordInputRef.current?.focus();
-    }
-
-    // file input ref
-    const imageInputRef = useRef<HTMLInputElement>(null);
-    const handleImageInputRef = (): void => {
-        imageInputRef.current?.click();
-    }
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -45,15 +21,10 @@ const SignupForm: React.FC = () => {
     }, []);
 
     // Show and hide password    
-    const [showPassword, setShowPassword] = useState<boolean>(true);
-    const handleTogglePassword = (e: React.MouseEvent<HTMLDivElement>) => {
+    const [showUserPassword, setShowUserPassword] = useState<boolean>(true);
+    const handleUserTogglePassword = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        setShowPassword((prev) => !prev);
-
-        // Keep focus on input after toggling
-        setTimeout(() => {
-            passwordInputRef.current?.focus();
-        }, 0);
+        setShowUserPassword((prev) => !prev);
     };
 
     const [selectedRole, setSelectedRole] = useState('serviceTaker');
@@ -62,11 +33,10 @@ const SignupForm: React.FC = () => {
         setSelectedRole(role);
     };
 
-    // radio button
-    const [isSignUpFormLoading, setIsSignUpFormLoading] = useState<boolean>(false);
+    const [isUserSignUpFormLoading, setIsUserSignUpFormLoading] = useState<boolean>(false);
 
     // image chage
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [userAvatarImg, setUserAvatarImg] = useState<File | null>(null);
 
     // user data for sign up
 
@@ -74,27 +44,27 @@ const SignupForm: React.FC = () => {
         name: string;
         password: string;
         email: string;
-        userUploadImage: File | null;
+        avatar: File | null;
     }>({
         name: "",
         password: "",
         email: "",
-        userUploadImage: null,
+        avatar: null,
     });
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUserAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
             const fileType = file.type;
             const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
 
             if (validExtensions.includes(fileType)) {
-                setSelectedImage(file);
+                setUserAvatarImg(file);
 
                 // Update userData state
                 setUserData((prevData) => ({
                     ...prevData,
-                    userUploadImage: file,
+                    avatar: file,
                 }));
             } else {
                 showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
@@ -104,22 +74,22 @@ const SignupForm: React.FC = () => {
 
     const handleUserSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        setIsSignUpFormLoading(true);
+        setIsUserSignUpFormLoading(true);
         try {
             if (userData.password.length < 8) {
                 return showToast("Password length must be 8 characters or longer", "error");
             }
 
             // Create FormData instance and append the fields
-            const formData = new FormData();
-            formData.append("name", userData.name);
-            formData.append("password", userData.password);
-            formData.append("email", userData.email);
-            if (userData.userUploadImage) {
-                formData.append("userUploadImage", userData.userUploadImage);
+            const userFormData = new FormData();
+            userFormData.append("name", userData.name);
+            userFormData.append("email", userData.email);
+            userFormData.append("password", userData.password);
+            if (userData.avatar) {
+                userFormData.append("avatar", userData.avatar);
             }
 
-            const response = await axios.post(`${baseUrl}api/user/signup`, formData);
+            const response = await axios.post(`${baseUrl}api/user/userSignup`, userFormData);
             showToast(response.data.message, "success");
             if (response.data.success) {
                 openLoginModal();
@@ -133,13 +103,139 @@ const SignupForm: React.FC = () => {
                 }
             }
         } finally {
-            setIsSignUpFormLoading(false);
+            setIsUserSignUpFormLoading(false);
         }
     };
 
-    const handleSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUserSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+
+
+    // provider form
+
+    const [showProviderPassword, setShowProviderPassword] = useState<boolean>(true);
+    const handleProviderTogglePassword = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setShowProviderPassword((prev) => !prev);
+    };
+
+    const [isProviderSignUpFormLoading, setIsProviderSignUpFormLoading] = useState<boolean>(false);
+
+    // image chage
+    const [providerAvatarImg, setProviderAvatarImg] = useState<File | null>(null);
+    const [providerIdentityProof, setProviderIdentityProof] = useState<File | null>(null);
+
+    // user data for sign up
+
+    const [providerData, setProviderData] = useState<{
+        name: string;
+        email: string;
+        service: string;
+        price: number | null;
+        address: string;
+        password: string;
+        avatar: File | null;
+        identityProof: File | null;
+    }>({
+        name: "",
+        email: "",
+        service: "",
+        price: 0,
+        address: "",
+        password: "",
+        avatar: null,
+        identityProof: null,
+    });
+
+    const handleProviderAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            const fileType = file.type;
+            const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
+
+            if (validExtensions.includes(fileType)) {
+                setProviderAvatarImg(file);
+
+                // Update setProviderData state
+                setProviderData((prevData) => ({
+                    ...prevData,
+                    avatar: file,
+                }));
+            } else {
+                showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
+            }
+        }
+    };
+
+    const handleProviderIdentityProofChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            const fileType = file.type;
+            const validExtensions = ["application/pdf"];
+
+            if (validExtensions.includes(fileType)) {
+                setProviderIdentityProof(file);
+
+                // Update setProviderData state
+                setProviderData((prevData) => ({
+                    ...prevData,
+                    identityProof: file,
+                }));
+            } else {
+                showToast("Only PDF files are allowed", "error");
+            }
+        }
+    };
+
+    const handleProviderSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        setIsProviderSignUpFormLoading(true);
+        try {
+            if (providerData.password.length < 8) {
+                return showToast("Password length must be 8 characters or longer", "error");
+            }
+
+            // Create FormData instance and append the fields
+            const providerFormData = new FormData();
+            providerFormData.append("name", providerData.name);
+            providerFormData.append("email", providerData.email);
+            providerFormData.append("service", providerData.service);
+            providerFormData.append("price", providerData.price !== null ? providerData.price.toString() : "");
+            providerFormData.append("address", providerData.address);
+            providerFormData.append("password", providerData.password);
+            if (providerData.avatar) {
+                providerFormData.append("avatar", providerData.avatar);
+            }
+            if (providerData.identityProof) {
+                providerFormData.append("identityProof", providerData.identityProof);
+            }
+
+            const response = await axios.post(`${baseUrl}api/user/providerSignup`, providerFormData);
+            showToast(response.data.message, "success");
+            if (response.data.success) {
+                openLoginModal();
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        } finally {
+            setIsProviderSignUpFormLoading(false);
+        }
+    };
+
+    const handleProviderSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setProviderData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -215,7 +311,6 @@ const SignupForm: React.FC = () => {
                                     ?
                                     <form onSubmit={handleUserSignUp} className='w-full max-h-[300px] md:max-h-[350px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
                                         <div
-                                            onClick={handleFullnameInputRef}
                                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                         >
                                             <div className='mr-3'>
@@ -234,9 +329,8 @@ const SignupForm: React.FC = () => {
                                             </div>
                                             <input
                                                 type="text"
-                                                ref={fullnameInputRef}
-                                                onChange={handleSignUpChange}
-                                                name='name'
+                                                onChange={handleUserSignUpChange}
+                                                name="name"
                                                 value={userData.name}
                                                 autoComplete='off'
                                                 placeholder='Enter your full name'
@@ -245,7 +339,6 @@ const SignupForm: React.FC = () => {
                                             />
                                         </div>
                                         <div
-                                            onClick={handleEmailInputRef}
                                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                         >
                                             <div className='mr-3'>
@@ -264,9 +357,8 @@ const SignupForm: React.FC = () => {
                                             </div>
                                             <input
                                                 type="email"
-                                                ref={emailInputRef}
-                                                onChange={handleSignUpChange}
-                                                name='email'
+                                                onChange={handleUserSignUpChange}
+                                                name="email"
                                                 value={userData.email}
                                                 autoComplete='off'
                                                 placeholder='Enter your email'
@@ -275,7 +367,6 @@ const SignupForm: React.FC = () => {
                                             />
                                         </div>
                                         <div
-                                            onClick={handlePasswordInputRef}
                                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                         >
                                             <div className='mr-3'>
@@ -295,23 +386,22 @@ const SignupForm: React.FC = () => {
                                             </div>
                                             <input
                                                 type={
-                                                    showPassword ? 'password' : 'text'
+                                                    showUserPassword ? 'password' : 'text'
                                                 }
                                                 placeholder='Enter your password'
-                                                ref={passwordInputRef}
-                                                onChange={handleSignUpChange}
-                                                name='password'
+                                                onChange={handleUserSignUpChange}
+                                                name="password"
                                                 value={userData.password}
                                                 autoComplete='off'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />
                                             <div
-                                                onClick={handleTogglePassword}
+                                                onClick={handleUserTogglePassword}
                                                 className='ml-3'
                                             >
                                                 {
-                                                    showPassword
+                                                    showUserPassword
                                                         ?
                                                         <svg
                                                             width="20px"
@@ -343,7 +433,6 @@ const SignupForm: React.FC = () => {
                                         </div>
                                         <div
                                             className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
-                                            onClick={handleImageInputRef}
                                         >
                                             <div className="mr-3">
                                                 <svg
@@ -360,23 +449,22 @@ const SignupForm: React.FC = () => {
                                                 </svg>
                                             </div>
                                             <label htmlFor="fileUpload" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
-                                                {selectedImage ? selectedImage.name : "Choose a file"}
+                                                {userAvatarImg ? userAvatarImg.name : "Choose a file"}
                                             </label>
                                             <input
                                                 id="fileUpload"
-                                                ref={imageInputRef}
                                                 type="file"
-                                                onChange={handleImageChange}
+                                                onChange={handleUserAvatarChange}
                                                 className="hidden"
                                             />
                                         </div>
                                         <button
                                             type="submit"
                                             className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                                            disabled={isSignUpFormLoading}
+                                            disabled={isUserSignUpFormLoading}
                                         >
                                             {
-                                                isSignUpFormLoading
+                                                isUserSignUpFormLoading
                                                     ?
                                                     <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <circle
@@ -412,7 +500,7 @@ const SignupForm: React.FC = () => {
                                         </div>
                                     </form>
                                     :
-                                    <form onSubmit={handleUserSignUp} className='w-full max-h-[300px] md:max-h-[350px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
+                                    <form onSubmit={handleProviderSignUp} className='w-full max-h-[300px] md:max-h-[350px] overflow-y-scroll overflow-x-hidden custom-scrollbar'>
                                         <div
                                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                         >
@@ -433,6 +521,9 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="text"
                                                 autoComplete='off'
+                                                onChange={handleProviderSignUpChange}
+                                                name='name'
+                                                value={providerData.name}
                                                 placeholder='Enter your full name'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -458,6 +549,9 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="email"
                                                 autoComplete='off'
+                                                onChange={handleProviderSignUpChange}
+                                                name='email'
+                                                value={providerData.email}
                                                 placeholder='Enter your email'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -483,6 +577,9 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="text"
                                                 autoComplete='off'
+                                                onChange={handleProviderSignUpChange}
+                                                name='service'
+                                                value={providerData.service}
                                                 placeholder='Enter your service (e.g., Electrician)'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -508,6 +605,9 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="number"
                                                 autoComplete='off'
+                                                onChange={handleProviderSignUpChange}
+                                                name='price'
+                                                value={providerData.price?.toString()}
                                                 placeholder='Enter your hourly price (e.g., 500)'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -533,6 +633,9 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="text"
                                                 autoComplete='off'
+                                                onChange={handleProviderSignUpChange}
+                                                name='address'
+                                                value={providerData.address}
                                                 placeholder='Enter your service address'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
@@ -558,19 +661,22 @@ const SignupForm: React.FC = () => {
                                             </div>
                                             <input
                                                 type={
-                                                    showPassword ? 'password' : 'text'
+                                                    showProviderPassword ? 'password' : 'text'
                                                 }
                                                 placeholder='Enter your password'
+                                                onChange={handleProviderSignUpChange}
+                                                name='password'
+                                                value={providerData.password}
                                                 autoComplete='off'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />
                                             <div
-                                                onClick={handleTogglePassword}
+                                                onClick={handleProviderTogglePassword}
                                                 className='ml-3'
                                             >
                                                 {
-                                                    showPassword
+                                                    showProviderPassword
                                                         ?
                                                         <svg
                                                             width="20px"
@@ -617,12 +723,41 @@ const SignupForm: React.FC = () => {
                                                     />
                                                 </svg>
                                             </div>
-                                            <label htmlFor="fileUpload" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
-                                                {selectedImage ? selectedImage.name : "Choose a file"}
+                                            <label htmlFor="providerAvatar" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
+                                                {providerAvatarImg ? providerAvatarImg.name : "Choose your avtar"}
                                             </label>
                                             <input
-                                                id="fileUpload"
+                                                id="providerAvatar"
                                                 type="file"
+                                                onChange={handleProviderAvatarChange}
+                                                className="hidden"
+                                            />
+
+                                        </div>
+                                        <div
+                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                                        >
+                                            <div className="mr-3">
+                                                <svg
+                                                    width="24px"
+                                                    height="24px"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    className="focus:outline-none"
+                                                >
+                                                    <path
+                                                        d="M20 5H4V19L13.2923 9.70649C13.6828 9.31595 14.3159 9.31591 14.7065 9.70641L20 15.0104V5ZM2 3.9934C2 3.44476 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44495 22 3.9934V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5551 2 20.0066V3.9934ZM8 11C6.89543 11 6 10.1046 6 9C6 7.89543 6.89543 7 8 7C9.10457 7 10 7.89543 10 9C10 10.1046 9.10457 11 8 11Z"
+                                                        fill="currentColor"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <label htmlFor="providerIdentityProof" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
+                                                {providerIdentityProof ? providerIdentityProof.name : "Upload your work license"}
+                                            </label>
+                                            <input
+                                                id="providerIdentityProof"
+                                                type="file"
+                                                onChange={handleProviderIdentityProofChange}
                                                 className="hidden"
                                             />
 
@@ -630,10 +765,10 @@ const SignupForm: React.FC = () => {
                                         <button
                                             type="submit"
                                             className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                                            disabled={isSignUpFormLoading}
+                                            disabled={isProviderSignUpFormLoading}
                                         >
                                             {
-                                                isSignUpFormLoading
+                                                isProviderSignUpFormLoading
                                                     ?
                                                     <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <circle

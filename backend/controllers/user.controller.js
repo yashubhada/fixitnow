@@ -19,8 +19,12 @@ export const handleUserSignUp = async (req, res) => {
         const { name, email, password } = req.body;
 
         const isUser = await User.findOne({ email });
-
         if (isUser) {
+            return res.status(400).json({ success: false, message: 'User already exists' });
+        }
+
+        const isProvider = await Provider.findOne({ email });
+        if (isProvider) {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
@@ -67,9 +71,13 @@ export const handleProviderSignUp = async (req, res) => {
         const { name, email, service, price, address, password } = req.body;
 
         const isProvider = await Provider.findOne({ email });
-
         if (isProvider) {
-            return res.status(400).json({ success: false, message: 'Service provider already exists' });
+            return res.status(400).json({ success: false, message: 'User already exists' });
+        }
+
+        const isUser = await User.findOne({ email });
+        if (isUser) {
+            return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
         // Validate the uploaded files
@@ -122,19 +130,61 @@ export const handleProviderSignUp = async (req, res) => {
 
 export const handleSignIn = async (req, res) => {
     try {
-        let tokenData = null;
         const { email, password } = req.body;
+
         const user = await User.findOne({ email });
+        const provider = await Provider.findOne({ email });
 
-        if (!user) return res.status(400).json({ success: false, message: 'Invalid credentials' });
+        if (!user && !provider) {
+            return res.status(400).json({ success: false, message: 'Invalid credentials' });
+        }
 
-        // compare hash password
-        const checkPassword = await bcrypt.compare(password, user.password);
+        let isValidPassword, tokenData;
 
-        if (!checkPassword) return res.status(400).json({ success: false, message: 'Invalid credentials' });
+        if (user) {
+            isValidPassword = await bcrypt.compare(password, user.password);
+            if (!isValidPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid credentials",
+                });
+            }
+            tokenData = {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                role: user.userRole
+            };
+        }
 
-        tokenData = {
-            uid: user._id,
+        if (provider) {
+            isValidPassword = await bcrypt.compare(password, provider.password);
+            if (!isValidPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid credentials",
+                });
+            }
+
+            // Update isAvailable to true in MongoDB
+            await Provider.findOneAndUpdate(
+                { email },
+                { isAvailable: true },
+                { new: true } // Returns the updated document
+            );
+
+            tokenData = {
+                id: provider._id,
+                name: provider.name,
+                email: provider.email,
+                service: provider.service,
+                price: provider.price,
+                address: provider.address,
+                avatar: provider.avatar,
+                identityProof: provider.identityProof,
+                role: provider.userRole
+            };
         }
 
         if (!tokenData) return res.status(401).json({ success: false, message: 'Token data not found' });
@@ -152,7 +202,7 @@ export const handleSignIn = async (req, res) => {
                 secure: true,
                 maxAge: 3600000
             })
-            .json({ success: true, message: "Sign in successfull!" });
+            .json({ success: true, role: tokenData.role, message: "Sign in successfull!" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
@@ -166,6 +216,7 @@ export const handleGetLoggedInUser = (req, res) => {
         if (!token) {
             return res.status(401).send({ success: false, message: "No token found, please log in" });
         }
+
         return res.status(200).json({
             success: true,
             user: req.user || null
@@ -176,8 +227,18 @@ export const handleGetLoggedInUser = (req, res) => {
     }
 }
 
-export const handleLogout = (req, res) => {
+export const handleLogout = async (req, res) => {
     try {
+        if (req.user.role === 'serviceProvider') {
+            const id = req.user.id;
+            // Update isAvailable to true in MongoDB
+            await Provider.findByIdAndUpdate(
+                id,
+                { isAvailable: false },
+                { new: true } // Returns the updated document
+            );
+        }
+
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,

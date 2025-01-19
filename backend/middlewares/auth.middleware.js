@@ -1,4 +1,3 @@
-import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -17,23 +16,8 @@ export const handleAuthentication = async (req, res, next) => {
         // Verify token
         const decoded = jwt.verify(token, process.env.SECRET_FIXITNOW_TOKEN);
 
-        // Use decoded token to find user data
-        const userData = await User.findById(decoded.uid);
-
-        if (!userData) {
-            return res.status(401).json({ success: false, message: 'Invalid user' });
-        }
-
-        const requestedUser = {
-            id: userData._id,
-            name: userData.name,
-            email: userData.email,
-            avtar: userData.avtarImage,
-            history: userData.history,
-        }
-
         // Attach user data to the request object for use in subsequent middleware/handlers
-        req.user = requestedUser;
+        req.user = decoded;
 
         // Proceed to next middleware or route handler
         next();

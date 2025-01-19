@@ -219,7 +219,7 @@ const LandingPage: React.FC = () => {
                                 ?
                                 <>
                                     <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                                        <img className='w-10 h-10 shadow rounded-full bg-white' src={userData.user.avtar} />
+                                        <img className='w-10 h-10 shadow rounded-full bg-white' src={userData.user.avatar} />
                                         <div className='text-lg font-medium'>
                                             {userData.user.name}
                                         </div>
