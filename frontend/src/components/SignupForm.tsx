@@ -3,6 +3,17 @@ import axios from 'axios';
 import RoleImg1 from '../images/service-provider.png'
 import RoleImg2 from '../images/user.png'
 import { UserContext } from '../context/UserContext';
+import Gardener from '../images/gardener.png'
+import Cleaner from '../images/cleaner.png'
+import Plumber from '../images/plumber.png'
+import Electrician from '../images/electrician.png'
+import Carpenter from '../images/carpenter.png'
+import Roofing from '../images/roofing.png'
+import Painter from '../images/painter.png'
+import SmartHome from '../images/smart-home.png'
+import HomeRenovation from '../images/renovation.png'
+import Flooring from '../images/flooring.png'
+import Address from './address.json'
 
 const SignupForm: React.FC = () => {
 
@@ -19,6 +30,54 @@ const SignupForm: React.FC = () => {
             document.body.style.paddingRight = '';
         }
     }, []);
+
+    type ServiceCategoryType = {
+        icon: string;
+        title: string;
+    };
+
+    const serviceCategory: ServiceCategoryType[] = [
+        {
+            title: "Cleaning",
+            icon: Cleaner
+        },
+        {
+            title: "Plumbing",
+            icon: Plumber
+        },
+        {
+            title: "Electrician",
+            icon: Electrician
+        },
+        {
+            title: "Carpentry",
+            icon: Carpenter
+        },
+        {
+            title: "Garden",
+            icon: Gardener
+        },
+        {
+            title: "Painter",
+            icon: Painter
+        },
+        {
+            title: "Home Renovation",
+            icon: HomeRenovation
+        },
+        {
+            title: "Smart Home Installation",
+            icon: SmartHome
+        },
+        {
+            title: "Roofing",
+            icon: Roofing
+        },
+        {
+            title: "Flooring Specialist",
+            icon: Flooring
+        },
+    ];
 
     // Show and hide password    
     const [showUserPassword, setShowUserPassword] = useState<boolean>(true);
@@ -151,6 +210,47 @@ const SignupForm: React.FC = () => {
         avatar: null,
         identityProof: null,
     });
+
+    // select service
+    const [filteredServiceCategory, setFilteredServiceCategory] = useState<ServiceCategoryType[]>([]);
+    const handleServiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let word = e.target.value.toLowerCase();
+        setProviderData((prevData) => ({
+            ...prevData,
+            service: word,
+        }));
+        if (word !== "") {
+            let filteredData = serviceCategory.filter(service =>
+                service.title.toLowerCase().includes(word)
+            );
+            setFilteredServiceCategory(filteredData)
+        } else {
+            setFilteredServiceCategory([]);
+        }
+    }
+
+    //select service
+    interface AddressType {
+        address: string;
+    };
+
+    const [filteredAddress, setFilteredAddress] = useState<AddressType[]>([]);
+
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let word = e.target.value.toLowerCase();
+        setProviderData((prevData) => ({
+            ...prevData,
+            address: word,
+        }));
+        if (word !== "") {
+            let filteredData = Address.filter(ary =>
+                ary.address.toLowerCase().includes(word)
+            );
+            setFilteredAddress(filteredData)
+        } else {
+            setFilteredAddress([]);
+        }
+    }
 
     const handleProviderAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -558,7 +658,7 @@ const SignupForm: React.FC = () => {
                                             />
                                         </div>
                                         <div
-                                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                            className='relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                         >
                                             <div className='mr-3'>
                                                 <svg
@@ -577,13 +677,115 @@ const SignupForm: React.FC = () => {
                                             <input
                                                 type="text"
                                                 autoComplete='off'
-                                                onChange={handleProviderSignUpChange}
+                                                onChange={handleServiceChange}
                                                 name='service'
                                                 value={providerData.service}
                                                 placeholder='Enter your service (e.g., Electrician)'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />
+                                            {
+                                                filteredServiceCategory.length > 0 &&
+                                                <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                                    {filteredServiceCategory.length > 0 ? (
+                                                        filteredServiceCategory.map((service, index) => (
+                                                            <li
+                                                                key={index}
+                                                                className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                                onClick={
+                                                                    (): void => {
+                                                                        setProviderData((prevData) => ({
+                                                                            ...prevData,
+                                                                            service: service?.title,
+                                                                        }));
+                                                                        setFilteredServiceCategory([])
+                                                                    }
+                                                                }
+                                                            >
+                                                                <div>
+                                                                    <div className='h-[20px] w-[20px]'>
+                                                                        <img src={service?.icon} className='w-full h-full object-contain' />
+                                                                    </div>
+                                                                </div>
+                                                                <div>{service?.title}</div>
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li className="text-gray-500 p-2">No results found</li>
+                                                    )}
+                                                </ul>
+                                            }
+                                        </div>
+                                        <div
+                                            className='relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                        >
+                                            <div className='mr-3'>
+                                                <svg
+                                                    width="24px"
+                                                    height="24px"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    className='focus:outline-none'
+                                                >
+                                                    <path
+                                                        d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
+                                                        fill="currentColor"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                autoComplete='off'
+                                                onChange={handleAddressChange}
+                                                name='address'
+                                                value={providerData.address}
+                                                placeholder='Enter your service address'
+                                                required
+                                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                                            />
+                                            {
+                                                filteredAddress.length > 0 &&
+                                                <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                                    {filteredAddress.length > 0 ? (
+                                                        filteredAddress.map((ary, index) => (
+                                                            <li
+                                                                key={index}
+                                                                className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                                onClick={
+                                                                    (): void => {
+                                                                        setProviderData((prevData) => ({
+                                                                            ...prevData,
+                                                                            address: ary?.address,
+                                                                        }));
+                                                                        setFilteredAddress([])
+                                                                    }
+                                                                }
+                                                            >
+                                                                <div>
+                                                                    <div className='h-[20px] w-[20px]'>
+                                                                        <svg
+                                                                            width="20px"
+                                                                            height="20px"
+                                                                            viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            aria-label="Service location"
+                                                                            className='focus:outline-none'
+                                                                        >
+                                                                            <path
+                                                                                d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
+                                                                                fill="currentColor"
+                                                                            />
+                                                                        </svg>
+                                                                    </div>
+                                                                </div>
+                                                                <div>{ary?.address}</div>
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li className="text-gray-500 p-2">No results found</li>
+                                                    )}
+                                                </ul>
+                                            }
                                         </div>
                                         <div
                                             className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -609,34 +811,6 @@ const SignupForm: React.FC = () => {
                                                 name='price'
                                                 value={providerData.price?.toString()}
                                                 placeholder='Enter your hourly price (e.g., 500)'
-                                                required
-                                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                            />
-                                        </div>
-                                        <div
-                                            className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 mt-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                        >
-                                            <div className='mr-3'>
-                                                <svg
-                                                    width="24px"
-                                                    height="24px"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    className='focus:outline-none'
-                                                >
-                                                    <path
-                                                        d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
-                                                        fill="currentColor"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                autoComplete='off'
-                                                onChange={handleProviderSignUpChange}
-                                                name='address'
-                                                value={providerData.address}
-                                                placeholder='Enter your service address'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />

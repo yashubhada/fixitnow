@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
 
     const { baseUrl, closeLoginModal, openSignupForm, showToast, getLoggedInUserData } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     // email input ref
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +64,12 @@ const LoginForm: React.FC = () => {
             showToast(response.data.message, "success");
             if (response.data.success) {
                 await getLoggedInUserData();
+                if (response.data.role === 'serviceProvider') {
+                    navigate('/provider-dashboard');
+                }
+                if (response.data.role === 'serviceTaker') {
+                    navigate('/');
+                }
                 closeLoginModal();
             }
         } catch (err) {

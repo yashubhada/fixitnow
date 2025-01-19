@@ -27,7 +27,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     useEffect(() => {
         getLoggedInUserData();
-    }), [];
+    }, []);
 
     if (!userData) {
         closeClick();
