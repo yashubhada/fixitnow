@@ -26,13 +26,18 @@ const providerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    avtarImage: {
+    avatar: {
         type: String,
         required: true
     },
     identityProof: {
         type: String,
         required: true
+    },
+    isAvailable: {
+        type: Boolean,
+        enumm: [true, false],
+        default: false
     },
     userRole: {
         type: String,

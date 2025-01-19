@@ -8,15 +8,14 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
-const uploadFields = upload.fields([
-    { name: 'avatar', maxCount: 1 }, // Field for avatar image
-    { name: 'identityProof', maxCount: 1 } // Field for identity proof document
+const uploadAvatarIdentity = upload.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'identityProof', maxCount: 1 }
 ]);
-
 const userRouter = new Router();
 
-userRouter.post('/userSignup', uploadFields, handleUserSignUp);
-userRouter.post('/providerSignup', uploadFields, handleProviderSignUp);
+userRouter.post('/userSignup', upload.single('avatar'), handleUserSignUp);
+userRouter.post('/providerSignup', uploadAvatarIdentity, handleProviderSignUp);
 userRouter.post('/signin', handleSignIn);
 userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
