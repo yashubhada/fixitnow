@@ -5,27 +5,38 @@ import Logo from '../images/fixitnow-logo-black.png';
 
 const Home: React.FC = () => {
 
-    const { userData, getLoggedInUserData, handleLogout } = useContext(UserContext);
-
+    const { userData, getLoggedInUserData, handleLogout, showToast } = useContext(UserContext);
     const navigate = useNavigate();
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
-            setIsPageLoading(true);
-            await getLoggedInUserData();
-            setIsPageLoading(false);
+            try {
+                setIsPageLoading(true);
+                await getLoggedInUserData();
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            } finally {
+                setIsPageLoading(false);
+            }
         };
 
         fetchUserData();
     }, []);
 
     useEffect(() => {
-        if (!isPageLoading && userData?.user?.role !== "serviceProvider") {
-            navigate('/login');
+        if (!isPageLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
+            showToast("Log in to access your dashboard", "error");
+            navigate('/');
         }
-    }, [userData, isPageLoading, navigate]);
+    }, [userData, isPageLoading, navigate, showToast]);
+
+    // Logout function
+    const providerLogout = (): void => {
+        handleLogout();
+        navigate('/');
+    };
 
     if (isPageLoading) {
         return (
@@ -47,73 +58,77 @@ const Home: React.FC = () => {
                 </svg>
             </div>
         )
-    } else {
-        return (
-            <>
-                <section className='w-full h-screen flex'>
-                    <div className='w-[200px] py-4 px-3 border-gray-300 border-r shadow-xl'>
-                        <nav className='dashboard-main-nav relative h-full'>
-                            <img src={Logo} className='w-10 mb-5 mx-auto' />
-                            <ul className='space-y-3'>
-                                <a
-                                    href="#"
-                                    className='block py-2 px-3 bg-black rounded text-white'
-                                >
-                                    <li className='flex items-center'><i className="ri-dashboard-line mr-2 text-lg"></i>Dashboard</li>
-                                </a>
-                                <a
-                                    href="#"
-                                    className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
-                                >
-                                    <li className='flex items-center'><i className="ri-history-line mr-2 text-lg"></i>History</li>
-                                </a>
-                                <a
-                                    href="#"
-                                    className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
-                                >
-                                    <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
-                                </a>
-                                <a
-                                    href="#"
-                                    className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
-                                >
-                                    <li className='flex items-center'><i className="ri-message-2-line mr-2 text-lg"></i>Message</li>
-                                </a>
-                                <a
-                                    href="#"
-                                    className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
-                                >
-                                    <li className='flex items-center'><i className="ri-sparkling-2-line mr-2 text-lg"></i>Reviews</li>
-                                </a>
-                            </ul>
-
-                            <ul className='absolute bottom-5 w-full'>
-                                <div className='flex items-center mb-3'>
-                                    <img
-                                        src={userData?.user?.avatar}
-                                        className='w-10 h-10 rounded-full border mr-1'
-                                    />
-                                    <div>
-                                        <h1 className='text-base '>{userData?.user?.name}</h1>
-                                        <p className='text-sm text-slate-500'>{userData?.user?.email}</p>
-                                    </div>
-                                </div>
-                                <div
-                                    onClick={handleLogout}
-                                    className='py-2 px-3 hover:bg-gray-200 rounded text-black cursor-pointer'
-                                >
-                                    <li className='flex items-center'><i className="ri-logout-box-r-line mr-2 text-lg"></i>Logout</li>
-                                </div>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div className='w-[calc(100%-200px)] py-4 px-3'>
-                        hello
-                    </div>
-                </section>
-            </>
-        )
     }
+
+    if (!userData?.user || userData?.user?.role !== "serviceProvider") {
+        return null; // Avoid rendering anything if user is invalid
+    }
+
+    return (
+        <>
+            <section className='w-full h-screen flex'>
+                <div className='w-[200px] py-4 px-3 border-gray-300 border-r shadow-xl'>
+                    <nav className='dashboard-main-nav relative h-full'>
+                        <img src={Logo} className='w-10 mb-5 mx-auto' />
+                        <ul className='space-y-3'>
+                            <a
+                                href="#"
+                                className='block py-2 px-3 bg-black rounded text-white'
+                            >
+                                <li className='flex items-center'><i className="ri-dashboard-line mr-2 text-lg"></i>Dashboard</li>
+                            </a>
+                            <a
+                                href="#"
+                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                            >
+                                <li className='flex items-center'><i className="ri-history-line mr-2 text-lg"></i>History</li>
+                            </a>
+                            <a
+                                href="#"
+                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                            >
+                                <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
+                            </a>
+                            <a
+                                href="#"
+                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                            >
+                                <li className='flex items-center'><i className="ri-message-2-line mr-2 text-lg"></i>Message</li>
+                            </a>
+                            <a
+                                href="#"
+                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                            >
+                                <li className='flex items-center'><i className="ri-sparkling-2-line mr-2 text-lg"></i>Reviews</li>
+                            </a>
+                        </ul>
+
+                        <ul className='absolute bottom-5 w-full'>
+                            <div className='flex items-center py-2 px-3 hover:bg-gray-200 rounded cursor-pointer mb-3'>
+                                <img
+                                    src={userData?.user?.avatar}
+                                    className='w-10 h-10 rounded-full border mr-1'
+                                />
+                                <div>
+                                    <h1 className='text-base '>{userData?.user?.name}</h1>
+                                    <p className='text-sm text-slate-500'>{userData?.user?.email}</p>
+                                </div>
+                            </div>
+                            <div
+                                onClick={providerLogout}
+                                className='py-2 px-3 hover:bg-gray-200 rounded text-black cursor-pointer'
+                            >
+                                <li className='flex items-center'><i className="ri-logout-box-r-line mr-2 text-lg"></i>Logout</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+                <div className='w-[calc(100%-200px)] py-4 px-3'>
+                    hello
+                </div>
+            </section>
+        </>
+    )
 }
 
 export default Home

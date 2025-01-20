@@ -31,7 +31,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     if (!userData) {
         closeClick();
-        showToast("Please login to book your service", "error");
+        showToast("Please log in first to book your service", "error");
     }
 
     const provideresInfo = [
