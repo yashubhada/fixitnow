@@ -68,7 +68,7 @@ const LandingPage: React.FC = () => {
     return (
         <>
             <section className='w-full h-screen flex'>
-                <div className='w-[200px] py-4 px-3 border-gray-300 border-r shadow-xl'>
+                <div className='w-[250px] py-4 px-3 border-gray-300 border-r shadow-xl'>
                     <nav className='dashboard-main-nav relative h-full'>
                         <img src={Logo} className='w-10 mb-5 mx-auto' />
                         <ul className='space-y-3'>
@@ -121,13 +121,13 @@ const LandingPage: React.FC = () => {
                                 onClick={providerLogout}
                                 className='py-2 px-3 hover:bg-gray-200 rounded text-black cursor-pointer'
                             >
-                                <li className='flex items-center font-medium'><i className="ri-logout-box-r-line mr-2 text-lg"></i>Logout</li>
+                                <li className='flex items-center font-medium'><i className="ri-logout-box-line mr-2 text-lg"></i>Logout</li>
                             </div>
                         </ul>
                     </nav>
                 </div>
                 {/* Main Content */}
-                <div className="w-[calc(100%-200px)] py-4 px-3">
+                <div className="w-[calc(100%-250px)] py-4 px-3">
                     {location.pathname === '/provider-dashboard' && (
                         <div>
                             <h1 className="text-2xl font-bold">Dashboard Home</h1>
