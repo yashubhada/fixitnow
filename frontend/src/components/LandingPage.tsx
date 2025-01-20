@@ -227,41 +227,15 @@ const LandingPage: React.FC = () => {
                                     <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
                                         <ul>
                                             <li>
-                                                <div className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
-                                                    <svg
-                                                        width="20px"
-                                                        height="20px"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                                    >
-                                                        <path
-                                                            d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.25022 4 6.82447 5.38734 5.38451 7.50024L8 7.5V9.5H2V3.5H4L3.99989 5.99918C5.82434 3.57075 8.72873 2 12 2ZM13 7L12.9998 11.585L16.2426 14.8284L14.8284 16.2426L10.9998 12.413L11 7H13Z"
-                                                            fill="currentColor"
-                                                        />
-                                                    </svg>
-                                                    <div className='text-lg font-medium'>
-                                                        History
-                                                    </div>
+                                                <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
+                                                    <i className="ri-history-line text-lg mr-3"></i>
+                                                    <span className='text-lg'>History</span>
                                                 </div>
                                             </li>
                                             <li>
-                                                <div onClick={handleLogout} className='flex items-center justify-center gap-x-2 py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
-                                                    <svg
-                                                        width="20px"
-                                                        height="20px"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                                    >
-                                                        <path
-                                                            d="M4 18H6V20H18V4H6V6H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V18ZM6 11H13V13H6V16L1 12L6 8V11Z"
-                                                            fill="currentColor"
-                                                        />
-                                                    </svg>
-                                                    <div className='text-lg font-medium'>
-                                                        Logout
-                                                    </div>
+                                                <div onClick={handleLogout} className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
+                                                    <i className="ri-logout-box-line text-lg mr-3"></i>
+                                                    <span className='text-lg'>Logout</span>
                                                 </div>
                                             </li>
                                         </ul>
@@ -270,23 +244,10 @@ const LandingPage: React.FC = () => {
                                 :
                                 <div
                                     onClick={openLoginModal}
-                                    className='w-full cursor-pointer flex items-center justify-center gap-x-2 bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
+                                    className='w-full cursor-pointer flex items-center justify-center bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
                                 >
-                                    <svg
-                                        width="24px"
-                                        height="24px"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        className='focus:outline-none transform transition-transform duration-300 hover:scale-110'
-                                    >
-                                        <path
-                                            d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                    <div className='text-lg font-medium'>
-                                        Login
-                                    </div>
+                                    <i className="ri-login-box-line text-xl mr-2"></i>
+                                    <span className='text-lg'>Login</span>
                                 </div>
                         }
                     </div>
@@ -311,21 +272,7 @@ const LandingPage: React.FC = () => {
                                         onClick={handleLocationInputRef}
                                         className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                     >
-                                        <div className='mr-3'>
-                                            <svg
-                                                width="20px"
-                                                height="20px"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                aria-label="Service location"
-                                                className='focus:outline-none'
-                                            >
-                                                <path
-                                                    d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </div>
+                                        <i className="ri-map-pin-line text-xl mr-3"></i>
                                         <input
                                             type="text"
                                             value={userAddress}
@@ -344,7 +291,7 @@ const LandingPage: React.FC = () => {
                                                     filteredUserAddress.map((ary, index) => (
                                                         <li
                                                             key={index}
-                                                            className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                            className='flex items-center cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
                                                             onClick={
                                                                 (): void => {
                                                                     setUserAddress(ary?.address)
@@ -352,24 +299,8 @@ const LandingPage: React.FC = () => {
                                                                 }
                                                             }
                                                         >
-                                                            <div>
-                                                                <div className='h-[20px] w-[20px]'>
-                                                                    <svg
-                                                                        width="20px"
-                                                                        height="20px"
-                                                                        viewBox="0 0 24 24"
-                                                                        fill="none"
-                                                                        aria-label="Service location"
-                                                                        className='focus:outline-none'
-                                                                    >
-                                                                        <path
-                                                                            d="M18.364 17.364L12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364ZM12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15ZM12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11C14 12.1046 13.1046 13 12 13Z"
-                                                                            fill="currentColor"
-                                                                        />
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                            <div>{ary?.address}</div>
+                                                            <i className="ri-map-pin-line text-lg mr-3"></i>
+                                                            {ary?.address}
                                                         </li>
                                                     ))
                                                 ) : (
@@ -382,20 +313,7 @@ const LandingPage: React.FC = () => {
                                         onClick={handleServicesInputRef}
                                         className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                     >
-                                        <div className='mr-3'>
-                                            <svg
-                                                width="20px"
-                                                height="20px"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                className='focus:outline-none'
-                                            >
-                                                <path
-                                                    d="M5.32943 3.27158C6.56252 2.8332 7.9923 3.10749 8.97927 4.09446C9.96652 5.08171 10.2407 6.51202 9.80178 7.74535L20.6465 18.5902L18.5252 20.7115L7.67936 9.86709C6.44627 10.3055 5.01649 10.0312 4.02952 9.04421C3.04227 8.05696 2.7681 6.62665 3.20701 5.39332L5.44373 7.63C6.02952 8.21578 6.97927 8.21578 7.56505 7.63C8.15084 7.04421 8.15084 6.09446 7.56505 5.50868L5.32943 3.27158ZM15.6968 5.15512L18.8788 3.38736L20.293 4.80157L18.5252 7.98355L16.7574 8.3371L14.6361 10.4584L13.2219 9.04421L15.3432 6.92289L15.6968 5.15512ZM8.62572 12.9333L10.747 15.0546L5.79729 20.0044C5.2115 20.5902 4.26175 20.5902 3.67597 20.0044C3.12464 19.453 3.09221 18.5793 3.57867 17.99L3.67597 17.883L8.62572 12.9333Z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </div>
+                                        <i className="ri-tools-fill text-xl mr-3"></i>
                                         <input
                                             type="text"
                                             ref={servicesInputRef}

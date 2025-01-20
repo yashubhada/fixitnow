@@ -15,7 +15,6 @@ interface UserContextType {
     closeLoginModal: () => void;
     showToast: (message: string, type: "success" | "error") => void;
     userData: any;
-    setUserData: (userData: any) => void;
     getLoggedInUserData: () => void;
     handleLogout: () => void;
 }
@@ -33,7 +32,6 @@ const defaultValue: UserContextType = {
     closeLoginModal: () => { },
     showToast: () => { },
     userData: null,
-    setUserData: () => { },
     getLoggedInUserData: async () => { },
     handleLogout: async () => { },
 };
@@ -64,7 +62,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
 
     const [isSignupForm, setIsSignupForm] = useState(false);
     const [loginFormModal, setLoginFormModal] = useState(false);
-    
+
     // Signup form state
     const openSignupForm = () => {
         setIsSignupForm(true);
@@ -84,6 +82,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     };
 
     const [userData, setUserData] = useState<any>(null);
+
     const getLoggedInUserData = async () => {
         try {
             const response = await axios.post(
@@ -104,7 +103,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 console.error("Unexpected error:", err);
             }
         }
-    };
+    }
 
     const handleLogout = async () => {
         try {
@@ -145,9 +144,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 closeLoginModal,
                 showToast,
                 userData,
-                setUserData,
                 getLoggedInUserData,
-                handleLogout
+                handleLogout,
             }}
         >
             {children}
