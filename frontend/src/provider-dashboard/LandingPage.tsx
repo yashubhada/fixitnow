@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../images/fixitnow-logo-black.png';
 
-const Home: React.FC = () => {
+const LandingPage: React.FC = () => {
 
     const { userData, getLoggedInUserData, handleLogout, showToast } = useContext(UserContext);
     const navigate = useNavigate();
+    const location = useLocation(); // Get the current location
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
 
@@ -71,35 +72,37 @@ const Home: React.FC = () => {
                     <nav className='dashboard-main-nav relative h-full'>
                         <img src={Logo} className='w-10 mb-5 mx-auto' />
                         <ul className='space-y-3'>
-                            <a
-                                href="#"
-                                className='block py-2 px-3 bg-black rounded text-white'
+                            <NavLink
+                                to="/provider-dashboard"
+                                className={({ isActive }) =>
+                                    `block py-2 px-3 rounded ${isActive && location.pathname === '/provider-dashboard' ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
-                                <li className='flex items-center'><i className="ri-dashboard-line mr-2 text-lg"></i>Dashboard</li>
-                            </a>
-                            <a
-                                href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                                <li className='flex items-center font-medium'><i className="ri-dashboard-line mr-2 text-lg"></i>Dashboard</li>
+                            </NavLink>
+                            <NavLink
+                                to="/provider-dashboard/history"
+                                className={({ isActive }) =>
+                                    `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
-                                <li className='flex items-center'><i className="ri-history-line mr-2 text-lg"></i>History</li>
-                            </a>
+                                <li className='flex items-center font-medium'><i className="ri-history-line mr-2 text-lg"></i>History</li>
+                            </NavLink>
                             <a
                                 href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                                className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
                                 <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
                             </a>
                             <a
                                 href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                                className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
-                                <li className='flex items-center'><i className="ri-message-2-line mr-2 text-lg"></i>Message</li>
+                                <li className='flex items-center font-medium'><i className="ri-message-2-line mr-2 text-lg"></i>Message</li>
                             </a>
                             <a
                                 href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded text-black'
+                                className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
-                                <li className='flex items-center'><i className="ri-sparkling-2-line mr-2 text-lg"></i>Reviews</li>
+                                <li className='flex items-center font-medium'><i className="ri-sparkling-2-line mr-2 text-lg"></i>Reviews</li>
                             </a>
                         </ul>
 
@@ -110,7 +113,7 @@ const Home: React.FC = () => {
                                     className='w-10 h-10 rounded-full border mr-1'
                                 />
                                 <div>
-                                    <h1 className='text-base '>{userData?.user?.name}</h1>
+                                    <h1 className='text-base font-medium'>{userData?.user?.name}</h1>
                                     <p className='text-sm text-slate-500'>{userData?.user?.email}</p>
                                 </div>
                             </div>
@@ -118,17 +121,25 @@ const Home: React.FC = () => {
                                 onClick={providerLogout}
                                 className='py-2 px-3 hover:bg-gray-200 rounded text-black cursor-pointer'
                             >
-                                <li className='flex items-center'><i className="ri-logout-box-r-line mr-2 text-lg"></i>Logout</li>
+                                <li className='flex items-center font-medium'><i className="ri-logout-box-r-line mr-2 text-lg"></i>Logout</li>
                             </div>
                         </ul>
                     </nav>
                 </div>
-                <div className='w-[calc(100%-200px)] py-4 px-3'>
-                    hello
+                {/* Main Content */}
+                <div className="w-[calc(100%-200px)] py-4 px-3">
+                    {location.pathname === '/provider-dashboard' && (
+                        <div>
+                            <h1 className="text-2xl font-bold">Dashboard Home</h1>
+                        </div>
+                    )}
+
+                    {/* Nested Routes */}
+                    <Outlet />
                 </div>
             </section>
         </>
     )
 }
 
-export default Home
+export default LandingPage
