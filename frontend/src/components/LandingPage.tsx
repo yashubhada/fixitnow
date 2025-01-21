@@ -286,7 +286,7 @@ const LandingPage: React.FC = () => {
                                         {/* user address list */}
                                         {
                                             filteredUserAddress.length > 0 &&
-                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
                                                 {filteredUserAddress.length > 0 ? (
                                                     filteredUserAddress.map((ary, index) => (
                                                         <li
@@ -327,7 +327,7 @@ const LandingPage: React.FC = () => {
                                         {/* serviceCategory list */}
                                         {
                                             filteredServiceCategory.length > 0 &&
-                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[48px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
                                                 {filteredServiceCategory.length > 0 ? (
                                                     filteredServiceCategory.map((service, index) => (
                                                         <li

@@ -209,6 +209,15 @@ export const handleSignIn = async (req, res) => {
     }
 }
 
+export const fetchAllProviders = async (req, res) => {
+    try {
+        const providers = await Provider.find();
+        res.status(201).json({ success: true, providers });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
 export const handleGetLoggedInUser = (req, res) => {
     try {
         const token = req.cookies.accessToken;

@@ -137,7 +137,7 @@ const LoginForm: React.FC = () => {
                                         onChange={handleSignInChange}
                                         value={userData.password}
                                         ref={passwordInputRef}
-                                        autoComplete='off'
+                                        autoComplete='current-password'
                                         required
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                     />

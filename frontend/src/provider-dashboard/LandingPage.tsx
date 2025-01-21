@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../images/fixitnow-logo-black.png';
+import Home from './Home';
 
 const LandingPage: React.FC = () => {
 
@@ -129,9 +130,7 @@ const LandingPage: React.FC = () => {
                 {/* Main Content */}
                 <div className="w-[calc(100%-250px)] py-4 px-3">
                     {location.pathname === '/provider-dashboard' && (
-                        <div>
-                            <h1 className="text-2xl font-bold">Dashboard Home</h1>
-                        </div>
+                        <Home />
                     )}
 
                     {/* Nested Routes */}

@@ -1,4 +1,11 @@
-import { handleGetLoggedInUser, handleLogout, handleSignIn, handleUserSignUp, handleProviderSignUp } from "../controllers/user.controller.js";
+import {
+    handleGetLoggedInUser,
+    handleLogout,
+    handleSignIn,
+    handleUserSignUp,
+    handleProviderSignUp,
+    fetchAllProviders
+} from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
 import multer from 'multer';
@@ -17,6 +24,7 @@ const userRouter = new Router();
 userRouter.post('/userSignup', upload.single('avatar'), handleUserSignUp);
 userRouter.post('/providerSignup', uploadAvatarIdentity, handleProviderSignUp);
 userRouter.post('/signin', handleSignIn);
+userRouter.get('/fetchAllProviders', fetchAllProviders);
 userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
 
