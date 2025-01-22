@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
+import { io } from 'socket.io-client';
+
+// Initialize Socket.IO connection
+const socket = io("http://localhost:9797");
 
 interface ServiceInformation {
     serviceAddress: string | undefined;
@@ -27,7 +31,18 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     useEffect(() => {
         getLoggedInUserData();
+        socket.emit('register', 'user T');
     }, []);
+
+    const sendRequest = () => {
+        if (userData) {
+            socket.emit('serviceRequest', {
+                fromUserId: 'user T', // Replace with actual user ID
+                toUserId: 'provider',
+                requestData: userData,
+            });
+        }
+    };
 
     if (!userData) {
         closeClick();
@@ -145,52 +160,52 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                         </>
                                         :
                                         filteredProviders.length !== 0
-                                        ?
-                                        filteredProviders.map((provider, idx) =>
-                                            <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
-                                                <img
-                                                    src={provider.avatar}
-                                                    className='w-28'
-                                                />
-                                                <div>
-                                                    <div className="flex items-center gap-x-1 mb-1">
-                                                        <h1 className="text-base md:text-xl font-medium text-black">{provider.name}</h1>
-                                                        <i className="ri-verified-badge-line text-lg mr-2"></i>
-                                                    </div>
+                                            ?
+                                            filteredProviders.map((provider, idx) =>
+                                                <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
+                                                    <img
+                                                        src={provider.avatar}
+                                                        className='w-28'
+                                                    />
+                                                    <div>
+                                                        <div className="flex items-center gap-x-1 mb-1">
+                                                            <h1 className="text-base md:text-xl font-medium text-black">{provider.name}</h1>
+                                                            <i className="ri-verified-badge-line text-lg mr-2"></i>
+                                                        </div>
 
-                                                    <div className="flex items-center mb-1">
-                                                        <p>₹{provider.price}.00 / h</p>
-                                                    </div>
+                                                        <div className="flex items-center mb-1">
+                                                            <p>₹{provider.price}.00 / h</p>
+                                                        </div>
 
-                                                    <div className="flex items-center gap-1">
-                                                        {Array.from({ length: 5 }, (_, index) => (
-                                                            <svg
-                                                                key={index}
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                aria-label="Rating"
-                                                                className="focus:outline-none w-[13px] md:w-[15px]"
-                                                            >
-                                                                <path
-                                                                    d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z"
-                                                                    fill={index < 4 ? "rgba(234,113,46,1)" : "#555"}
-                                                                />
-                                                            </svg>
-                                                        ))}
-                                                        <div className="text-gray-500 text-sm md:text-base">(4.5)</div>
-                                                    </div>
+                                                        <div className="flex items-center gap-1">
+                                                            {Array.from({ length: 5 }, (_, index) => (
+                                                                <svg
+                                                                    key={index}
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    aria-label="Rating"
+                                                                    className="focus:outline-none w-[13px] md:w-[15px]"
+                                                                >
+                                                                    <path
+                                                                        d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z"
+                                                                        fill={index < 4 ? "rgba(234,113,46,1)" : "#555"}
+                                                                    />
+                                                                </svg>
+                                                            ))}
+                                                            <div className="text-gray-500 text-sm md:text-base">(4.5)</div>
+                                                        </div>
 
-                                                    <button
-                                                        onClick={openServiceModal}
-                                                        className="bg-black hover:bg-[#333] text-white rounded px-2 py-1 text-sm mt-1"
-                                                    >
-                                                        Send Request
-                                                    </button>
+                                                        <button
+                                                            onClick={sendRequest}
+                                                            className="bg-black hover:bg-[#333] text-white rounded px-2 py-1 text-sm mt-1"
+                                                        >
+                                                            Send Request
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )
-                                        :
-                                        <div className='text-red-600 text-center'>No <span className='font-bold'>{serviceType}</span> was found in <span className='font-bold'>{serviceAddress}</span></div>
+                                            )
+                                            :
+                                            <div className='text-red-600 text-center'>No <span className='font-bold'>{serviceType}</span> was found in <span className='font-bold'>{serviceAddress}</span></div>
                                 }
                             </div>
                         </div>

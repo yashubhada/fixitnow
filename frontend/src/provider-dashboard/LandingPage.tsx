@@ -3,6 +3,11 @@ import { UserContext } from '../context/UserContext';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../images/fixitnow-logo-black.png';
 import Home from './Home';
+import { io } from 'socket.io-client';
+import RequestModal from './RequestModal';
+
+// Initialize Socket.IO connection
+const socket = io("http://localhost:9797");
 
 const LandingPage: React.FC = () => {
 
@@ -25,7 +30,19 @@ const LandingPage: React.FC = () => {
         };
 
         fetchUserData();
+        socket.emit('register', 'provider');
     }, []);
+
+    const [requestData, setRequestData] = useState<any>(null);
+    useEffect(() => {
+        socket.on('receiveRequest', (data) => {
+            setRequestData(data.requestData.user);
+        });
+        return () => {
+            // Disconnect from the server when the component unmounts
+            socket.disconnect();
+        };
+    },[]);
 
     useEffect(() => {
         if (!isPageLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
@@ -137,6 +154,10 @@ const LandingPage: React.FC = () => {
                     <Outlet />
                 </div>
             </section>
+
+            {
+                requestData && <RequestModal data={requestData} />
+            }
         </>
     )
 }
