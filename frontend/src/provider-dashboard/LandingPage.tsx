@@ -16,7 +16,6 @@ const LandingPage: React.FC = () => {
     const location = useLocation(); // Get the current location
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
-    const [isShowRequestModal, setIsShowRequestModal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -45,7 +44,6 @@ const LandingPage: React.FC = () => {
     });
     useEffect(() => {
         socket.on('serviceRequest', (data) => {
-            setIsShowRequestModal(true);
             setRequestData(data.requestData.user);
             localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
         });

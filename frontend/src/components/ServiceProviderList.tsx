@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import ServiceRequestLoading from './ServiceRequestLoading';
 
 // Initialize Socket.IO connection
 const socket = io("http://localhost:9797");
@@ -52,9 +53,11 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
     }, [userData]);
 
     const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
+    const [providerName, setProviderName] = useState<string>('')
 
-    const sendRequest = (toUserId: string) => {
+    const sendRequest = (toUserId: string, name: string) => {
         if (userData) {
+            setProviderName(name);
             socket.emit('serviceRequest', {
                 fromUserId: userData.user.id,
                 toUserId,
@@ -238,31 +241,10 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                         </div>
 
                                                         <button
-                                                            onClick={() => sendRequest(provider._id)}
-                                                            disabled={isRequestLoading}
-                                                            className="bg-black hover:bg-[#333] text-white rounded w-[120px] py-2 flex justify-center text-sm mt-1 disabled:bg-[#333] disabled:cursor-not-allowed"
+                                                            onClick={() => sendRequest(provider._id, provider.name)}
+                                                            className="bg-black hover:bg-[#333] text-white rounded w-[120px] px-3 py-2 text-sm mt-1"
                                                         >
-                                                            {
-                                                                isRequestLoading
-                                                                    ?
-                                                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                                        <circle
-                                                                            className="opacity-25"
-                                                                            cx="12"
-                                                                            cy="12"
-                                                                            r="10"
-                                                                            stroke="currentColor"
-                                                                            strokeWidth="4"
-                                                                        ></circle>
-                                                                        <path
-                                                                            className="opacity-75"
-                                                                            fill="currentColor"
-                                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                                                        ></path>
-                                                                    </svg>
-                                                                    :
-                                                                    'Send Request'
-                                                            }
+                                                                    Send Request
                                                         </button>
                                                     </div>
                                                 </div>
@@ -292,6 +274,10 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                     </div>
                 </div>
             </div>
+
+            {
+                isRequestLoading && <ServiceRequestLoading providerName={providerName} />
+            }
         </>
     )
 }
