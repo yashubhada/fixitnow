@@ -9,11 +9,10 @@ const socket = io("http://localhost:9797");
 interface ServiceInformation {
     serviceAddress: string | undefined;
     serviceType: string | undefined;
-    openServiceModal: () => void;
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, openServiceModal, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, closeClick }) => {
 
     const { baseUrl, getLoggedInUserData, userData, showToast } = useContext(UserContext);
 
@@ -29,27 +28,65 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     }, []);
 
+    const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+
     useEffect(() => {
-        getLoggedInUserData();
-        socket.emit('register', 'user T');
+        const fetchUserData = async () => {
+            try {
+                setIsPageLoading(true);
+                await getLoggedInUserData();
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            } finally {
+                setIsPageLoading(false);
+            }
+        };
+
+        fetchUserData();
     }, []);
 
-    const sendRequest = () => {
+    useEffect(() => {
+        if (userData) {
+            socket.emit('register', userData?.user?.id);
+        }
+    }, [userData]);
+
+    const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
+
+    const sendRequest = (toUserId: string) => {
         if (userData) {
             socket.emit('serviceRequest', {
-                fromUserId: 'user T', // Replace with actual user ID
-                toUserId: 'provider',
+                fromUserId: userData.user.id,
+                toUserId,
                 requestData: userData,
             });
+            setIsRequestLoading(true);
         }
     };
 
-    if (!userData) {
-        closeClick();
-        showToast("Please log in first to book your service", "error");
-    }
+    useEffect(() => {
+        socket.on('serviceRequestResponse', (data) => {
+            console.log("Response data received: ", data);
+            if (data.status === 'declined') {
+                showToast("Sorry, your request has been declined. Please try again later", "error");
+            }
+            if (data.status === 'accepted') {
+                showToast("Your request has been successfully accepted", "success");
+            }
+            setIsRequestLoading(false);
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!userData || userData.user.role !== "serviceTaker") {
+            closeClick();
+            showToast("Login first to book your service", "error");
+        }
+    }, [userData, closeClick]);
+
 
     interface Provider {
+        _id: string;
         name: string;
         email: string;
         service: string;
@@ -85,12 +122,17 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
     useEffect(() => {
         if (loading === false && providers) {
             const filtered = providers.filter(
-                (provider) => provider.service === serviceType && provider.address === serviceAddress
+                (provider) => provider.service === serviceType
+                    && provider.address === serviceAddress
+                    && provider.isAvailable === true
             );
             setFilteredProviders(filtered);
         }
     }, [providers, loading]);
 
+    if (isPageLoading || !userData?.user || userData?.user?.role !== "serviceTaker") {
+        return null;
+    }
 
     return (
         <>
@@ -196,10 +238,31 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                         </div>
 
                                                         <button
-                                                            onClick={sendRequest}
-                                                            className="bg-black hover:bg-[#333] text-white rounded px-2 py-1 text-sm mt-1"
+                                                            onClick={() => sendRequest(provider._id)}
+                                                            disabled={isRequestLoading}
+                                                            className="bg-black hover:bg-[#333] text-white rounded w-[120px] py-2 flex justify-center text-sm mt-1 disabled:bg-[#333] disabled:cursor-not-allowed"
                                                         >
-                                                            Send Request
+                                                            {
+                                                                isRequestLoading
+                                                                    ?
+                                                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                        <circle
+                                                                            className="opacity-25"
+                                                                            cx="12"
+                                                                            cy="12"
+                                                                            r="10"
+                                                                            stroke="currentColor"
+                                                                            strokeWidth="4"
+                                                                        ></circle>
+                                                                        <path
+                                                                            className="opacity-75"
+                                                                            fill="currentColor"
+                                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                                        ></path>
+                                                                    </svg>
+                                                                    :
+                                                                    'Send Request'
+                                                            }
                                                         </button>
                                                     </div>
                                                 </div>

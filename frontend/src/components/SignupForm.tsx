@@ -470,11 +470,11 @@ const SignupForm: React.FC = () => {
                                             </div>
                                         </div>
                                         <div
-                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
                                         >
                                             <i className="ri-image-line text-xl mr-3"></i>
                                             <label htmlFor="fileUpload" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
-                                                {userAvatarImg ? userAvatarImg.name : "Choose a file"}
+                                                {userAvatarImg ? userAvatarImg.name : "Choose your avatar image"}
                                             </label>
                                             <input
                                                 id="fileUpload"
@@ -654,7 +654,7 @@ const SignupForm: React.FC = () => {
                                                 onChange={handleProviderSignUpChange}
                                                 name='price'
                                                 value={providerData.price?.toString()}
-                                                placeholder='Enter your hourly price (e.g., 500)'
+                                                placeholder='Per-minute price (e.g., ₹10)'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />
@@ -689,11 +689,11 @@ const SignupForm: React.FC = () => {
                                             </div>
                                         </div>
                                         <div
-                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
                                         >
                                             <i className="ri-image-line text-xl mr-3"></i>
                                             <label htmlFor="providerAvatar" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">
-                                                {providerAvatarImg ? providerAvatarImg.name : "Choose your avtar"}
+                                                {providerAvatarImg ? providerAvatarImg.name : "Choose your avatar image"}
                                             </label>
                                             <input
                                                 id="providerAvatar"
@@ -704,7 +704,7 @@ const SignupForm: React.FC = () => {
 
                                         </div>
                                         <div
-                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-pointer w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
                                         >
                                             <i className="ri-id-card-line text-xl mr-3"></i>
                                             <label htmlFor="providerIdentityProof" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent outline-none focus:text-black truncate">

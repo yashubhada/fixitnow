@@ -20,7 +20,6 @@ import SignupForm from './SignupForm'
 import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext'
 import ServiceModal from './ServiceModal'
-import RequestLoading from './RequestLoading'
 import Address from './address.json'
 
 const LandingPage: React.FC = () => {
@@ -167,16 +166,6 @@ const LandingPage: React.FC = () => {
 
     // service modal and requset loading
     const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
-    const [isOpenLoading, setIsOpenLoading] = useState<boolean>(false);
-
-    const handleServiceModal = (): void => {
-        setIsOpenLoading(true);
-        setIsOpenServiceProviderListModal(false);
-        setTimeout(() => {
-            setIsOpenServiceModal(true);
-            setIsOpenLoading(false);
-        }, 5000);
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -215,7 +204,7 @@ const LandingPage: React.FC = () => {
                 <section className='fixed top-3 right-3 w-[130px] z-10'>
                     <div className='relative group w-full flex justify-end'>
                         {
-                            userData
+                            userData?.user?.role === "serviceTaker"
                                 ?
                                 <>
                                     <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
@@ -492,7 +481,6 @@ const LandingPage: React.FC = () => {
                     <ServiceProviderList
                         serviceAddress={userAddress}
                         serviceType={serviceProviderValue}
-                        openServiceModal={handleServiceModal}
                         closeClick={closeServiceProviderListModal}
                     />
                 }
@@ -500,11 +488,6 @@ const LandingPage: React.FC = () => {
                 {
                     isOpenServiceModal &&
                     <ServiceModal />
-                }
-
-                {
-                    isOpenLoading &&
-                    <RequestLoading />
                 }
             </>
         )

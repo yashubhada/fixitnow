@@ -202,7 +202,7 @@ export const handleSignIn = async (req, res) => {
                 secure: true,
                 maxAge: 3600000
             })
-            .json({ success: true, role: tokenData.role, message: "Sign in successfull!" });
+            .json({ success: true, role: tokenData.role, message: "Sign in successfull! 😊" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
@@ -252,7 +252,7 @@ export const handleLogout = async (req, res) => {
             httpOnly: true,
             secure: true,
         });
-        res.status(201).json({ success: true, message: "Logout successfull!" });
+        res.status(201).json({ success: true, message: "Logout successfull! 👋" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });

@@ -47,13 +47,29 @@ io.on('connection', (socket) => {
 
     if (targetSocketId) {
       // Send request data to the specific user
-      io.to(targetSocketId).emit('receiveRequest', {
+      io.to(targetSocketId).emit('serviceRequest', {
         fromUserId,
         requestData,
       });
       console.log(`Service request sent from ${fromUserId} to ${toUserId}`);
     } else {
       console.log(`User ${toUserId} is not connected`);
+    }
+  });
+
+  // Handle request response (accept/decline)
+  socket.on('serviceRequestResponse', ({ toUserId, fromUserId, status }) => {
+    const requesterSocketId = userSockets.get(fromUserId);
+
+    if (requesterSocketId) {
+      // Notify the requester about the response
+      io.to(requesterSocketId).emit('serviceRequestResponse', {
+        toUserId,
+        status, // "accepted" or "declined"
+      });
+      console.log(`Request ${status} by ${toUserId} for ${fromUserId}`);
+    } else {
+      console.log(`Requester ${fromUserId} is not connected`);
     }
   });
 

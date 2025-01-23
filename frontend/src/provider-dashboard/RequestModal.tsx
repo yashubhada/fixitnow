@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 interface propsData {
-    data: any | {};
+    data: any;
+    handleServiceResponse: (status: 'accepted' | 'declined') => void;
 }
 
-const RequestModal: React.FC<propsData> = ({ data }) => {
+const RequestModal: React.FC<propsData> = ({ data, handleServiceResponse }) => {
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             {/* Background Overlay */}
@@ -23,10 +24,16 @@ const RequestModal: React.FC<propsData> = ({ data }) => {
                         <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.email}</p>
                     </div>
                     <div className='grid grid-cols-2 gap-5 mt-5'>
-                        <button className='w-full bg-black hover:bg-[#333] text-white py-2 rounded'>
+                        <button
+                            onClick={() => handleServiceResponse("accepted")}
+                            className='w-full bg-black hover:bg-[#333] text-white py-2 rounded'
+                        >
                             Accept
                         </button>
-                        <button className='w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded'>
+                        <button
+                            onClick={() => handleServiceResponse("declined")}
+                            className='w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded'
+                        >
                             Decline
                         </button>
                     </div>

@@ -1,6 +1,10 @@
 import axios from "axios";
 import React, { createContext, ReactNode, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { io } from 'socket.io-client';
+
+// Initialize Socket.IO connection
+const socket = io("http://localhost:9797");
 
 // Define the context type
 interface UserContextType {
@@ -53,9 +57,19 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     // Toast function
     const showToast = (message: string, type: "success" | "error") => {
         if (type === "success") {
-            toast.success(message);
+            toast.success(message, {
+                style: {
+                    fontFamily: 'Poppins, sans-serif',
+                },
+                duration: 5000,
+            });
         } else if (type === "error") {
-            toast.error(message);
+            toast.error(message, {
+                style: {
+                    fontFamily: 'Poppins, sans-serif',
+                },
+                duration: 5000,
+            });
         }
     };
 
@@ -113,7 +127,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 { withCredentials: true }
             );
             if (response.data.success) {
-                showToast("Logout successfully!", "success");
+                socket.disconnect();
+                showToast(response.data.message, "success");
                 setUserData(null);
             }
         } catch (err) {

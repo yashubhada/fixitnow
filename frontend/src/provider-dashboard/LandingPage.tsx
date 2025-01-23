@@ -16,6 +16,7 @@ const LandingPage: React.FC = () => {
     const location = useLocation(); // Get the current location
 
     const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+    const [isShowRequestModal, setIsShowRequestModal] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -30,32 +31,49 @@ const LandingPage: React.FC = () => {
         };
 
         fetchUserData();
-        socket.emit('register', 'provider');
     }, []);
 
-    const [requestData, setRequestData] = useState<any>(null);
     useEffect(() => {
-        socket.on('receiveRequest', (data) => {
-            setRequestData(data.requestData.user);
-        });
-        return () => {
-            // Disconnect from the server when the component unmounts
-            socket.disconnect();
-        };
-    },[]);
-
-    useEffect(() => {
-        if (!isPageLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
-            showToast("Log in to access your dashboard", "error");
-            navigate('/');
+        if (userData) {
+            socket.emit('register', userData?.user?.id);
         }
-    }, [userData, isPageLoading, navigate, showToast]);
+    }, [userData]);
+
+    const [requestData, setRequestData] = useState<any>(() => {
+        const storedData = localStorage.getItem("requestData");
+        return storedData ? JSON.parse(storedData) : null;
+    });
+    useEffect(() => {
+        socket.on('serviceRequest', (data) => {
+            setIsShowRequestModal(true);
+            setRequestData(data.requestData.user);
+            localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
+        });
+    }, [socket]);
+
+    // handle service response
+    const handleServiceResponse = (status: 'accepted' | 'declined'): void => {
+        socket.emit('serviceRequestResponse', ({
+            toUserId: userData.user.id,
+            fromUserId: requestData.id,
+            status
+        }));
+        localStorage.removeItem('requestData');
+        setRequestData(null);
+    }
 
     // Logout function
     const providerLogout = (): void => {
         handleLogout();
         navigate('/');
     };
+
+    useEffect(() => {
+        if (!isPageLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
+            showToast("Login first to access your dashboard", "error");
+            navigate('/');
+        }
+    }, [userData, isPageLoading, navigate, showToast]);
 
     if (isPageLoading) {
         return (
@@ -156,7 +174,11 @@ const LandingPage: React.FC = () => {
             </section>
 
             {
-                requestData && <RequestModal data={requestData} />
+                requestData &&
+                <RequestModal
+                    data={requestData}
+                    handleServiceResponse={handleServiceResponse}
+                />
             }
         </>
     )
