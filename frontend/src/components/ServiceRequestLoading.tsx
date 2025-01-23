@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
-import Loading from '../images/loading-animation.svg';
 
-const ServiceRequestLoading: React.FC<{ providerName: string; }> = ({ providerName }) => {
+const ServiceRequestLoading: React.FC<{ providerName: string | undefined; }> = ({ providerName }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -23,8 +22,22 @@ const ServiceRequestLoading: React.FC<{ providerName: string; }> = ({ providerNa
             {/* Modal Content */}
             <div className="h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className='bg-white p-5 rounded-md z-10 w-full md:w-[520px] animate-fade-in'>
-                    <img src={Loading} />
-                    <p className='mt-5 text-center text-black text-lg'>Please wait until your request is accepted by {providerName}</p>
+                    <svg className="animate-spin h-20 w-20 text-black mx-auto my-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                        ></circle>
+                        <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        ></path>
+                    </svg>
+                    <p className='mt-5 text-center text-black text-lg'>Please wait until your request is accepted by <span className='font-bold'>{providerName}</span></p>
                 </div>
             </div>
         </div>

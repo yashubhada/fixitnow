@@ -10,10 +10,11 @@ const socket = io("http://localhost:9797");
 interface ServiceInformation {
     serviceAddress: string | undefined;
     serviceType: string | undefined;
+    handleAcceptedService: (providerData: any) => void;
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType,handleAcceptedService, closeClick }) => {
 
     const { baseUrl, getLoggedInUserData, userData, showToast } = useContext(UserContext);
 
@@ -51,34 +52,6 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
             socket.emit('register', userData?.user?.id);
         }
     }, [userData]);
-
-    const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
-    const [providerName, setProviderName] = useState<string>('')
-
-    const sendRequest = (toUserId: string, name: string) => {
-        if (userData) {
-            setProviderName(name);
-            socket.emit('serviceRequest', {
-                fromUserId: userData.user.id,
-                toUserId,
-                requestData: userData,
-            });
-            setIsRequestLoading(true);
-        }
-    };
-
-    useEffect(() => {
-        socket.on('serviceRequestResponse', (data) => {
-            console.log("Response data received: ", data);
-            if (data.status === 'declined') {
-                showToast("Sorry, your request has been declined. Please try again later", "error");
-            }
-            if (data.status === 'accepted') {
-                showToast("Your request has been successfully accepted", "success");
-            }
-            setIsRequestLoading(false);
-        });
-    }, []);
 
     useEffect(() => {
         if (!userData || userData.user.role !== "serviceTaker") {
@@ -121,6 +94,35 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         };
         fetchProviders();
     }, []);
+
+    const [isRequestLoading, setIsRequestLoading] = useState<boolean>(false);
+    const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+
+    const sendRequest = (provider: Provider) => {
+        if (userData) {
+            setSelectedProvider(provider);
+            socket.emit('serviceRequest', {
+                fromUserId: userData.user.id,
+                toUserId: provider._id,
+                requestData: userData,
+            });
+            setIsRequestLoading(true);
+        }
+    };
+
+
+    useEffect(() => {
+        socket.on('serviceRequestResponse', (data) => {
+            setIsRequestLoading(false);
+            if (data.status === 'declined') {
+                showToast("Sorry, your request has been declined. Please try again later", "error");
+            }
+            if (data.status === 'accepted') {
+                showToast("Your request has been successfully accepted", "success");
+                handleAcceptedService(selectedProvider);
+            }
+        });
+    }, [selectedProvider]);
 
     useEffect(() => {
         if (loading === false && providers) {
@@ -241,10 +243,10 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                         </div>
 
                                                         <button
-                                                            onClick={() => sendRequest(provider._id, provider.name)}
+                                                            onClick={() => sendRequest(provider)}
                                                             className="bg-black hover:bg-[#333] text-white rounded w-[120px] px-3 py-2 text-sm mt-1"
                                                         >
-                                                                    Send Request
+                                                            Send Request
                                                         </button>
                                                     </div>
                                                 </div>
@@ -276,7 +278,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
             </div>
 
             {
-                isRequestLoading && <ServiceRequestLoading providerName={providerName} />
+                isRequestLoading && <ServiceRequestLoading providerName={selectedProvider?.name} />
             }
         </>
     )

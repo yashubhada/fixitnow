@@ -165,7 +165,18 @@ const LandingPage: React.FC = () => {
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
 
     // service modal and requset loading
-    const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
+    const [selectedProvider, setSelectedProvider] = useState<any | null>(null);
+
+    const [requestedProvider, setRequestedProvider] = useState<any | null>(() => {
+        const storedProvider = localStorage.getItem("requestedProvider");
+        return storedProvider ? JSON.parse(storedProvider) : null;
+    });
+
+    const handleAcceptedService = (providerData: any): void => {
+        setIsOpenServiceProviderListModal(false);
+        setRequestedProvider(providerData); // Update requestedProvider state
+        localStorage.setItem("requestedProvider", JSON.stringify(providerData)); // Store in local storage
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -481,14 +492,14 @@ const LandingPage: React.FC = () => {
                     <ServiceProviderList
                         serviceAddress={userAddress}
                         serviceType={serviceProviderValue}
+                        handleAcceptedService={handleAcceptedService}
                         closeClick={closeServiceProviderListModal}
                     />
                 }
 
-                {
-                    isOpenServiceModal &&
-                    <ServiceModal />
-                }
+                {requestedProvider && (
+                    <ServiceModal providerData={requestedProvider} />
+                )}
             </>
         )
     }

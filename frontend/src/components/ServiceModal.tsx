@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import UserImage from '../images/user-image.jpg'
 
-const ServiceModal: React.FC = () => {
+const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -39,25 +39,25 @@ const ServiceModal: React.FC = () => {
                                 referrerPolicy="no-referrer-when-downgrade"
                             ></iframe>
                         </div>
-                        <div className={`absolute left-0 ${serviceInfo ? 'bottom-0' : '-bottom-[70%]'} md:static w-full md:w-auto p-3 md:p-0 bg-white transition-all duration-500 ease-in-out`}>
+                        <div className={`absolute left-0 ${serviceInfo ? 'bottom-0' : '-bottom-[70%]'} md:static w-full md:w-auto p-3 md:pr-5 bg-white transition-all duration-500 ease-in-out`}>
                             <div className='relative flex items-center justify-center'>
                                 <div>
                                     <div className='flex items-center gap-x-3 rounded'>
                                         <div className='w-28 h-24 md:w-32 md:h-32 rounded md:rounded-full overflow-hidden'>
                                             <img
-                                                src={UserImage}
+                                                src={providerData.avatar}
                                                 className='w-full h-full object-cover'
                                             />
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-x-1 mb-2">
-                                                <h1 className="text-base md:text-3xl font-medium text-black">Mike's Plumbing</h1>
+                                                <h1 className="text-base md:text-3xl font-medium text-black">{providerData.name}</h1>
                                                 <i className="ri-verified-badge-fill text-lg mr-2"></i>
                                             </div>
 
-                                            <div className="flex items-center text-gray-500 mb-2">
+                                            <div className="flex items-start text-gray-500 mb-2">
                                                 <i className="ri-map-pin-line text-lg mr-2"></i>
-                                                <p className='text-sm md:text-xl'>Amreli</p>
+                                                <p className='text-sm md:text-xl'>{providerData.address}</p>
                                             </div>
 
                                             <div className="flex items-center gap-1">
@@ -95,7 +95,7 @@ const ServiceModal: React.FC = () => {
                                         </div>
                                         <div className='flex items-center mt-2'>
                                             <i className="ri-money-rupee-circle-line text-lg mr-2"></i>
-                                            <p className='text-base'>Cash payment : ₹390.00/-</p>
+                                            <p className='text-base'>Cash payment : ₹{providerData.price}.00/-</p>
                                         </div>
                                         <div className='flex items-center mt-2'>
                                             <i className="ri-pin-distance-line text-lg mr-2"></i>
