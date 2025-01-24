@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import { io } from 'socket.io-client';
@@ -14,7 +14,7 @@ interface ServiceInformation {
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType,handleAcceptedService, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
 
     const { baseUrl, getLoggedInUserData, userData, showToast } = useContext(UserContext);
 
@@ -110,19 +110,32 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     };
 
+    const selectedProviderRef = useRef(selectedProvider);
+    useEffect(() => {
+        selectedProviderRef.current = selectedProvider;
+    }, [selectedProvider]);
 
     useEffect(() => {
-        socket.on('serviceRequestResponse', (data) => {
+        const handleServiceRequestResponse = (data: any) => {
             setIsRequestLoading(false);
-            if (data.status === 'declined') {
+
+            if (data.status === "declined") {
                 showToast("Sorry, your request has been declined. Please try again later", "error");
             }
-            if (data.status === 'accepted') {
+
+            if (data.status === "accepted") {
                 showToast("Your request has been successfully accepted", "success");
-                handleAcceptedService(selectedProvider);
+
+                // Use the ref to access the latest selectedProvider
+                handleAcceptedService(selectedProviderRef.current);
             }
-        });
-    }, [selectedProvider]);
+        };
+
+        socket.on("serviceRequestResponse", handleServiceRequestResponse);
+        return () => {
+            socket.off("serviceRequestResponse", handleServiceRequestResponse);
+        };
+    }, []);
 
     useEffect(() => {
         if (loading === false && providers) {
@@ -179,7 +192,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                         ?
                                         <>
                                             <div className="flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded animate-pulse">
-                                                <div className="bg-gray-300 w-28 h-28 rounded"></div>
+                                                <div className="bg-gray-300 w-36 h-36 rounded"></div>
                                                 <div className="flex-1 space-y-2">
                                                     <div className="bg-gray-300 h-5 w-2/3 rounded"></div>
                                                     <div className="bg-gray-300 h-4 w-1/4 rounded"></div>
@@ -192,7 +205,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded animate-pulse">
-                                                <div className="bg-gray-300 w-28 h-28 rounded"></div>
+                                                <div className="bg-gray-300 w-36 h-36 rounded"></div>
                                                 <div className="flex-1 space-y-2">
                                                     <div className="bg-gray-300 h-5 w-2/3 rounded"></div>
                                                     <div className="bg-gray-300 h-4 w-1/4 rounded"></div>
@@ -212,7 +225,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                 <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
                                                     <img
                                                         src={provider.avatar}
-                                                        className='w-28'
+                                                        className='w-36 rounded'
                                                     />
                                                     <div>
                                                         <div className="flex items-center gap-x-1 mb-1">

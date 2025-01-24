@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Provider from "../models/provider.modal.js";
+import Request from "../models/request,.modal.js";
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
@@ -58,7 +59,7 @@ export const handleUserSignUp = async (req, res) => {
             avatar: avatarUpload.secure_url,
         });
 
-        res.status(201).json({ success: true, message: "Signup successfull!" });
+        res.status(201).json({ success: true, message: "Signup successfull! 😊" });
 
     } catch (err) {
         console.error(err);
@@ -253,6 +254,25 @@ export const handleLogout = async (req, res) => {
             secure: true,
         });
         res.status(201).json({ success: true, message: "Logout successfull! 👋" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+export const createNewRequest = async (req, res) => {
+    try {
+        const { userId, providerId, location, serviceType, price, status, verificationCode } = req.body;
+        await Request.create({
+            userId,
+            providerId,
+            location,
+            serviceType,
+            price,
+            status,
+            verificationCode,
+        });
+        res.status(201).json({ success: true, message: "New Request Generated! 🎉🚀" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });

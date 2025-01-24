@@ -60,6 +60,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             toast.success(message, {
                 style: {
                     fontFamily: 'Poppins, sans-serif',
+                    maxWidth: '900px'
                 },
                 duration: 5000,
             });
@@ -67,6 +68,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             toast.error(message, {
                 style: {
                     fontFamily: 'Poppins, sans-serif',
+                    maxWidth: '900px'
                 },
                 duration: 5000,
             });

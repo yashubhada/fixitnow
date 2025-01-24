@@ -491,21 +491,24 @@ const SignupForm: React.FC = () => {
                                             {
                                                 isUserSignUpFormLoading
                                                     ?
-                                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle
-                                                            className="opacity-25"
-                                                            cx="12"
-                                                            cy="12"
-                                                            r="10"
-                                                            stroke="currentColor"
-                                                            strokeWidth="4"
-                                                        ></circle>
-                                                        <path
-                                                            className="opacity-75"
-                                                            fill="currentColor"
-                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                                        ></path>
-                                                    </svg>
+                                                    <>
+                                                        <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle
+                                                                className="opacity-25"
+                                                                cx="12"
+                                                                cy="12"
+                                                                r="10"
+                                                                stroke="currentColor"
+                                                                strokeWidth="4"
+                                                            ></circle>
+                                                            <path
+                                                                className="opacity-75"
+                                                                fill="currentColor"
+                                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                            ></path>
+                                                        </svg>
+                                                        Signing up...
+                                                    </>
                                                     :
                                                     'Sign up'
                                             }
@@ -654,7 +657,7 @@ const SignupForm: React.FC = () => {
                                                 onChange={handleProviderSignUpChange}
                                                 name='price'
                                                 value={providerData.price?.toString()}
-                                                placeholder='Per-minute price (e.g., ₹10)'
+                                                placeholder='Enter service price (e.g., ₹499)'
                                                 required
                                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                             />
@@ -726,21 +729,24 @@ const SignupForm: React.FC = () => {
                                             {
                                                 isProviderSignUpFormLoading
                                                     ?
-                                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle
-                                                            className="opacity-25"
-                                                            cx="12"
-                                                            cy="12"
-                                                            r="10"
-                                                            stroke="currentColor"
-                                                            strokeWidth="4"
-                                                        ></circle>
-                                                        <path
-                                                            className="opacity-75"
-                                                            fill="currentColor"
-                                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                                        ></path>
-                                                    </svg>
+                                                    <>
+                                                        <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle
+                                                                className="opacity-25"
+                                                                cx="12"
+                                                                cy="12"
+                                                                r="10"
+                                                                stroke="currentColor"
+                                                                strokeWidth="4"
+                                                            ></circle>
+                                                            <path
+                                                                className="opacity-75"
+                                                                fill="currentColor"
+                                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                            ></path>
+                                                        </svg>
+                                                        Signing up...
+                                                    </>
                                                     :
                                                     'Sign up'
                                             }

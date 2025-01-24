@@ -4,7 +4,8 @@ import {
     handleSignIn,
     handleUserSignUp,
     handleProviderSignUp,
-    fetchAllProviders
+    fetchAllProviders,
+    createNewRequest
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -27,5 +28,7 @@ userRouter.post('/signin', handleSignIn);
 userRouter.get('/fetchAllProviders', fetchAllProviders);
 userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
+// request
+userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);
 
 export default userRouter;

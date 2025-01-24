@@ -22,21 +22,20 @@ const ServiceRequestLoading: React.FC<{ providerName: string | undefined; }> = (
             {/* Modal Content */}
             <div className="h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className='bg-white p-5 rounded-md z-10 w-full md:w-[520px] animate-fade-in'>
-                    <svg className="animate-spin h-20 w-20 text-black mx-auto my-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                        ></circle>
-                        <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                        ></path>
-                    </svg>
+                    <div className='flex items-center justify-center w-16 h-16 mx-auto my-16'>
+                        <svg
+                            className="animate-spin"
+                            viewBox="25 25 50 50"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <circle
+                                className="fill-none stroke-black stroke-[2] stroke-dasharray-[1_200] stroke-dashoffset-[0] stroke-linecap-round animate-dash"
+                                r="20"
+                                cy="50"
+                                cx="50"
+                            ></circle>
+                        </svg>
+                    </div>
                     <p className='mt-5 text-center text-black text-lg'>Please wait until your request is accepted by <span className='font-bold'>{providerName}</span></p>
                 </div>
             </div>

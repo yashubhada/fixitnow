@@ -14,9 +14,16 @@ export default {
           '0%': { opacity: 0, transform: 'scale(0.95)' },
           '100%': { opacity: 1, transform: 'scale(1)' },
         },
+        dash: {
+          "0%": { "stroke-dasharray": "1, 200", "stroke-dashoffset": "0" },
+          "50%": { "stroke-dasharray": "90, 200", "stroke-dashoffset": "-35px" },
+          "75%": { "stroke-dasharray": "200, 200", "stroke-dashoffset": "-100px" },
+          "100%": { "stroke-dasharray": "200, 200", "stroke-dashoffset": "-200px" },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
+        dash: "dash 3s ease-in-out infinite",
       },
     },
   },
