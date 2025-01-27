@@ -5,13 +5,14 @@ import Logo from '../images/fixitnow-logo-black.png';
 import Home from './Home';
 import { io } from 'socket.io-client';
 import RequestModal from './RequestModal';
+import axios from 'axios';
 
 // Initialize Socket.IO connection
 const socket = io("http://localhost:9797");
 
 const LandingPage: React.FC = () => {
 
-    const { userData, getLoggedInUserData, handleLogout, showToast } = useContext(UserContext);
+    const { baseUrl, userData, getLoggedInUserData, handleLogout, showToast } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
@@ -49,13 +50,53 @@ const LandingPage: React.FC = () => {
         });
     }, [socket]);
 
+    // verification code generate
+    const generateVerificationCode = (): string => {
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let verificationCode = "";
+
+        for (let i = 0; i < 8; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            verificationCode += characters[randomIndex];
+        }
+
+        return verificationCode;
+    };
+
     // handle service response
-    const handleServiceResponse = (status: 'accepted' | 'declined'): void => {
+    const handleServiceResponse = async (status: 'accepted' | 'declined') => {
         socket.emit('serviceRequestResponse', ({
             toUserId: userData.user.id,
             fromUserId: requestData.id,
             status
         }));
+        let newRequestData;
+        if (status === 'accepted') {
+            newRequestData = {
+                userId: requestData.id,
+                providerId: userData.user.id,
+                location: userData.user.address,
+                serviceType: userData.user.service,
+                price: userData.user.price,
+                status: 'Accepted',
+                verificationCode: generateVerificationCode(),
+            }
+        } else if (status === 'declined') {
+            newRequestData = {
+                userId: requestData.id,
+                providerId: userData.user.id,
+                location: userData.user.address,
+                serviceType: userData.user.service,
+                price: userData.user.price,
+                status: 'Canceled',
+                verificationCode: generateVerificationCode(),
+            }
+        }
+        const response = await axios.post(
+            `${baseUrl}api/user/createNewRequest`,
+            requestData,
+        );
+        console.log("New request", response.data);
         localStorage.removeItem('requestData');
         setRequestData(null);
     }

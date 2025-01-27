@@ -83,11 +83,6 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
                                 <p className='text-base'>Distance : 0.2 km</p>
                             </div>
                         </div>
-                        <div className='mt-5 md:mt-10'>
-                            <button className='px-5 py-2 text-white rounded-md bg-black hover:bg-[#333]'>
-                                cancel service
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div >
