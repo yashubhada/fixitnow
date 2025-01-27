@@ -59,47 +59,50 @@ const LandingPage: React.FC = () => {
             const randomIndex = Math.floor(Math.random() * characters.length);
             verificationCode += characters[randomIndex];
         }
-
         return verificationCode;
     };
 
-    // handle service response
-    const handleServiceResponse = async (status: 'accepted' | 'declined') => {
-        socket.emit('serviceRequestResponse', ({
-            toUserId: userData.user.id,
-            fromUserId: requestData.id,
-            status
-        }));
-        let newRequestData;
-        if (status === 'accepted') {
-            newRequestData = {
-                userId: requestData.id,
-                providerId: userData.user.id,
-                location: userData.user.address,
-                serviceType: userData.user.service,
-                price: userData.user.price,
-                status: 'Accepted',
-                verificationCode: generateVerificationCode(),
-            }
-        } else if (status === 'declined') {
-            newRequestData = {
-                userId: requestData.id,
-                providerId: userData.user.id,
-                location: userData.user.address,
-                serviceType: userData.user.service,
-                price: userData.user.price,
-                status: 'Canceled',
-                verificationCode: generateVerificationCode(),
-            }
-        }
-        const response = await axios.post(
-            `${baseUrl}api/user/createNewRequest`,
-            requestData,
-        );
-        console.log("New request", response.data);
-        localStorage.removeItem('requestData');
-        setRequestData(null);
+    interface NewRequestData {
+        userId: string;
+        providerId: string;
+        location: string;
+        serviceType: string;
+        price: number;
+        status: "Accepted" | "Canceled";
+        verificationCode: string | null;
     }
+
+    const handleServiceResponse = async (status: 'accepted' | 'declined') => {
+        const verificationCode = generateVerificationCode();
+        const newRequestData: NewRequestData = {
+            userId: requestData.id,
+            providerId: userData.user.id,
+            location: userData.user.address,
+            serviceType: userData.user.service,
+            price: userData.user.price,
+            status: status === 'accepted' ? 'Accepted' : 'Canceled',
+            verificationCode,
+        };
+
+        try {
+            const response = await axios.post(
+                `${baseUrl}api/user/createNewRequest`,
+                newRequestData,
+                { withCredentials: true }
+            );
+            console.log("New request", response.data);
+            socket.emit('serviceRequestResponse', {
+                toUserId: userData.user.id,
+                fromUserId: requestData.id,
+                status,
+                verificationCode,
+            });
+            localStorage.removeItem('requestData');
+            setRequestData(null);
+        } catch (error) {
+            console.error("Error creating new request:", error);
+        }
+    };
 
     // Logout function
     const providerLogout = (): void => {

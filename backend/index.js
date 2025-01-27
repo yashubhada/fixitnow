@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
   });
 
   // Handle request response (accept/decline)
-  socket.on('serviceRequestResponse', ({ toUserId, fromUserId, status }) => {
+  socket.on('serviceRequestResponse', ({ toUserId, fromUserId, status, verificationCode }) => {
     const requesterSocketId = userSockets.get(fromUserId);
 
     if (requesterSocketId) {
@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
       io.to(requesterSocketId).emit('serviceRequestResponse', {
         toUserId,
         status, // "accepted" or "declined"
+        verificationCode
       });
       console.log(`Request ${status} by ${toUserId} for ${fromUserId}`);
     } else {

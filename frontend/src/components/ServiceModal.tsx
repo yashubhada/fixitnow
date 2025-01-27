@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react';
+import { io } from 'socket.io-client';
+
+const socket = io("http://localhost:9797", { withCredentials: true });
 
 const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
 
@@ -13,6 +16,33 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
             document.body.style.paddingRight = '';
         }
     }, []);
+
+    useEffect(() => {
+        socket.on("connect", () => {
+            console.log("Socket connected:", socket.id);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Socket disconnected");
+        });
+
+        return () => {
+            socket.off("connect");
+            socket.off("disconnect");
+        };
+    }, []);
+
+
+    useEffect(() => {
+        console.log("Listening for serviceRequestResponse...");
+        socket.on('serviceRequestResponse', (data: any) => {
+            console.log("Event received!", data);
+        });
+
+        return () => {
+            socket.off('serviceRequestResponse');
+        };
+    }, [socket]);
 
     return (
         <>

@@ -164,9 +164,6 @@ const LandingPage: React.FC = () => {
     // page loading
     const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
 
-    // service modal and requset loading
-    const [selectedProvider, setSelectedProvider] = useState<any | null>(null);
-
     const [requestedProvider, setRequestedProvider] = useState<any | null>(() => {
         const storedProvider = localStorage.getItem("requestedProvider");
         return storedProvider ? JSON.parse(storedProvider) : null;
