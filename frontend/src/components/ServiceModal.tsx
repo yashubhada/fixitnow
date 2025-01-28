@@ -18,31 +18,18 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
     }, []);
 
     useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Socket connected:", socket.id);
-        });
-
-        socket.on("disconnect", () => {
-            console.log("Socket disconnected");
-        });
-
-        return () => {
-            socket.off("connect");
-            socket.off("disconnect");
-        };
-    }, []);
-
-
-    useEffect(() => {
-        console.log("Listening for serviceRequestResponse...");
-        socket.on('serviceRequestResponse', (data: any) => {
+        const handleResponse = (data: any) => {
             console.log("Event received!", data);
-        });
-
-        return () => {
-            socket.off('serviceRequestResponse');
         };
-    }, [socket]);
+    
+        console.log("Socket ID:", socket.id);
+        console.log("Listening for serviceRequestResponse...");
+        socket.on('serviceRequestResponse', handleResponse);
+    
+        return () => {
+            socket.off('serviceRequestResponse', handleResponse);
+        };
+    }, []);    
 
     return (
         <>

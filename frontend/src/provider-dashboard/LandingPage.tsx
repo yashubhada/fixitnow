@@ -6,6 +6,7 @@ import Home from './Home';
 import { io } from 'socket.io-client';
 import RequestModal from './RequestModal';
 import axios from 'axios';
+import VerifyCodeInput from './VerifyCodeInput';
 
 // Initialize Socket.IO connection
 const socket = io("http://localhost:9797");
@@ -221,6 +222,10 @@ const LandingPage: React.FC = () => {
                     data={requestData}
                     handleServiceResponse={handleServiceResponse}
                 />
+            }
+
+            {
+                <VerifyCodeInput />
             }
         </>
     )
