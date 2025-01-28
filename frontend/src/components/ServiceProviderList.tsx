@@ -16,7 +16,7 @@ interface ServiceInformation {
 
 const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
 
-    const { baseUrl, getLoggedInUserData, userData, showToast } = useContext(UserContext);
+    const { baseUrl, userData, showToast } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -28,23 +28,6 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
             document.body.style.overflow = 'auto';
             document.body.style.paddingRight = '';
         }
-    }, []);
-
-    const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                setIsPageLoading(true);
-                await getLoggedInUserData();
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            } finally {
-                setIsPageLoading(false);
-            }
-        };
-
-        fetchUserData();
     }, []);
 
     useEffect(() => {
@@ -148,7 +131,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     }, [providers, loading]);
 
-    if (isPageLoading || !userData?.user || userData?.user?.role !== "serviceTaker") {
+    if (!userData?.user || userData?.user?.role !== "serviceTaker") {
         return null;
     }
 
@@ -234,7 +217,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                         </div>
 
                                                         <div className="flex items-center mb-1">
-                                                            <p>₹{provider.price}.00 / h</p>
+                                                            <p>₹{provider.price}.00</p>
                                                         </div>
 
                                                         <div className="flex items-center gap-1">

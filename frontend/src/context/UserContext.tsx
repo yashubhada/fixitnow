@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { io } from 'socket.io-client';
+import PageLoading from "../components/PageLoading";
 
 // Initialize Socket.IO connection
 const socket = io("http://localhost:9797");
@@ -19,8 +20,8 @@ interface UserContextType {
     closeLoginModal: () => void;
     showToast: (message: string, type: "success" | "error") => void;
     userData: any;
-    getLoggedInUserData: () => void;
     handleLogout: () => void;
+    isLoading: boolean; // Add isLoading to context
 }
 
 // Default context value
@@ -36,8 +37,8 @@ const defaultValue: UserContextType = {
     closeLoginModal: () => { },
     showToast: () => { },
     userData: null,
-    getLoggedInUserData: async () => { },
     handleLogout: async () => { },
+    isLoading: false, // Default loading state
 };
 
 // Create context
@@ -51,7 +52,7 @@ interface UserContextProviderProps {
 // Provider component
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({ children }) => {
 
-    // server url
+    // Server URL
     const baseUrl = "http://localhost:9797/";
 
     // Toast function
@@ -75,7 +76,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         }
     };
 
-
+    // State for signup and login forms
     const [isSignupForm, setIsSignupForm] = useState(false);
     const [loginFormModal, setLoginFormModal] = useState(false);
 
@@ -97,9 +98,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         setLoginFormModal(false);
     };
 
+    // User data and loading state
     const [userData, setUserData] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true); // Global loading state
 
+    // Fetch logged-in user data
     const getLoggedInUserData = async () => {
+        setIsLoading(true); // Set loading to true before fetching
         try {
             const response = await axios.post(
                 `${baseUrl}api/user/getLoggedInUser`,
@@ -118,9 +123,17 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             } else {
                 console.error("Unexpected error:", err);
             }
+        } finally {
+            setIsLoading(false); // Set loading to false after fetching
         }
-    }
+    };
 
+    // Fetch user data on component mount
+    useEffect(() => {
+        getLoggedInUserData();
+    }, []);
+
+    // Logout function
     const handleLogout = async () => {
         try {
             const response = await axios.post(
@@ -145,7 +158,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 console.error("Unexpected error:", err);
             }
         }
-    }
+    };
 
     return (
         <UserContext.Provider
@@ -161,12 +174,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 closeLoginModal,
                 showToast,
                 userData,
-                getLoggedInUserData,
                 handleLogout,
+                isLoading, 
             }}
         >
             {children}
             <Toaster />
+            {isLoading && <PageLoading />}
         </UserContext.Provider>
     );
 };

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
 
-    const { baseUrl, closeLoginModal, openSignupForm, showToast, getLoggedInUserData } = useContext(UserContext);
+    const { baseUrl, closeLoginModal, openSignupForm, showToast } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -63,7 +63,6 @@ const LoginForm: React.FC = () => {
             const response = await axios.post(`${baseUrl}api/user/signin`, userData, { withCredentials: true });
             showToast(response.data.message, "success");
             if (response.data.success) {
-                await getLoggedInUserData();
                 if (response.data.role === 'serviceProvider') {
                     navigate('/provider-dashboard');
                 }

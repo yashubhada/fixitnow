@@ -267,9 +267,9 @@ export const createNewRequest = async (req, res) => {
         if (!token) {
             return res.status(401).send({ success: false, message: "No token found, please log in" });
         }
-        
+
         const { userId, providerId, location, serviceType, price, status, verificationCode } = req.body;
-        await Request.create({
+        const newRequest = await Request.create({
             userId,
             providerId,
             location,
@@ -278,7 +278,12 @@ export const createNewRequest = async (req, res) => {
             status,
             verificationCode,
         });
-        res.status(201).json({ success: true, message: "New Request Generated! 🎉🚀" });
+
+        if (!newRequest) {
+            return res.status(201).json({ success: false, message: "Failed to create request" });
+        }
+
+        res.status(201).json({ success: true, requestId: newRequest._id, message: "New Request Generated! 🎉🚀" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: err.message });

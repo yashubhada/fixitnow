@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../images/fixitnow-logo-black.png';
@@ -12,46 +12,38 @@ import VerifyCodeInput from './VerifyCodeInput';
 const socket = io("http://localhost:9797");
 
 const LandingPage: React.FC = () => {
-
-    const { baseUrl, userData, getLoggedInUserData, handleLogout, showToast } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
-    const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+    const [requestData, setRequestData] = useState<any>(() => {
+        const storedData = localStorage.getItem("requestData");
+        return storedData ? JSON.parse(storedData) : null;
+    });
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                setIsPageLoading(true);
-                await getLoggedInUserData();
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            } finally {
-                setIsPageLoading(false);
-            }
-        };
+    const [isShowVerifyCodeModal, setIsShowVerifyCodeModal] = useState<boolean>(false);
 
-        fetchUserData();
-    }, []);
-
+    // Register user with socket when userData is available
     useEffect(() => {
         if (userData) {
             socket.emit('register', userData?.user?.id);
         }
     }, [userData]);
 
-    const [requestData, setRequestData] = useState<any>(() => {
-        const storedData = localStorage.getItem("requestData");
-        return storedData ? JSON.parse(storedData) : null;
-    });
+    // Listen for service requests
     useEffect(() => {
         socket.on('serviceRequest', (data) => {
             setRequestData(data.requestData.user);
             localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
         });
+
+        // Clean up the event listener
+        return () => {
+            socket.off('serviceRequest');
+        };
     }, [socket]);
 
-    // verification code generate
+    // Generate verification code
     const generateVerificationCode = (): string => {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let verificationCode = "";
@@ -63,19 +55,13 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
-    interface NewRequestData {
-        userId: string;
-        providerId: string;
-        location: string;
-        serviceType: string;
-        price: number;
-        status: "Accepted" | "Canceled";
-        verificationCode: string | null;
-    }
-
+    // Handle service response
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
+        if (status === 'accepted') {
+            setIsShowVerifyCodeModal(true);
+        }
         const verificationCode = generateVerificationCode();
-        const newRequestData: NewRequestData = {
+        const newRequestData = {
             userId: requestData.id,
             providerId: userData.user.id,
             location: userData.user.address,
@@ -111,37 +97,17 @@ const LandingPage: React.FC = () => {
         navigate('/');
     };
 
+    // Redirect if user is not logged in or not a service provider
     useEffect(() => {
-        if (!isPageLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
+        if (!isLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
             showToast("Login first to access your dashboard", "error");
             navigate('/');
         }
-    }, [userData, isPageLoading, navigate, showToast]);
+    }, [userData, isLoading, navigate, showToast]);
 
-    if (isPageLoading) {
-        return (
-            <div className='h-screen w-full flex items-center justify-center bg-white'>
-                <svg className="animate-spin h-7 w-7 text-black mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                    ></circle>
-                    <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    ></path>
-                </svg>
-            </div>
-        )
-    }
-
+    // Do not render if user is invalid
     if (!userData?.user || userData?.user?.role !== "serviceProvider") {
-        return null; // Avoid rendering anything if user is invalid
+        return null;
     }
 
     return (
@@ -149,7 +115,7 @@ const LandingPage: React.FC = () => {
             <section className='w-full h-screen flex'>
                 <div className='w-[250px] py-4 px-3 border-gray-300 border-r shadow-xl'>
                     <nav className='dashboard-main-nav relative h-full'>
-                        <img src={Logo} className='w-10 mb-5 mx-auto' />
+                        <img src={Logo} className='w-10 mb-5 mx-auto' alt="FixItNow Logo" />
                         <ul className='space-y-3'>
                             <NavLink
                                 to="/provider-dashboard"
@@ -190,6 +156,7 @@ const LandingPage: React.FC = () => {
                                 <img
                                     src={userData?.user?.avatar}
                                     className='w-10 h-10 rounded-full border mr-1'
+                                    alt="User Avatar"
                                 />
                                 <div>
                                     <h1 className='text-base font-medium'>{userData?.user?.name}</h1>
@@ -216,19 +183,16 @@ const LandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {
-                requestData &&
+            {requestData && (
                 <RequestModal
                     data={requestData}
                     handleServiceResponse={handleServiceResponse}
                 />
-            }
+            )}
 
-            {
-                <VerifyCodeInput />
-            }
+            {isShowVerifyCodeModal && <VerifyCodeInput />}
         </>
-    )
-}
+    );
+};
 
-export default LandingPage
+export default LandingPage;
