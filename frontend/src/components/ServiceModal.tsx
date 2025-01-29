@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 const socket = io("http://localhost:9797", { withCredentials: true });
 
-const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
+const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData, data }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -18,22 +18,30 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
     }, []);
 
     useEffect(() => {
-        const handleResponse = (data: any) => {
-            console.log("Event received!", data);
-        };
+        console.log(data,"--- check for data")
+    }, [data])
 
-        if (socket.connected) {
-            console.log("Listening for serviceRequestResponse...");
-            socket.on("serviceRequestResponse", handleResponse);
-        } else {
-            console.log("Socket not connected yet.");
-        }
+    // useEffect(() => {
+    //     socket.connect();
+    //     const handleResponse = (data: any) => {
+    //         console.log("Event received!", data);
+    //     };
 
-        return () => {
-            socket.off("serviceRequestResponse", handleResponse);
-        };
-    }, [socket.connected]);
+    //     if (socket.connected) {
+    //         console.log("Listening for serviceRequestResponse...");
+    //         socket.on("serviceRequestResponse", handleResponse);
+    //     } else {
+    //         console.log("Socket not connected yet.");
+    //     }
 
+    //     return () => {
+    //         socket.off("serviceRequestResponse", handleResponse);
+    //     };
+    // }, [socket.connected]);
+
+    // socket.on("serviceRequestResponse", () => {
+    //     console.log("called")
+    // });
 
     return (
         <>
