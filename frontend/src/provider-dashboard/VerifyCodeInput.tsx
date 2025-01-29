@@ -1,6 +1,16 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const VerifyCodeInput: React.FC = () => {
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Focus on the input element when the component mounts
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, []);
+
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             {/* Background Overlay */}
@@ -16,6 +26,7 @@ const VerifyCodeInput: React.FC = () => {
                         <i className="ri-shield-check-line text-xl mr-3"></i>
                         <input
                             type="text"
+                            ref={inputRef}
                             autoComplete='off'
                             placeholder='Enter verification code'
                             required
@@ -26,30 +37,7 @@ const VerifyCodeInput: React.FC = () => {
                         type="submit"
                         className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
                     >
-                        {
-                            // isProviderSignUpFormLoading
-                            //     ?
-                            //     <>
-                            //         <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            //             <circle
-                            //                 className="opacity-25"
-                            //                 cx="12"
-                            //                 cy="12"
-                            //                 r="10"
-                            //                 stroke="currentColor"
-                            //                 strokeWidth="4"
-                            //             ></circle>
-                            //             <path
-                            //                 className="opacity-75"
-                            //                 fill="currentColor"
-                            //                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                            //             ></path>
-                            //         </svg>
-                            //         Signing up...
-                            //     </>
-                            //     :
-                                'Verify'
-                        }
+                        Verify
                     </button>
                 </div>
             </div>

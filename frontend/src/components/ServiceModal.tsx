@@ -22,14 +22,18 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
             console.log("Event received!", data);
         };
 
-        console.log("Socket ID:", socket.id);
-        console.log("Listening for serviceRequestResponse...");
-        socket.on('serviceRequestResponseForClient', handleResponse);
+        if (socket.connected) {
+            console.log("Listening for serviceRequestResponse...");
+            socket.on("serviceRequestResponse", handleResponse);
+        } else {
+            console.log("Socket not connected yet.");
+        }
 
         return () => {
-            socket.off('serviceRequestResponseForClient', handleResponse);
+            socket.off("serviceRequestResponse", handleResponse);
         };
-    }, []);
+    }, [socket.connected]);
+
 
     return (
         <>

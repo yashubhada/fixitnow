@@ -14,6 +14,12 @@ const LoginForm: React.FC = () => {
         emailInputRef.current?.focus();
     }
 
+    useEffect(() => {
+        if(emailInputRef.current){
+            emailInputRef.current.focus();
+        }
+    }, []);
+
     // password input ref
     const passwordInputRef = useRef<HTMLInputElement>(null);
     const handlePasswordInputRef = (): void => {
