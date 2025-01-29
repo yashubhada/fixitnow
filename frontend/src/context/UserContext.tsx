@@ -20,6 +20,7 @@ interface UserContextType {
     closeLoginModal: () => void;
     showToast: (message: string, type: "success" | "error") => void;
     userData: any;
+    setUserData: (userData: any | null) => void;
     handleLogout: () => void;
     isLoading: boolean; // Add isLoading to context
 }
@@ -37,6 +38,7 @@ const defaultValue: UserContextType = {
     closeLoginModal: () => { },
     showToast: () => { },
     userData: null,
+    setUserData: () => { },
     handleLogout: async () => { },
     isLoading: false, // Default loading state
 };
@@ -174,8 +176,9 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 closeLoginModal,
                 showToast,
                 userData,
+                setUserData,
                 handleLogout,
-                isLoading, 
+                isLoading,
             }}
         >
             {children}

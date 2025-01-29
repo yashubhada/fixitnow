@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import LogoBlack from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
@@ -173,8 +173,6 @@ const LandingPage: React.FC = () => {
         localStorage.setItem("requestedProvider", JSON.stringify(providerData)); // Store in local storage
     };
 
-    useEffect(() => { }, [userData]);
-
     if (isLoading) {
         return <PageLoading />
     }
@@ -189,9 +187,9 @@ const LandingPage: React.FC = () => {
                             ?
                             <>
                                 <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
-                                    <img className='w-10 h-10 shadow rounded-full bg-white' src={userData.user.avatar} />
+                                    <img className='w-10 h-10 shadow rounded-full bg-white' src={userData?.user?.avatar} />
                                     <div className='text-lg font-medium'>
-                                        {userData.user.name}
+                                        {userData?.user?.name}
                                     </div>
                                 </div>
                                 <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>

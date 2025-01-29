@@ -141,13 +141,13 @@ const LandingPage: React.FC = () => {
                                 href="#"
                                 className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
-                                <li className='flex items-center font-medium'><i className="ri-message-2-line mr-2 text-lg"></i>Message</li>
+                                <li className='flex items-center font-medium'><i className="ri-chat-1-line mr-2 text-lg"></i>Message</li>
                             </a>
                             <a
                                 href="#"
                                 className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
-                                <li className='flex items-center font-medium'><i className="ri-sparkling-2-line mr-2 text-lg"></i>Reviews</li>
+                                <li className='flex items-center font-medium'><i className="ri-chat-quote-line mr-2 text-lg"></i>Reviews</li>
                             </a>
                         </ul>
 

@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
 
-    const { baseUrl, closeLoginModal, openSignupForm, showToast } = useContext(UserContext);
-
+    const { baseUrl, closeLoginModal, openSignupForm, showToast, setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
     // email input ref
@@ -48,7 +47,7 @@ const LoginForm: React.FC = () => {
 
     // sign in form
     const [isSignInFormLoading, setIsSignInFormLoading] = useState<boolean>(false);
-    const [userData, setUserData] = useState<{
+    const [loginData, setLoginData] = useState<{
         email: string;
         password: string;
     }>({
@@ -60,7 +59,9 @@ const LoginForm: React.FC = () => {
         e.preventDefault();
         setIsSignInFormLoading(true);
         try {
-            const response = await axios.post(`${baseUrl}api/user/signin`, userData, { withCredentials: true });
+            const response = await axios.post(`${baseUrl}api/user/signin`, loginData, { withCredentials: true });
+            // console.log(response?.data?.user);
+            setUserData(response?.data);
             showToast(response.data.message, "success");
             if (response.data.success) {
                 if (response.data.role === 'serviceProvider') {
@@ -87,7 +88,7 @@ const LoginForm: React.FC = () => {
 
     const handleSignInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setUserData((prevData) => ({
+        setLoginData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -115,7 +116,7 @@ const LoginForm: React.FC = () => {
                                         ref={emailInputRef}
                                         onChange={handleSignInChange}
                                         name='email'
-                                        value={userData.email}
+                                        value={loginData.email}
                                         autoComplete='off'
                                         placeholder='Enter your email'
                                         required
@@ -134,7 +135,7 @@ const LoginForm: React.FC = () => {
                                         placeholder='Enter your password'
                                         name='password'
                                         onChange={handleSignInChange}
-                                        value={userData.password}
+                                        value={loginData.password}
                                         ref={passwordInputRef}
                                         autoComplete='current-password'
                                         required
