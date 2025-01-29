@@ -14,7 +14,7 @@ interface ServiceInformation {
     closeClick: () => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick, setData }) => {
 
     const { baseUrl, userData, showToast } = useContext(UserContext);
 
@@ -108,6 +108,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
             if (data.status === "accepted") {
                 showToast("Your request has been successfully accepted", "success");
+                setData(data)
 
                 // Use the ref to access the latest selectedProvider
                 handleAcceptedService(selectedProviderRef.current);
