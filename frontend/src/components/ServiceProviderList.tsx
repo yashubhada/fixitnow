@@ -12,6 +12,7 @@ interface ServiceInformation {
     serviceType: string | undefined;
     handleAcceptedService: (providerData: any) => void;
     closeClick: () => void;
+    setData: (data: any) => void;
 }
 
 const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick, setData }) => {

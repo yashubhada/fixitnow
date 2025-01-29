@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
-import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:9797", { withCredentials: true });
-
-const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData, data }) => {
+const ServiceModal: React.FC<{ providerData: any; data: any; }> = ({ providerData, data }) => {
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -95,7 +92,7 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData, data }) 
                                 Hover to know your request code
                             </p>
                             <p className="text-gray-700 absolute translate-y-[200%] transition-all duration-500 ease-in-out group-hover:translate-y-0">
-                                Your request code is <span className='text-gray-950'>123456</span>
+                                Your request code is <span className='text-gray-950'>{data.verificationCode}</span>
                             </p>
                         </div>
                         <div className='mt-3 md:mt-10'>
