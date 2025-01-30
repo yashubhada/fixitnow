@@ -25,7 +25,6 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
     useEffect(() => {
         handleOnServiceRequestResponse();
         if (socketData) {
-            console.log("modal", socketData);
             setVerificationCode(socketData?.verificationCode);
             localStorage.setItem("verificationCode", socketData?.verificationCode);
         }

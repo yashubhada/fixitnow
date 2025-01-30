@@ -79,7 +79,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     // Toast function
     const showToast = (message: string, type: "success" | "error") => {
         toast[type](message, {
-            style: { fontFamily: "Poppins, sans-serif", maxWidth: "900px" },
+            style: { maxWidth: "900px" },
             duration: 5000,
         });
     };
@@ -170,18 +170,12 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     const handleSocketRegister = (id: string) => {
         if (socket) {
             socket.emit('register', id);
-            console.log('Socket register : ', id);
         }
     };
 
     const handleEmitServiceRequest = (fromUserId: string, toUserId: string, requestData: any) => {
         if (socket) {
             socket.emit('serviceRequest', {
-                fromUserId,
-                toUserId,
-                requestData,
-            });
-            console.log('socket service request : ', {
                 fromUserId,
                 toUserId,
                 requestData,
@@ -193,7 +187,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         if (socket) {
             const listener = (data: any) => {
                 setSocketData(data);
-                console.log('on service request', data);
             };
             socket.on('serviceRequest', listener);
 
@@ -217,12 +210,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 status,
                 verificationCode,
             });
-            console.log("Emit request response", {
-                toUserId,
-                fromUserId,
-                status,
-                verificationCode,
-            });
         }
     };
 
@@ -230,7 +217,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         if (socket) {
             const listener = (data: any) => {
                 setSocketData(data);
-                console.log('on service request response', data);
             };
             socket.on('serviceRequestResponse', listener);
 

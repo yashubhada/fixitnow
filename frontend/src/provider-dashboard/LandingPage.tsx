@@ -77,9 +77,11 @@ const LandingPage: React.FC = () => {
                 { withCredentials: true }
             );
 
-            if(status === 'accepted' && response.data.success){
+            if (status === 'accepted' && response.data.success) {
                 setIsShowVerifyCodeModal(true);
             }
+
+            localStorage.setItem('requestId', response.data.requestId);
 
             // Emit service request response
             handleEmitServiceRequestResponse(
@@ -196,7 +198,7 @@ const LandingPage: React.FC = () => {
                 />
             )}
 
-            {isShowVerifyCodeModal && <VerifyCodeInput />}
+            {isShowVerifyCodeModal && <VerifyCodeInput close={() => setIsShowVerifyCodeModal(false)} />}
         </>
     );
 };

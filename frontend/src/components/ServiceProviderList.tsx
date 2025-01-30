@@ -28,7 +28,6 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     useEffect(() => {
         if (userData) {
-            // socket.emit('register', userData?.user?.id);
             handleSocketRegister(userData?.user?.id);
         }
     }, [userData]);

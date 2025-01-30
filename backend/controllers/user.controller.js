@@ -121,7 +121,7 @@ export const handleProviderSignUp = async (req, res) => {
             identityProof: identityProofUpload.secure_url,
         });
 
-        res.status(201).json({ success: true, message: 'Signup successful!' });
+        res.status(201).json({ success: true, message: 'Signup Successful 😊' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
@@ -203,7 +203,7 @@ export const handleSignIn = async (req, res) => {
                 secure: true,
                 maxAge: 3600000
             })
-            .json({ success: true, user: tokenData, role: tokenData.role, message: "Sign in successfull! 😊" });
+            .json({ success: true, user: tokenData, role: tokenData.role, message: "Signin Successful 😊" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
@@ -253,9 +253,8 @@ export const handleLogout = async (req, res) => {
             httpOnly: true,
             secure: true,
         });
-        res.status(201).json({ success: true, message: "Logout successfull! 👋" });
+        res.status(201).json({ success: true, message: "Logout Successful 👋" });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ success: false, error: err.message });
     }
 }
@@ -285,7 +284,26 @@ export const createNewRequest = async (req, res) => {
 
         res.status(201).json({ success: true, requestId: newRequest._id, message: "New Request Generated! 🎉🚀" });
     } catch (err) {
-        console.error(err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+export const fetchSingleServiceRequest = async (req, res) => {
+    try {
+        const { id, verificationCode } = req.body;
+
+        const request = await Request.findById(id);
+
+        if (!request) {
+            return res.status(404).json({ success: false, message: "Request Not Found" });
+        }
+
+        if (request.verificationCode !== verificationCode) {
+            return res.status(400).json({ success: false, message: "Invalid Verification Code" });
+        }
+
+        res.status(200).json({ success: true, message: "Verification Successful 👍" });
+    } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 }
