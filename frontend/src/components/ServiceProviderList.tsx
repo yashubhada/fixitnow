@@ -109,7 +109,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
             if (data.status === "accepted") {
                 showToast("Your request has been successfully accepted", "success");
-                setData(data)
+                setData(data);
 
                 // Use the ref to access the latest selectedProvider
                 handleAcceptedService(selectedProviderRef.current);

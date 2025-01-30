@@ -1,11 +1,8 @@
 import axios from "axios";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { io } from 'socket.io-client';
+import { io, Socket } from "socket.io-client";
 import PageLoading from "../components/PageLoading";
-
-// Initialize Socket.IO connection
-const socket = io("http://localhost:9797");
 
 // Define the context type
 interface UserContextType {
@@ -22,7 +19,21 @@ interface UserContextType {
     userData: any;
     setUserData: (userData: any | null) => void;
     handleLogout: () => void;
-    isLoading: boolean; // Add isLoading to context
+    isLoading: boolean;
+
+    // Socket
+    socket: Socket | null;
+    socketData: any | null;
+    handleSocketRegister: (id: string) => void;
+    handleEmitServiceRequest: (fromUserId: string, toUserId: string, requestData: any) => void;
+    handleOnServiceRequest: () => void;
+    handleEmitServiceRequestResponse: (
+        toUserId: string,
+        fromUserId: string,
+        status: "accepted" | "declined",
+        verificationCode: string
+    ) => void;
+    handleOnServiceRequestResponse: () => void;
 }
 
 // Default context value
@@ -40,7 +51,16 @@ const defaultValue: UserContextType = {
     userData: null,
     setUserData: () => { },
     handleLogout: async () => { },
-    isLoading: false, // Default loading state
+    isLoading: false,
+
+    // Socket
+    socket: null,
+    socketData: null,
+    handleSocketRegister: () => { },
+    handleEmitServiceRequest: () => { },
+    handleOnServiceRequest: () => { },
+    handleEmitServiceRequestResponse: () => { },
+    handleOnServiceRequestResponse: () => { },
 };
 
 // Create context
@@ -53,84 +73,57 @@ interface UserContextProviderProps {
 
 // Provider component
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({ children }) => {
-
     // Server URL
     const baseUrl = "http://localhost:9797/";
 
     // Toast function
     const showToast = (message: string, type: "success" | "error") => {
-        if (type === "success") {
-            toast.success(message, {
-                style: {
-                    fontFamily: 'Poppins, sans-serif',
-                    maxWidth: '900px'
-                },
-                duration: 5000,
-            });
-        } else if (type === "error") {
-            toast.error(message, {
-                style: {
-                    fontFamily: 'Poppins, sans-serif',
-                    maxWidth: '900px'
-                },
-                duration: 5000,
-            });
-        }
+        toast[type](message, {
+            style: { fontFamily: "Poppins, sans-serif", maxWidth: "900px" },
+            duration: 5000,
+        });
     };
 
     // State for signup and login forms
     const [isSignupForm, setIsSignupForm] = useState(false);
     const [loginFormModal, setLoginFormModal] = useState(false);
 
-    // Signup form state
+    // Signup form handlers
     const openSignupForm = () => {
         setIsSignupForm(true);
         setLoginFormModal(false);
     };
-    const closeSignupForm = () => {
-        setIsSignupForm(false);
-    };
+    const closeSignupForm = () => setIsSignupForm(false);
 
-    // Login form state
+    // Login form handlers
     const openLoginModal = () => {
         setLoginFormModal(true);
         setIsSignupForm(false);
     };
-    const closeLoginModal = () => {
-        setLoginFormModal(false);
-    };
+    const closeLoginModal = () => setLoginFormModal(false);
 
     // User data and loading state
     const [userData, setUserData] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true); // Global loading state
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Fetch logged-in user data
     const getLoggedInUserData = async () => {
-        setIsLoading(true); // Set loading to true before fetching
+        setIsLoading(true);
         try {
-            const response = await axios.post(
-                `${baseUrl}api/user/getLoggedInUser`,
-                {}, // Empty payload
-                { withCredentials: true }
-            );
+            const response = await axios.post(`${baseUrl}api/user/getLoggedInUser`, {}, { withCredentials: true });
             setUserData(response.data);
         } catch (err) {
-            if (axios.isAxiosError(err)) {
-                // Handle Axios-specific errors
-                if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message || "An error occurred", "error");
-                    }
-                }
+            if (axios.isAxiosError(err) && err.response?.status === 400) {
+                showToast(err.response.data.message || "An error occurred", "error");
             } else {
                 console.error("Unexpected error:", err);
             }
         } finally {
-            setIsLoading(false); // Set loading to false after fetching
+            setIsLoading(false);
         }
     };
 
-    // Fetch user data on component mount
+    // Fetch user data on mount
     useEffect(() => {
         getLoggedInUserData();
     }, []);
@@ -138,27 +131,100 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     // Logout function
     const handleLogout = async () => {
         try {
-            const response = await axios.post(
-                `${baseUrl}api/user/logout`,
-                {}, // Empty payload
-                { withCredentials: true }
-            );
+            const response = await axios.post(`${baseUrl}api/user/logout`, {}, { withCredentials: true });
             if (response.data.success) {
-                socket.disconnect();
+                socket?.disconnect();
                 showToast(response.data.message, "success");
                 setUserData(null);
             }
         } catch (err) {
-            if (axios.isAxiosError(err)) {
-                // Handle Axios-specific errors
-                if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message || "An error occurred", "error");
-                    }
-                }
+            if (axios.isAxiosError(err) && err.response?.status === 400) {
+                showToast(err.response.data.message || "An error occurred", "error");
             } else {
                 console.error("Unexpected error:", err);
             }
+        }
+    };
+
+    // Socket state
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [socketData, setSocketData] = useState<any | null>(null);
+
+    // Initialize socket connection
+    useEffect(() => {
+        const newSocket = io("http://localhost:9797", { withCredentials: true });
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []);
+
+    const handleSocketRegister = (id: string) => {
+        if (socket) {
+            socket.emit('register', id);
+            console.log('Socket register : ', id);
+        }
+    };
+
+    const handleEmitServiceRequest = (fromUserId: string, toUserId: string, requestData: any) => {
+        if (socket) {
+            socket.emit('serviceRequest', {
+                fromUserId,
+                toUserId,
+                requestData,
+            });
+            console.log('socket service request : ', {
+                fromUserId,
+                toUserId,
+                requestData,
+            });
+        }
+    };
+
+    const handleOnServiceRequest = () => {
+        if (socket) {
+            const listener = (data: any) => {
+                setSocketData(data);
+                console.log('on service request', data);
+            };
+            socket.on('serviceRequest', listener);
+
+            // Cleanup listener
+            return () => {
+                socket.off('serviceRequest', listener);
+            };
+        }
+    };
+
+    const handleEmitServiceRequestResponse = (
+        toUserId: string,
+        fromUserId: string,
+        status: 'accepted' | 'declined',
+        verificationCode: string
+    ) => {
+        if (socket) {
+            socket.emit('serviceRequestResponse', {
+                toUserId,
+                fromUserId,
+                status,
+                verificationCode,
+            });
+        }
+    };
+
+    const handleOnServiceRequestResponse = () => {
+        if (socket) {
+            const listener = (data: any) => {
+                setSocketData(data);
+                console.log('on service request response', data);
+            };
+            socket.on('serviceRequestResponse', listener);
+
+            // Cleanup listener
+            return () => {
+                socket.off('serviceRequestResponse', listener);
+            };
         }
     };
 
@@ -179,6 +245,15 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 setUserData,
                 handleLogout,
                 isLoading,
+
+                // Socket
+                socket,
+                socketData,
+                handleSocketRegister,
+                handleEmitServiceRequest,
+                handleOnServiceRequest,
+                handleEmitServiceRequestResponse,
+                handleOnServiceRequestResponse,
             }}
         >
             {children}

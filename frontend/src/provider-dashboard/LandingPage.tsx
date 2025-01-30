@@ -3,16 +3,13 @@ import { UserContext } from '../context/UserContext';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../images/fixitnow-logo-black.png';
 import Home from './Home';
-import { io } from 'socket.io-client';
 import RequestModal from './RequestModal';
 import axios from 'axios';
 import VerifyCodeInput from './VerifyCodeInput';
 
-// Initialize Socket.IO connection
-const socket = io("http://localhost:9797");
 
 const LandingPage: React.FC = () => {
-    const { baseUrl, userData, handleLogout, showToast, isLoading } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading, socket, handleSocketRegister, handleOnServiceRequest } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
@@ -24,23 +21,31 @@ const LandingPage: React.FC = () => {
     const [isShowVerifyCodeModal, setIsShowVerifyCodeModal] = useState<boolean>(false);
 
     // Register user with socket when userData is available
+    // useEffect(() => {
+    //     if (userData) {
+    //         socket.emit('register', userData?.user?.id);
+    //     }
+    // }, [userData]);
+
     useEffect(() => {
-        if (userData) {
-            socket.emit('register', userData?.user?.id);
-        }
+        handleSocketRegister(userData?.user?.id);
     }, [userData]);
 
     // Listen for service requests
-    useEffect(() => {
-        socket.on('serviceRequest', (data) => {
-            setRequestData(data.requestData.user);
-            localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
-        });
+    // useEffect(() => {
+    //     socket.on('serviceRequest', (data) => {
+    //         setRequestData(data.requestData.user);
+    //         localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
+    //     });
 
-        // Clean up the event listener
-        return () => {
-            socket.off('serviceRequest');
-        };
+    //     // Clean up the event listener
+    //     return () => {
+    //         socket.off('serviceRequest');
+    //     };
+    // }, [socket]);
+
+    useEffect(() => {
+        handleOnServiceRequest();
     }, [socket]);
 
     // Generate verification code
@@ -78,12 +83,12 @@ const LandingPage: React.FC = () => {
                 { withCredentials: true }
             );
             console.log("New request", response.data);
-            socket.emit('serviceRequestResponse', {
-                toUserId: userData.user.id,
-                fromUserId: requestData.id,
-                status,
-                verificationCode,
-            });
+            // socket.emit('serviceRequestResponse', {
+            //     toUserId: userData.user.id,
+            //     fromUserId: requestData.id,
+            //     status,
+            //     verificationCode,
+            // });
             localStorage.removeItem('requestData');
             setRequestData(null);
         } catch (error) {
