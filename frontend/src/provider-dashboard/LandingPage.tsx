@@ -9,7 +9,7 @@ import VerifyCodeInput from './VerifyCodeInput';
 
 
 const LandingPage: React.FC = () => {
-    const { baseUrl, userData, handleLogout, showToast, isLoading, socket, handleSocketRegister, handleOnServiceRequest } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
@@ -20,33 +20,31 @@ const LandingPage: React.FC = () => {
 
     const [isShowVerifyCodeModal, setIsShowVerifyCodeModal] = useState<boolean>(false);
 
-    // Register user with socket when userData is available
-    // useEffect(() => {
-    //     if (userData) {
-    //         socket.emit('register', userData?.user?.id);
-    //     }
-    // }, [userData]);
-
     useEffect(() => {
+        // Register user with socket
         handleSocketRegister(userData?.user?.id);
+
+        // Sync requestData from local storage
+        const storedRequestData = localStorage.getItem("requestData");
+        if (storedRequestData) {
+            try {
+                const parsedData = JSON.parse(storedRequestData);
+                setRequestData(parsedData);
+            } catch (error) {
+                console.error("Error parsing requestData from localStorage:", error);
+            }
+        }
+
+        // Listen for service requests
+        handleOnServiceRequest();
     }, [userData]);
 
-    // Listen for service requests
-    // useEffect(() => {
-    //     socket.on('serviceRequest', (data) => {
-    //         setRequestData(data.requestData.user);
-    //         localStorage.setItem("requestData", JSON.stringify(data.requestData.user));
-    //     });
-
-    //     // Clean up the event listener
-    //     return () => {
-    //         socket.off('serviceRequest');
-    //     };
-    // }, [socket]);
-
     useEffect(() => {
-        handleOnServiceRequest();
-    }, [socket]);
+        if (socketData) {
+            setRequestData(socketData); // Update requestData when socketData changes
+            localStorage.setItem("requestData", JSON.stringify(socketData)); // Sync with local storage
+        }
+    }, [socketData]);
 
     // Generate verification code
     const generateVerificationCode = (): string => {
@@ -60,14 +58,10 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
-    // Handle service response
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
-        if (status === 'accepted') {
-            setIsShowVerifyCodeModal(true);
-        }
         const verificationCode = generateVerificationCode();
         const newRequestData = {
-            userId: requestData.id,
+            userId: requestData.requestData.user.id,
             providerId: userData.user.id,
             location: userData.user.address,
             serviceType: userData.user.service,
@@ -82,13 +76,20 @@ const LandingPage: React.FC = () => {
                 newRequestData,
                 { withCredentials: true }
             );
-            console.log("New request", response.data);
-            // socket.emit('serviceRequestResponse', {
-            //     toUserId: userData.user.id,
-            //     fromUserId: requestData.id,
-            //     status,
-            //     verificationCode,
-            // });
+
+            if(status === 'accepted' && response.data.success){
+                setIsShowVerifyCodeModal(true);
+            }
+
+            // Emit service request response
+            handleEmitServiceRequestResponse(
+                userData.user.id, // toUserId
+                requestData.requestData.user.id,   // fromUserId
+                status,           // status
+                verificationCode  // verificationCode
+            );
+
+            // Clear requestData from state and local storage
             localStorage.removeItem('requestData');
             setRequestData(null);
         } catch (error) {

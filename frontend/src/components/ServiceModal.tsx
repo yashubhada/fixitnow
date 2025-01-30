@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 
-const ServiceModal: React.FC<{ providerData: any; data: any; }> = ({ providerData, data }) => {
+const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
+
+    const { socket, socketData, handleOnServiceRequestResponse } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -14,31 +17,19 @@ const ServiceModal: React.FC<{ providerData: any; data: any; }> = ({ providerDat
         }
     }, []);
 
+    const [verificationCode, setVerificationCode] = useState<string | null>(() => {
+        const code = localStorage.getItem("verificationCode");
+        return code ? code : null;
+    })
+
     useEffect(() => {
-        console.log(data,"--- check for data")
-    }, [data])
-
-    // useEffect(() => {
-    //     socket.connect();
-    //     const handleResponse = (data: any) => {
-    //         console.log("Event received!", data);
-    //     };
-
-    //     if (socket.connected) {
-    //         console.log("Listening for serviceRequestResponse...");
-    //         socket.on("serviceRequestResponse", handleResponse);
-    //     } else {
-    //         console.log("Socket not connected yet.");
-    //     }
-
-    //     return () => {
-    //         socket.off("serviceRequestResponse", handleResponse);
-    //     };
-    // }, [socket.connected]);
-
-    // socket.on("serviceRequestResponse", () => {
-    //     console.log("called")
-    // });
+        handleOnServiceRequestResponse();
+        if (socketData) {
+            console.log("modal", socketData);
+            setVerificationCode(socketData?.verificationCode);
+            localStorage.setItem("verificationCode", socketData?.verificationCode);
+        }
+    }, [socket, socketData, handleOnServiceRequestResponse]);
 
     return (
         <>
@@ -89,10 +80,10 @@ const ServiceModal: React.FC<{ providerData: any; data: any; }> = ({ providerDat
                         <div className='bg-gray-300 p-[1px] rounded-full my-5 md:my-10'></div>
                         <div className="text-sm md:text-base w-full h-10 flex items-center justify-center p-3 rounded-md border border-[#b3b3b3] select-none cursor-pointer group overflow-hidden relative">
                             <p className="text-gray-700 absolute transition-all duration-500 ease-in-out group-hover:-translate-y-[200%]">
-                                Hover to know your request code
+                                Hover to know your verification code
                             </p>
                             <p className="text-gray-700 absolute translate-y-[200%] transition-all duration-500 ease-in-out group-hover:translate-y-0">
-                                Your request code is <span className='text-gray-950'>{data.verificationCode}</span>
+                                Your verification code is <span className='text-gray-950 font-semibold'>{verificationCode}</span>
                             </p>
                         </div>
                         <div className='mt-3 md:mt-10'>

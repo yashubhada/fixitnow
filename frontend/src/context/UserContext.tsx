@@ -155,6 +155,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         const newSocket = io("http://localhost:9797", { withCredentials: true });
         setSocket(newSocket);
 
+        const storedRequestData = localStorage.getItem("requestData");
+        if (storedRequestData) {
+            const parsedData = JSON.parse(storedRequestData);
+            setSocketData(parsedData); // Update socketData state
+            newSocket.emit('reconnect', parsedData); // Emit reconnect event to the server
+        }
+
         return () => {
             newSocket.disconnect();
         };
@@ -205,6 +212,12 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     ) => {
         if (socket) {
             socket.emit('serviceRequestResponse', {
+                toUserId,
+                fromUserId,
+                status,
+                verificationCode,
+            });
+            console.log("Emit request response", {
                 toUserId,
                 fromUserId,
                 status,

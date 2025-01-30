@@ -17,11 +17,11 @@ const RequestModal: React.FC<propsData> = ({ data, handleServiceResponse }) => {
                     <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">New Request Alert</h1>
                     <div>
                         <img
-                            src={data?.avatar}
+                            src={data?.requestData?.user?.avatar}
                             className='w-20 h-20 rounded-full border shadow-md mx-auto'
                         />
-                        <p className='mt-3 text-center text-lg font-semibold '>{data?.name}</p>
-                        <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.email}</p>
+                        <p className='mt-3 text-center text-lg font-semibold '>{data?.requestData?.user?.name}</p>
+                        <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.requestData?.user?.email}</p>
                     </div>
                     <div className='grid grid-cols-2 gap-5 mt-5'>
                         <button

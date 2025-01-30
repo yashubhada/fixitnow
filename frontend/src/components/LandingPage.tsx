@@ -96,7 +96,6 @@ const LandingPage: React.FC = () => {
 
     const [userAddress, setUserAddress] = useState<string>("");
     const [filteredUserAddress, setFilteredUserAddress] = useState<AddressType[]>([]);
-    const [data, setData] = useState<any>({});
 
     const handleUserAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let word = e.target.value.toLowerCase();
@@ -463,12 +462,11 @@ const LandingPage: React.FC = () => {
                     serviceType={serviceProviderValue}
                     handleAcceptedService={handleAcceptedService}
                     closeClick={closeServiceProviderListModal}
-                    setData={setData}
                 />
             }
 
             {requestedProvider && (
-                <ServiceModal providerData={requestedProvider} data={data} />
+                <ServiceModal providerData={requestedProvider} />
             )}
         </>
     )

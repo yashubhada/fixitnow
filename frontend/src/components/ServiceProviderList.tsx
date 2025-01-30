@@ -1,23 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
-import { io } from 'socket.io-client';
 import ServiceRequestLoading from './ServiceRequestLoading';
-
-// Initialize Socket.IO connection
-const socket = io("http://localhost:9797");
 
 interface ServiceInformation {
     serviceAddress: string | undefined;
     serviceType: string | undefined;
     handleAcceptedService: (providerData: any) => void;
     closeClick: () => void;
-    setData: (data: any) => void;
 }
 
-const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick, setData }) => {
+const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
 
-    const { baseUrl, userData, showToast } = useContext(UserContext);
+    const { baseUrl, userData, showToast, socketData, handleSocketRegister, handleEmitServiceRequest, handleOnServiceRequestResponse } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -33,7 +28,8 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     useEffect(() => {
         if (userData) {
-            socket.emit('register', userData?.user?.id);
+            // socket.emit('register', userData?.user?.id);
+            handleSocketRegister(userData?.user?.id);
         }
     }, [userData]);
 
@@ -85,11 +81,11 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
     const sendRequest = (provider: Provider) => {
         if (userData) {
             setSelectedProvider(provider);
-            socket.emit('serviceRequest', {
-                fromUserId: userData.user.id,
-                toUserId: provider._id,
-                requestData: userData,
-            });
+            handleEmitServiceRequest(
+                userData.user.id,
+                provider._id,
+                userData
+            );
             setIsRequestLoading(true);
         }
     };
@@ -100,27 +96,21 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
     }, [selectedProvider]);
 
     useEffect(() => {
-        const handleServiceRequestResponse = (data: any) => {
-            setIsRequestLoading(false);
-
-            if (data.status === "declined") {
+        handleOnServiceRequestResponse();
+        if (socketData) {
+            if (socketData.status === "declined") {
                 showToast("Sorry, your request has been declined. Please try again later", "error");
+                setIsRequestLoading(false);
             }
 
-            if (data.status === "accepted") {
+            if (socketData.status === "accepted") {
                 showToast("Your request has been successfully accepted", "success");
-                setData(data);
 
                 // Use the ref to access the latest selectedProvider
                 handleAcceptedService(selectedProviderRef.current);
             }
-        };
-
-        socket.on("serviceRequestResponse", handleServiceRequestResponse);
-        return () => {
-            socket.off("serviceRequestResponse", handleServiceRequestResponse);
-        };
-    }, []);
+        }
+    }, [socketData]);
 
     useEffect(() => {
         if (loading === false && providers) {

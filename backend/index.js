@@ -57,8 +57,15 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('reconnect', (data) => {
+    const { userId } = data;
+    socket.to(userId).emit('serviceRequest', data); // Re-emit the request data
+  });
+
   // Handle request response (accept/decline)
   socket.on('serviceRequestResponse', ({ toUserId, fromUserId, status, verificationCode }) => {
+    console.log(`Received serviceRequestResponse:`, { toUserId, fromUserId, status, verificationCode });
+
     const requesterSocketId = userSockets.get(fromUserId);
 
     if (requesterSocketId) {
@@ -66,7 +73,7 @@ io.on('connection', (socket) => {
       io.to(requesterSocketId).emit('serviceRequestResponse', {
         toUserId,
         status, // "accepted" or "declined"
-        verificationCode
+        verificationCode,
       });
       console.log(`Request ${status} by ${toUserId} for ${fromUserId}`);
     } else {
