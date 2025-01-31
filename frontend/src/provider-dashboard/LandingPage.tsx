@@ -81,6 +81,7 @@ const LandingPage: React.FC = () => {
                 setIsRequsetAccept(true);
                 showToast("Request accepted successfully!", "success");
                 navigate("/provider-dashboard/verify-code")
+                localStorage.setItem("takerId", requestData.requestData.user.id);
             }
 
             localStorage.setItem('requestId', response.data.requestId);
@@ -148,7 +149,7 @@ const LandingPage: React.FC = () => {
                                 <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
                             </a>
                             {
-                                !isRequsetAccept
+                                isRequsetAccept
                                 &&
                                 <>
                                     <NavLink

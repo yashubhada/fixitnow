@@ -2,7 +2,7 @@ import React from 'react';
 
 const Home: React.FC = () => {
     return (
-        <div className="bg-gray-50 min-h-full p-6">
+        <div className="min-h-full">
             <h1 className="text-2xl font-bold text-black mb-7">Dashboard Overview</h1>
 
             {/* Stats Overview */}

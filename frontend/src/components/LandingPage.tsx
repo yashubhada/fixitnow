@@ -1,5 +1,4 @@
 import React, { useContext, useRef, useState } from 'react'
-import LogoBlack from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
 import Cleaner from '../images/cleaner.png'
@@ -196,6 +195,12 @@ const LandingPage: React.FC = () => {
                                     <ul>
                                         <li>
                                             <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
+                                                <i className="ri-user-3-line text-lg mr-3"></i>
+                                                <span className='text-lg'>Profile</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
                                                 <i className="ri-history-line text-lg mr-3"></i>
                                                 <span className='text-lg'>History</span>
                                             </div>
@@ -225,11 +230,6 @@ const LandingPage: React.FC = () => {
             <section className='max-w-[1360px] mx-auto flex items-center px-4 pt-10 md:px-10 md:pt-20'>
                 <div className='flex items-center w-full'>
                     <div className='w-full md:w-1/2'>
-                        <img
-                            src={LogoBlack}
-                            alt="fixitnow logo"
-                            className='w-12 md:w-16'
-                        />
                         <h1 className='mt-4 text-black text-[30px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
                         <div className='font-roboto w-full md:w-[400px] mt-8'>
                             <form

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
+import { data } from 'react-router-dom';
 
 const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
 
-    const { socket, socketData, handleOnServiceRequestResponse } = useContext(UserContext);
+    const { userData, socket, socketData, handleOnServiceRequestResponse, handleChatSendMessage, handleChatReceiveMessage } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -36,6 +37,16 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
     const toggleChat = (): void => {
         setIsChatVisible(!isChatVisible);
     };
+
+    const [chatInput, setChatInput] = useState<string>("");
+    const sendMessage: React.FormEventHandler<HTMLFormElement> = (e) => {
+        e.preventDefault();
+        handleChatSendMessage(userData.user.id, providerData._id, chatInput);
+    }
+
+    const handleChatInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setChatInput(e.target.value);
+    }
 
     return (
         <>
@@ -158,15 +169,20 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
                         </div>
                         {/* Send Message */}
                         <div className='w-full p-2 border-t'>
-                            <form className='w-full flex items-center justify-between py-[6px] px-2 bg-[#f3f3f3] cursor-text border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
+                            <form onClick={sendMessage} className='w-full flex items-center justify-between py-[6px] px-2 bg-[#f3f3f3] cursor-text border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
                                 <input
                                     type="text"
                                     autoComplete='off'
+                                    value={chatInput}
+                                    onChange={handleChatInputChange}
                                     placeholder={`Send a message to ${providerData.name}...`}
                                     required
                                     className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black pr-2'
                                 />
-                                <button className='px-1 text-lg bg-black text-white rounded-md'>
+                                <button
+                                    type="submit"
+                                    className='px-1 text-lg bg-black text-white rounded-md'
+                                >
                                     <i className="ri-send-plane-2-fill"></i>
                                 </button>
                             </form>

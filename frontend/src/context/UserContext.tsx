@@ -34,6 +34,12 @@ interface UserContextType {
         verificationCode: string
     ) => void;
     handleOnServiceRequestResponse: () => void;
+    handleChatSendMessage: (
+        fromUserId: string,
+        toUserId: string,
+        message: string
+    ) => void;
+    handleChatReceiveMessage: () => void;
 }
 
 // Default context value
@@ -61,6 +67,8 @@ const defaultValue: UserContextType = {
     handleOnServiceRequest: () => { },
     handleEmitServiceRequestResponse: () => { },
     handleOnServiceRequestResponse: () => { },
+    handleChatSendMessage: () => { },
+    handleChatReceiveMessage: () => { },
 };
 
 // Create context
@@ -227,6 +235,40 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         }
     };
 
+    const handleChatSendMessage = (
+        fromUserId: string,
+        toUserId: string,
+        message: string
+    ) => {
+        if (socket) {
+            socket.emit('sendMessage', {
+                fromUserId,
+                toUserId,
+                message
+            });
+            console.log("send", {
+                fromUserId,
+                toUserId,
+                message
+            });
+        }
+    }
+
+    const handleChatReceiveMessage = () => {
+        if (socket) {
+            const listener = (data: any) => {
+                setSocketData(data);
+                console.log("receive: ", data);
+            };
+            socket.on('receiveMessage', listener);
+
+            // Cleanup listener
+            return () => {
+                socket.off('receiveMessage', listener);
+            };
+        }
+    }
+
     return (
         <UserContext.Provider
             value={{
@@ -253,6 +295,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 handleOnServiceRequest,
                 handleEmitServiceRequestResponse,
                 handleOnServiceRequestResponse,
+                handleChatSendMessage,
+                handleChatReceiveMessage,
             }}
         >
             {children}

@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+body {
   font-family: 'Nunito', sans-serif;
+}
+
+/* spinner animation */
+@layer components {
+  .spinner {
+    @apply relative inline-block w-[1em] h-[1em] text-[28px];
+  }
+
+  .spinner.center {
+    @apply absolute inset-0 m-auto;
+  }
+
+  .spinner-blade {
+    @apply absolute left-[0.4629em] bottom-0 w-[0.074em] h-[0.2777em] rounded-[0.0555em] bg-transparent;
+    transform-origin: center -0.2222em;
+    animation: spinner-fade9234 1s infinite linear;
+  }
+
+  @keyframes spinner-fade9234 {
+    0% {
+      background-color: theme("colors.black");
+    }
+
+    100% {
+      background-color: transparent;
+    }
+  }
 }
