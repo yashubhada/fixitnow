@@ -186,7 +186,7 @@ const LandingPage: React.FC = () => {
                         userData?.user?.role === "serviceTaker"
                             ?
                             <>
-                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'>
+                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'>
                                     <img className='w-10 h-10 shadow rounded-full bg-white' src={userData?.user?.avatar} />
                                     <div className='text-lg font-medium'>
                                         {userData?.user?.name}
@@ -195,13 +195,13 @@ const LandingPage: React.FC = () => {
                                 <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
                                     <ul>
                                         <li>
-                                            <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
+                                            <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
                                                 <i className="ri-history-line text-lg mr-3"></i>
                                                 <span className='text-lg'>History</span>
                                             </div>
                                         </li>
                                         <li>
-                                            <div onClick={handleLogout} className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-black hover:text-white cursor-pointer'>
+                                            <div onClick={handleLogout} className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
                                                 <i className="ri-logout-box-line text-lg mr-3"></i>
                                                 <span className='text-lg'>Logout</span>
                                             </div>
@@ -212,7 +212,7 @@ const LandingPage: React.FC = () => {
                             :
                             <div
                                 onClick={openLoginModal}
-                                className='w-full cursor-pointer flex items-center justify-center bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-black hover:text-white'
+                                className='w-full cursor-pointer flex items-center justify-center bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'
                             >
                                 <i className="ri-login-box-line text-xl mr-2"></i>
                                 <span className='text-lg'>Login</span>

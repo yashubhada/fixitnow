@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
 
   // Handle request response (accept/decline)
   socket.on('serviceRequestResponse', ({ toUserId, fromUserId, status, verificationCode }) => {
-    console.log(`Received serviceRequestResponse:`, { toUserId, fromUserId, status, verificationCode });
+    // console.log(`Received serviceRequestResponse:`, { toUserId, fromUserId, status, verificationCode });
 
     const requesterSocketId = userSockets.get(fromUserId);
 
@@ -78,6 +78,22 @@ io.on('connection', (socket) => {
       console.log(`Request ${status} by ${toUserId} for ${fromUserId}`);
     } else {
       console.log(`Requester ${fromUserId} is not connected`);
+    }
+  });
+
+  // Handle sending a chat message between two users
+  socket.on('sendMessage', ({ fromUserId, toUserId, message }) => {
+    const targetSocketId = userSockets.get(toUserId);
+
+    if (targetSocketId) {
+      // Send the message to the recipient
+      io.to(targetSocketId).emit('receiveMessage', {
+        fromUserId,
+        message,
+      });
+      console.log(`Message sent from ${fromUserId} to ${toUserId}: ${message}`);
+    } else {
+      console.log(`User ${toUserId} is not connected`);
     }
   });
 

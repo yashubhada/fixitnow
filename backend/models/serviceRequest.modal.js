@@ -21,11 +21,7 @@ const serviceRequestSchema = new mongoose.Schema({
         enum: ['Pending', 'Accepted', 'Completed', 'Canceled'],
         default: 'Pending',
     },
-    startedAt: {
-        type: Date,
-        default: null,
-    },
-    completedAt: {
+    totalTime: {
         type: Date,
         default: null,
     },

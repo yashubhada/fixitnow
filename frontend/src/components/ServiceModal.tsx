@@ -30,6 +30,13 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
         }
     }, [socket, socketData, handleOnServiceRequestResponse]);
 
+
+    // handle chat
+    const [isChatVisible, setIsChatVisible] = useState(false);
+    const toggleChat = (): void => {
+        setIsChatVisible(!isChatVisible);
+    };
+
     return (
         <>
             <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
@@ -98,6 +105,71 @@ const ServiceModal: React.FC<{ providerData: any; }> = ({ providerData }) => {
                                 <i className="ri-pin-distance-line text-lg mr-2"></i>
                                 <p className='text-base'>Distance : 0.2 km</p>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Chat Toggle Button */}
+                    <div
+                        className='fixed bottom-0 right-2 bg-white p-2 rounded-t-md flex items-center cursor-pointer'
+                        onClick={toggleChat}
+                    >
+                        <div className='relative mr-2'>
+                            <img
+                                className='w-10 rounded-full'
+                                src={providerData.avatar}
+                                alt="Provider Avatar"
+                            />
+                            <div className='absolute h-3 w-3 bg-green-500 rounded-full bottom-0 right-0 border-white border-2'></div>
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-semibold text-black">{providerData.name}</h1>
+                        </div>
+                    </div>
+
+                    {/* Chat Container */}
+                    <div
+                        className={`z-10 md:w-96 fixed bottom-0 right-2 bg-white rounded-t-md transform transition-transform duration-300 ease-in-out ${isChatVisible ? "translate-y-0" : "translate-y-full"
+                            }`}
+                    >
+                        <div className='flex items-center justify-between p-2 border-b'>
+                            <div className='flex items-center'>
+                                <div className='relative mr-2'>
+                                    <img
+                                        className='w-10 rounded-full'
+                                        src={providerData.avatar}
+                                        alt="Provider Avatar"
+                                    />
+                                    <div className='absolute h-3 w-3 bg-green-500 rounded-full bottom-0 right-0 border-white border-2'></div>
+                                </div>
+                                <div>
+                                    <h1 className="text-lg font-semibold text-black">{providerData.name}</h1>
+                                </div>
+                            </div>
+                            <div
+                                className='px-1 text-lg bg-black text-white cursor-pointer rounded-md'
+                                onClick={toggleChat}
+                            >
+                                <i className="ri-close-fill"></i>
+                            </div>
+                        </div>
+                        {/* Message Container */}
+                        <div className='w-full h-[calc(100vh-118px)] bg-red-100 p-2'>
+                            {/* Message content goes here */}
+                        </div>
+                        {/* Send Message */}
+                        <div className='w-full p-2 border-t'>
+                            <form className='w-full flex items-center justify-between py-[6px] px-2 bg-[#f3f3f3] cursor-text border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'>
+                                <input
+                                    type="text"
+                                    autoComplete='off'
+                                    placeholder={`Send a message to ${providerData.name}...`}
+                                    required
+                                    className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black pr-2'
+                                />
+                                <button className='px-1 text-lg bg-black text-white rounded-md'>
+                                    <i className="ri-send-plane-2-fill"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -23,7 +23,7 @@ const Timmer: React.FC = () => {
 
     // Update the timer every second
     useEffect(() => {
-        let interval: NodeJS.Timeout;
+        let interval: any;
         if (isRunning) {
             interval = setInterval(() => {
                 setTimeElapsed((prevTime) => {

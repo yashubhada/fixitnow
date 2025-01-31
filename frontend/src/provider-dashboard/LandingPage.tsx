@@ -5,7 +5,6 @@ import Logo from '../images/fixitnow-logo-black.png';
 import Home from './Home';
 import RequestModal from './RequestModal';
 import axios from 'axios';
-import VerifyCodeInput from './VerifyCodeInput';
 import Timmer from './Timmer';
 
 
@@ -18,8 +17,6 @@ const LandingPage: React.FC = () => {
         const storedData = localStorage.getItem("requestData");
         return storedData ? JSON.parse(storedData) : null;
     });
-
-    const [isShowVerifyCodeModal, setIsShowVerifyCodeModal] = useState<boolean>(false);
 
     useEffect(() => {
         // Register user with socket
@@ -59,6 +56,8 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
+    const [isRequsetAccept, setIsRequsetAccept] = useState<boolean>(false);
+
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
         const verificationCode = generateVerificationCode();
         const newRequestData = {
@@ -79,7 +78,9 @@ const LandingPage: React.FC = () => {
             );
 
             if (status === 'accepted' && response.data.success) {
-                setIsShowVerifyCodeModal(true);
+                setIsRequsetAccept(true);
+                showToast("Request accepted successfully!", "success");
+                navigate("/provider-dashboard/verify-code")
             }
 
             localStorage.setItem('requestId', response.data.requestId);
@@ -146,12 +147,26 @@ const LandingPage: React.FC = () => {
                             >
                                 <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
                             </a>
-                            <a
-                                href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded'
-                            >
-                                <li className='flex items-center font-medium'><i className="ri-chat-1-line mr-2 text-lg"></i>Message</li>
-                            </a>
+                            {
+                                !isRequsetAccept
+                                &&
+                                <>
+                                    <NavLink
+                                        to="/provider-dashboard/chat"
+                                        className={({ isActive }) =>
+                                            `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
+                                    >
+                                        <li className='flex items-center font-medium'><i className="ri-chat-1-line mr-2 text-lg"></i>Message</li>
+                                    </NavLink>
+                                    <NavLink
+                                        to="/provider-dashboard/verify-code"
+                                        className={({ isActive }) =>
+                                            `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
+                                    >
+                                        <li className='flex items-center font-medium'><i className="ri-shield-check-line mr-2 text-lg"></i>User Verification</li>
+                                    </NavLink>
+                                </>
+                            }
                             <a
                                 href="#"
                                 className='block py-2 px-3 hover:bg-gray-200 rounded'
@@ -199,7 +214,7 @@ const LandingPage: React.FC = () => {
                 />
             )}
 
-            {isShowVerifyCodeModal && <VerifyCodeInput close={() => setIsShowVerifyCodeModal(false)} />}
+            {/* {isShowVerifyCodeModal && <VerifyCodeInput close={() => setIsShowVerifyCodeModal(false)} />} */}
 
             {
                 // <Timmer />
