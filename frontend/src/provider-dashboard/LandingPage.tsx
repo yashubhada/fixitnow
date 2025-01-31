@@ -6,6 +6,7 @@ import Home from './Home';
 import RequestModal from './RequestModal';
 import axios from 'axios';
 import VerifyCodeInput from './VerifyCodeInput';
+import Timmer from './Timmer';
 
 
 const LandingPage: React.FC = () => {
@@ -199,6 +200,10 @@ const LandingPage: React.FC = () => {
             )}
 
             {isShowVerifyCodeModal && <VerifyCodeInput close={() => setIsShowVerifyCodeModal(false)} />}
+
+            {
+                // <Timmer />
+            }
         </>
     );
 };
