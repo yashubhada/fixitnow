@@ -62,7 +62,19 @@ export const handleUserSignUp = async (req, res) => {
         res.status(201).json({ success: true, message: "Signup successfull! 😊" });
 
     } catch (err) {
-        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+export const fetchSingleTaker = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const taker = await User.findById(id);
+        if (!taker) {
+            return res.status(400).json({ success: false, message: 'User not found' });
+        }
+        res.status(201).json({ success: true, taker });
+    } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
 }
@@ -123,11 +135,22 @@ export const handleProviderSignUp = async (req, res) => {
 
         res.status(201).json({ success: true, message: 'Signup Successful 😊' });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ success: false, message: err.message });
     }
 };
 
+export const fetchSingleProvider = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const provider = await Provider.findById(id);
+        if (!provider) {
+            return res.status(400).json({ success: false, message: 'Service provider not found' });
+        }
+        res.status(201).json({ success: true, provider });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
 
 export const handleSignIn = async (req, res) => {
     try {
@@ -205,7 +228,6 @@ export const handleSignIn = async (req, res) => {
             })
             .json({ success: true, user: tokenData, role: tokenData.role, message: "Signin Successful 😊" });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ success: false, message: err.message });
     }
 }

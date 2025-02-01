@@ -56,7 +56,10 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
-    const [isRequsetAccept, setIsRequsetAccept] = useState<boolean>(false);
+    const [isRequsetAccept, setIsRequsetAccept] = useState<string | null>(() => {
+        const storedData = localStorage.getItem("requestId");
+        return storedData ? storedData : null;
+    });
 
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
         const verificationCode = generateVerificationCode();
@@ -78,12 +81,12 @@ const LandingPage: React.FC = () => {
             );
 
             if (status === 'accepted' && response.data.success) {
-                setIsRequsetAccept(true);
                 showToast("Request accepted successfully!", "success");
                 navigate("/provider-dashboard/verify-code")
                 localStorage.setItem("takerId", requestData.requestData.user.id);
             }
 
+            setIsRequsetAccept(response.data.requestId);
             localStorage.setItem('requestId', response.data.requestId);
 
             // Emit service request response
@@ -211,11 +214,10 @@ const LandingPage: React.FC = () => {
             {requestData && (
                 <RequestModal
                     data={requestData}
+                    close={() => setRequestData(null)}
                     handleServiceResponse={handleServiceResponse}
                 />
             )}
-
-            {/* {isShowVerifyCodeModal && <VerifyCodeInput close={() => setIsShowVerifyCodeModal(false)} />} */}
 
             {
                 // <Timmer />

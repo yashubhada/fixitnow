@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const VerifyCodeInput: React.FC = () => {
 
     const { baseUrl, showToast } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,8 +39,9 @@ const VerifyCodeInput: React.FC = () => {
                 { withCredentials: true }
             );
             if (response.data.success) {
-                localStorage.removeItem('requestId');
+                localStorage.removeItem("requestId");
                 showToast(response.data.message, "success");
+                navigate("/provider-dashboard");
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {

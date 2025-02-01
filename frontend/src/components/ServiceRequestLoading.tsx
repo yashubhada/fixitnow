@@ -14,9 +14,6 @@ const ServiceRequestLoading: React.FC<{ providerName: string | undefined; }> = (
         }
     }, []);
 
-    // Number of spinner blades
-    const blades = Array.from({ length: 12 }, (_, i) => i);
-
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             {/* Background Overlay */}
@@ -25,19 +22,21 @@ const ServiceRequestLoading: React.FC<{ providerName: string | undefined; }> = (
             {/* Modal Content */}
             <div className="h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className='bg-white p-5 rounded-md z-10 w-full md:w-[520px] animate-fade-in'>
-                    <div className="spinner center">
-                        {blades.map((index) => (
-                            <div
-                                key={index}
-                                className="spinner-blade"
-                                style={{
-                                    animationDelay: `${index * 0.083}s`,
-                                    transform: `rotate(${index * 30}deg)`,
-                                }}
-                            ></div>
-                        ))}
+                    <div className='flex justify-center my-32'>
+                        <div className="spinner">
+                            {Array.from({ length: 12 }, (_, i) => (
+                                <div
+                                    key={i}
+                                    className="spinner-blade"
+                                    style={{
+                                        animationDelay: `${i * 0.083}s`,
+                                        transform: `rotate(${i * 30}deg)`,
+                                    }}
+                                ></div>
+                            ))}
+                        </div>
                     </div>
-                    <p className='mt-36 text-center text-black text-lg'>Please wait until your request is accepted by <span className='font-bold'>{providerName}</span></p>
+                    <p className='text-center text-black text-lg'>Please wait until your request is accepted by <span className='font-bold'>{providerName}</span></p>
                 </div>
             </div>
         </div>

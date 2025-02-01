@@ -6,7 +6,9 @@ import {
     handleProviderSignUp,
     fetchAllProviders,
     createNewRequest,
-    fetchSingleServiceRequest
+    fetchSingleServiceRequest,
+    fetchSingleTaker,
+    fetchSingleProvider
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -29,6 +31,11 @@ userRouter.post('/signin', handleSignIn);
 userRouter.get('/fetchAllProviders', fetchAllProviders);
 userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
+
+// fetch single user and service provider
+userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);
+userRouter.get('/fetchSingleProvider', fetchSingleProvider);
+
 // request
 userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);
 userRouter.post('/fetchSingleServiceRequest', handleAuthentication, fetchSingleServiceRequest);

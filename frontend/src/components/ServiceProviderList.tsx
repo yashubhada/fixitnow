@@ -89,6 +89,13 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     };
 
+    if (isRequestLoading) {
+        setTimeout(() => {
+            setIsRequestLoading(false);
+            showToast("Service provider not responding. Please try again later", "error");
+        }, 30000);
+    }
+
     const selectedProviderRef = useRef(selectedProvider);
     useEffect(() => {
         selectedProviderRef.current = selectedProvider;
