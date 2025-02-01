@@ -257,7 +257,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     const handleChatReceiveMessage = () => {
         if (socket) {
             const listener = (data: any) => {
-                setSocketData(data);
                 console.log("receive: ", data);
             };
             socket.on('receiveMessage', listener);
