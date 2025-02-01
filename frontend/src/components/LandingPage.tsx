@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from 'react'
+import BlackLogo from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
 import Cleaner from '../images/cleaner.png'
@@ -230,6 +231,11 @@ const LandingPage: React.FC = () => {
             <section className='max-w-[1360px] mx-auto flex items-center px-4 pt-10 md:px-10 md:pt-20'>
                 <div className='flex items-center w-full'>
                     <div className='w-full md:w-1/2'>
+                        <img
+                            src={BlackLogo}
+                            alt="Company logo"
+                            className='w-14 md:w-20'
+                        />
                         <h1 className='mt-4 text-black text-[30px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Help is Just Around the Corner</h1>
                         <div className='font-roboto w-full md:w-[400px] mt-8'>
                             <form
