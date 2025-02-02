@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HourGlass from '../images/hourGlass.gif';
+import { UserContext } from '../context/UserContext';
 
-const Timmer: React.FC = () => {
+const Timmer: React.FC<{ showButton: boolean; }> = ({ showButton }) => {
+
+    const { showToast, setIsShowTimmer } = useContext(UserContext);
+
     const [timeElapsed, setTimeElapsed] = useState<number>(0);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
@@ -48,8 +52,9 @@ const Timmer: React.FC = () => {
     // Handle "End Task" button click
     const handleEndTask = () => {
         setIsRunning(false);
+        setIsShowTimmer(false);
         localStorage.removeItem('stopwatchTime');
-        alert(`Task ended. Time spent: ${formatTime(timeElapsed)}`);
+        showToast(`Task ended. Time spent: ${formatTime(timeElapsed)}`, "success");
     };
 
     return (
@@ -67,12 +72,16 @@ const Timmer: React.FC = () => {
                     <div className="text-center">
                         {formatTime(timeElapsed)}
                     </div>
-                    <button
-                        className="w-full bg-black hover:bg-[#333] text-white py-2 rounded mt-5"
-                        onClick={handleEndTask}
-                    >
-                        End Task
-                    </button>
+                    {
+                        showButton
+                        &&
+                        <button
+                            className="w-full bg-black hover:bg-[#333] text-white py-2 rounded mt-5"
+                            onClick={handleEndTask}
+                        >
+                            End Task
+                        </button>
+                    }
                 </div>
             </div>
         </div>

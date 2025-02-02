@@ -5,9 +5,18 @@ import { useNavigate } from 'react-router-dom';
 
 const VerifyCodeInput: React.FC = () => {
 
-    const { baseUrl, showToast } = useContext(UserContext);
+    const { baseUrl, showToast, setIsShowTimmer } = useContext(UserContext);
 
     const navigate = useNavigate();
+
+    // if request id not found
+    useEffect(() => {
+        const id = localStorage.getItem("takerId");
+        if (!id) {
+            navigate("/provider-dashboard/not-found");
+            return;
+        }
+    }, []);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,8 +48,9 @@ const VerifyCodeInput: React.FC = () => {
                 { withCredentials: true }
             );
             if (response.data.success) {
-                localStorage.removeItem("requestId");
+                localStorage.removeItem("takerId");
                 showToast(response.data.message, "success");
+                setIsShowTimmer(true); // show timmer
                 navigate("/provider-dashboard");
             }
         } catch (err) {

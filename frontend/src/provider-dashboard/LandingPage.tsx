@@ -9,7 +9,7 @@ import Timmer from './Timmer';
 
 
 const LandingPage: React.FC = () => {
-    const { baseUrl, userData, handleLogout, showToast, isLoading, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, isShowTimmer } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
@@ -56,11 +56,6 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
-    const [isRequsetAccept, setIsRequsetAccept] = useState<string | null>(() => {
-        const storedData = localStorage.getItem("requestId");
-        return storedData ? storedData : null;
-    });
-
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
         const verificationCode = generateVerificationCode();
         const newRequestData = {
@@ -86,7 +81,6 @@ const LandingPage: React.FC = () => {
                 localStorage.setItem("takerId", requestData.requestData.user.id);
             }
 
-            setIsRequsetAccept(response.data.requestId);
             localStorage.setItem('requestId', response.data.requestId);
 
             // Emit service request response
@@ -151,26 +145,20 @@ const LandingPage: React.FC = () => {
                             >
                                 <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
                             </a>
-                            {
-                                isRequsetAccept
-                                &&
-                                <>
-                                    <NavLink
-                                        to="/provider-dashboard/chat"
-                                        className={({ isActive }) =>
-                                            `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
-                                    >
-                                        <li className='flex items-center font-medium'><i className="ri-chat-1-line mr-2 text-lg"></i>Message</li>
-                                    </NavLink>
-                                    <NavLink
-                                        to="/provider-dashboard/verify-code"
-                                        className={({ isActive }) =>
-                                            `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
-                                    >
-                                        <li className='flex items-center font-medium'><i className="ri-shield-check-line mr-2 text-lg"></i>User Verification</li>
-                                    </NavLink>
-                                </>
-                            }
+                            <NavLink
+                                to="/provider-dashboard/chat"
+                                className={({ isActive }) =>
+                                    `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
+                            >
+                                <li className='flex items-center font-medium'><i className="ri-chat-1-line mr-2 text-lg"></i>Message</li>
+                            </NavLink>
+                            <NavLink
+                                to="/provider-dashboard/verify-code"
+                                className={({ isActive }) =>
+                                    `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
+                            >
+                                <li className='flex items-center font-medium'><i className="ri-shield-check-line mr-2 text-lg"></i>User Verification</li>
+                            </NavLink>
                             <a
                                 href="#"
                                 className='block py-2 px-3 hover:bg-gray-200 rounded'
@@ -220,7 +208,7 @@ const LandingPage: React.FC = () => {
             )}
 
             {
-                // <Timmer />
+                isShowTimmer && <Timmer showButton={true} />
             }
         </>
     );

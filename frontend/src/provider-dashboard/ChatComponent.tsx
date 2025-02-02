@@ -24,8 +24,7 @@ const ChatComponent: React.FC = () => {
         setIsLoading(true);
         const id = localStorage.getItem("takerId");
         if (!id) {
-            showToast("User ID not found", "error");
-            navigate("/provider-dashboard");
+            navigate("/provider-dashboard/not-found");
             return;
         }
         try {

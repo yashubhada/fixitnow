@@ -6,6 +6,7 @@ import DashboardLandingPage from './provider-dashboard/LandingPage'
 import History from './provider-dashboard/History'
 import VerifyCodeInput from './provider-dashboard/VerifyCodeInput'
 import ChatComponent from './provider-dashboard/ChatComponent'
+import NotFound from './provider-dashboard/NotFound'
 
 const App: React.FC = () => {
     return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
                             <Route path="history" element={<History />} />
                             <Route path="verify-code" element={<VerifyCodeInput />} />
                             <Route path="chat" element={<ChatComponent />} />
+                            <Route path="not-found" element={<NotFound />} />
                         </Route>
                     </Routes>
                 </UserContextProvider>
