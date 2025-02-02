@@ -1,29 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
 import HourGlass from '../images/hourGlass.gif';
 import { UserContext } from '../context/UserContext';
+import axios from 'axios';
 
-const Timmer: React.FC<{ showButton: boolean; }> = ({ showButton }) => {
-
-    const { showToast, setIsShowTimmer } = useContext(UserContext);
+const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
+    const { baseUrl, userData, showToast, setIsShowTimmer } = useContext(UserContext);
 
     const [timeElapsed, setTimeElapsed] = useState<number>(0);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+    const [requestId, setRequestId] = useState<string | null>(null);
+    const [providerId, setProviderId] = useState<string | null>(null);
 
     // Load the timer from localStorage on component mount
     useEffect(() => {
         const savedTime = localStorage.getItem('stopwatchTime');
         if (savedTime) {
             setTimeElapsed(parseInt(savedTime, 10));
-            setIsRunning(true);
         }
+        setIsRunning(true);
     }, []);
-
-    // Start the timer when the modal is shown
-    useEffect(() => {
-        if (!isRunning) {
-            setIsRunning(true);
-        }
-    }, [isRunning]);
 
     // Update the timer every second
     useEffect(() => {
@@ -49,12 +44,40 @@ const Timmer: React.FC<{ showButton: boolean; }> = ({ showButton }) => {
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
+    // Set requestId and providerId
+    useEffect(() => {
+        setRequestId(localStorage.getItem('requestId'));
+        setProviderId(userData.user.id);
+    }, [userData]);
+
     // Handle "End Task" button click
-    const handleEndTask = () => {
+    const handleEndTask = async () => {
         setIsRunning(false);
         setIsShowTimmer(false);
         localStorage.removeItem('stopwatchTime');
-        showToast(`Task ended. Time spent: ${formatTime(timeElapsed)}`, "success");
+        localStorage.removeItem('requestId');
+        localStorage.removeItem('providerId');
+
+        if (requestId && providerId) {
+            try {
+                const response = await axios.post(
+                    `${baseUrl}api/user/serviceComplete`,
+                    { requestId, providerId, totalTime: timeElapsed },
+                    { withCredentials: true }
+                );
+                if (response.data.success) {
+                    showToast(`Task ended. Time spent: ${formatTime(timeElapsed)}`, "success");
+                }
+            } catch (err) {
+                if (axios.isAxiosError(err)) {
+                    if (err.response) {
+                        if (err.status === 400) {
+                            showToast(err.response.data.message, "error");
+                        }
+                    }
+                }
+            }
+        }
     };
 
     return (
@@ -72,16 +95,14 @@ const Timmer: React.FC<{ showButton: boolean; }> = ({ showButton }) => {
                     <div className="text-center">
                         {formatTime(timeElapsed)}
                     </div>
-                    {
-                        showButton
-                        &&
+                    {showButton && (
                         <button
                             className="w-full bg-black hover:bg-[#333] text-white py-2 rounded mt-5"
                             onClick={handleEndTask}
                         >
                             End Task
                         </button>
-                    }
+                    )}
                 </div>
             </div>
         </div>

@@ -23,13 +23,13 @@ const requestSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    requestedAt: {
-        type: Date,
-        default: Date.now,
+    totalTime: {
+        type: Number,
+        default: null,
     },
     status: {
         type: String,
-        enum: ['Pending', 'Accepted', 'Canceled'],
+        enum: ['Pending', 'Accepted', 'Completed', 'Canceled'],
         default: 'Pending',
     },
     verificationCode: {

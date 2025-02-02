@@ -300,11 +300,38 @@ export const createNewRequest = async (req, res) => {
             verificationCode,
         });
 
+        if (status === 'Accepted') {
+            await Provider.findByIdAndUpdate(
+                providerId,
+                { isAvailable: false },
+                { new: true } // Returns the updated document
+            );
+        }
+
         if (!newRequest) {
             return res.status(201).json({ success: false, message: "Failed to create request" });
         }
 
         res.status(201).json({ success: true, requestId: newRequest._id, message: "New Request Generated! 🎉🚀" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+export const serviceComplete = async (req, res) => {
+    try {
+        const { requestId, providerId, totalTime } = req.body;
+        await Request.findByIdAndUpdate(
+            requestId,
+            { totalTime },
+            { new: true }
+        );
+        await Provider.findByIdAndUpdate(
+            providerId,
+            { isAvailable: true },
+            { new: true }
+        );
+        res.status(201).json({ success: true, message: "Service completed successfully 🎉" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }

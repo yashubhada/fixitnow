@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import BlackLogo from '../images/fixitnow-logo-black.png'
 import LogoWhite from '../images/fixitnow-logo-white.png'
 import Gardener from '../images/gardener.png'
@@ -22,10 +22,11 @@ import { UserContext } from '../context/UserContext'
 import ServiceModal from './ServiceModal'
 import Address from './address.json'
 import PageLoading from './PageLoading'
+import Timmer from '../provider-dashboard/Timmer'
 
 const LandingPage: React.FC = () => {
 
-    const { openLoginModal, isLoading, loginFormModal, isSignupForm, userData, handleLogout } = useContext(UserContext);
+    const { openLoginModal, isLoading, loginFormModal, isSignupForm, userData, handleLogout, isShowTimmer } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -172,6 +173,10 @@ const LandingPage: React.FC = () => {
         setRequestedProvider(providerData); // Update requestedProvider state
         localStorage.setItem("requestedProvider", JSON.stringify(providerData)); // Store in local storage
     };
+
+    useEffect(() => {
+        console.log("isShowTimmer updated:", isShowTimmer);
+    }, [isShowTimmer]);
 
     if (isLoading) {
         return <PageLoading />
@@ -474,6 +479,10 @@ const LandingPage: React.FC = () => {
             {requestedProvider && (
                 <ServiceModal providerData={requestedProvider} />
             )}
+
+            {
+                isShowTimmer && <Timmer showButton={false} />
+            }
         </>
     )
 }
