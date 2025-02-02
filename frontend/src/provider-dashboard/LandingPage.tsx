@@ -9,7 +9,7 @@ import Timmer from './Timmer';
 
 
 const LandingPage: React.FC = () => {
-    const { baseUrl, userData, handleLogout, showToast, isLoading, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, isShowTimmer } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading, socket, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, handleOnTimmerComponent, isShowTimmer } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation(); // Get the current location
 
@@ -112,6 +112,10 @@ const LandingPage: React.FC = () => {
             navigate('/');
         }
     }, [userData, isLoading, navigate, showToast]);
+
+    useEffect(() => {
+        handleOnTimmerComponent();
+    }, [socket]);
 
     // Do not render if user is invalid
     if (!userData?.user || userData?.user?.role !== "serviceProvider") {

@@ -5,17 +5,27 @@ import { useNavigate } from 'react-router-dom';
 
 const VerifyCodeInput: React.FC = () => {
 
-    const { baseUrl, showToast, setIsShowTimmer } = useContext(UserContext);
+    const { baseUrl, userData, showToast, setIsShowTimmer, handleEmitTimmerComponent } = useContext(UserContext);
 
     const navigate = useNavigate();
 
-    // if request id not found
+    const [takerId, setTakerId] = useState<string | null>(null);
+    const [providerId, setProviderId] = useState<string | null>(null);
+
+    // if taker id not found
     useEffect(() => {
         const id = localStorage.getItem("takerId");
+        if (id) {
+            setTakerId(id);
+        }
         if (!id) {
             navigate("/provider-dashboard/not-found");
             return;
         }
+    }, []);
+
+    useEffect(() => {
+        setProviderId(userData.user.id);
     }, []);
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +58,10 @@ const VerifyCodeInput: React.FC = () => {
                 { withCredentials: true }
             );
             if (response.data.success) {
-                localStorage.removeItem("takerId");
+                if (providerId && takerId) {
+                    handleEmitTimmerComponent(providerId, takerId, 'open');
+                }
+                // localStorage.removeItem("takerId");
                 showToast(response.data.message, "success");
                 setIsShowTimmer(true); // show timmer
                 navigate("/provider-dashboard");

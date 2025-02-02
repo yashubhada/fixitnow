@@ -97,6 +97,19 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Handle Timmer component toggle (open/close)
+  socket.on('toggleTimmerComponent', ({ fromUserId, toUserId, action }) => {
+    const targetSocketId = userSockets.get(toUserId);
+
+    if (targetSocketId) {
+      // Emit the toggle event to the target user
+      io.to(targetSocketId).emit('TimmerComponentToggled', { action });
+      console.log(`Timmer Component ${action} for ${toUserId} by ${fromUserId}`);
+    } else {
+      console.log(`User ${toUserId} is not connected`);
+    }
+  });
+
   // Handle disconnect
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);

@@ -26,7 +26,7 @@ import Timmer from '../provider-dashboard/Timmer'
 
 const LandingPage: React.FC = () => {
 
-    const { openLoginModal, isLoading, loginFormModal, isSignupForm, userData, handleLogout, isShowTimmer } = useContext(UserContext);
+    const { openLoginModal, isLoading, loginFormModal, isSignupForm, userData, handleLogout, isShowTimmer, socket, handleOnTimmerComponent } = useContext(UserContext);
 
     const currentYear = new Date().getFullYear();
 
@@ -175,8 +175,32 @@ const LandingPage: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log("isShowTimmer updated:", isShowTimmer);
+        handleOnTimmerComponent();
+    }, [socket]);
+
+    useEffect(() => {
+        if (isShowTimmer) {
+            setRequestedProvider(null);
+            localStorage.clear();
+        }
     }, [isShowTimmer]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            // Prevent the default action (required for some browsers)
+            event.preventDefault();
+            // Custom message (not all browsers will display this)
+            event.returnValue = 'Are you sure you want to leave? Your changes may not be saved.';
+        };
+
+        // Add the event listener
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
 
     if (isLoading) {
         return <PageLoading />

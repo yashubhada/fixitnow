@@ -44,6 +44,12 @@ interface UserContextType {
     // timmer component
     isShowTimmer: boolean;
     setIsShowTimmer: (isShowTimmer: boolean) => void;
+    handleEmitTimmerComponent: (
+        fromUserId: string,
+        toUserId: string,
+        action: string
+    ) => void;
+    handleOnTimmerComponent: () => void;
 }
 
 // Default context value
@@ -77,6 +83,8 @@ const defaultValue: UserContextType = {
     // Timmer component
     isShowTimmer: false,
     setIsShowTimmer: () => { },
+    handleEmitTimmerComponent: () => { },
+    handleOnTimmerComponent: () => { },
 };
 
 // Create context
@@ -279,6 +287,47 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     // manage timmer component
     const [isShowTimmer, setIsShowTimmer] = useState<boolean>(false);
 
+    const handleEmitTimmerComponent = (
+        fromUserId: string,
+        toUserId: string,
+        action: string
+    ) => {
+        if (socket) {
+            socket.emit('toggleTimmerComponent', {
+                fromUserId,
+                toUserId,
+                action
+            });
+            console.log("Timmer Emit", {
+                fromUserId,
+                toUserId,
+                action
+            });
+        }
+    }
+
+    const handleOnTimmerComponent = () => {
+        if (socket) {
+            const listener = ({ action }: { action: 'open' | 'close' }) => {
+                if (action === 'open') {
+                    setIsShowTimmer(true);
+                    console.log("Timer component opened");
+                } else if (action === 'close') {
+                    setIsShowTimmer(false);
+                    console.log("Timer component closed");
+                }
+            };
+
+            // Attach the listener to the 'componentToggled' event
+            socket.on('TimmerComponentToggled', listener);
+
+            // Cleanup: Remove the listener when the component unmounts or `socket` changes
+            return () => {
+                socket.off('TimmerComponentToggled', listener);
+            };
+        }
+    };
+
     return (
         <UserContext.Provider
             value={{
@@ -311,6 +360,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 //timmer component
                 isShowTimmer,
                 setIsShowTimmer,
+                handleOnTimmerComponent,
+                handleEmitTimmerComponent
             }}
         >
             {children}

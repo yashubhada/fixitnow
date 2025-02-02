@@ -4,7 +4,7 @@ import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 
 const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
-    const { baseUrl, userData, showToast, setIsShowTimmer } = useContext(UserContext);
+    const { baseUrl, userData, showToast, setIsShowTimmer, handleEmitTimmerComponent } = useContext(UserContext);
 
     const [timeElapsed, setTimeElapsed] = useState<number>(0);
     const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -50,6 +50,16 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
         setProviderId(userData.user.id);
     }, [userData]);
 
+    const [takerId, setTakerId] = useState<string | null>(null);
+
+    // if taker id not found
+    useEffect(() => {
+        const id = localStorage.getItem("takerId");
+        if (id) {
+            setTakerId(id);
+        }
+    }, []);
+
     // Handle "End Task" button click
     const handleEndTask = async () => {
         setIsRunning(false);
@@ -67,6 +77,10 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
                 );
                 if (response.data.success) {
                     showToast(`Task ended. Time spent: ${formatTime(timeElapsed)}`, "success");
+                    if (providerId && takerId) {
+                        handleEmitTimmerComponent(providerId, takerId, 'close');
+                    }
+                    localStorage.clear();
                 }
             } catch (err) {
                 if (axios.isAxiosError(err)) {
