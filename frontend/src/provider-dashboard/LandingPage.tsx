@@ -60,7 +60,11 @@ const LandingPage: React.FC = () => {
         const verificationCode = generateVerificationCode();
         const newRequestData = {
             userId: requestData.requestData.user.id,
+            userName: requestData.requestData.user.name,
+            userAvatar: requestData.requestData.user.avatar,
             providerId: userData.user.id,
+            providerName: userData.user.name,
+            providerAvatar: userData.user.avatar,
             location: userData.user.address,
             serviceType: userData.user.service,
             price: userData.user.price,

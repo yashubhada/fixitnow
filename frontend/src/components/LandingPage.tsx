@@ -190,19 +190,8 @@ const LandingPage: React.FC = () => {
     };
 
     useEffect(() => {
-        if (isShowTimmer) {
-            localStorage.removeItem("requestedProvider");
-            localStorage.removeItem("verificationCode");
-        } else if (isShowTimmer === false) {
+        if (isShowTimmer === false && isShowTimmer !== null && userData.user.role === "serviceTaker") {
             setIsShowReviewForm(true);
-            localStorage.removeItem("stopwatchTime");
-            localStorage.removeItem("requestedProvider");
-            localStorage.removeItem("verificationCode");
-        }
-        else {
-            localStorage.removeItem("stopwatchTime");
-            localStorage.removeItem("requestedProvider");
-            localStorage.removeItem("verificationCode");
         }
     }, [isShowTimmer]);
 

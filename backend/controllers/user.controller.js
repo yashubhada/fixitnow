@@ -289,10 +289,14 @@ export const createNewRequest = async (req, res) => {
             return res.status(401).send({ success: false, message: "No token found, please log in" });
         }
 
-        const { userId, providerId, location, serviceType, price, status, verificationCode } = req.body;
+        const { userId, userName, userAvatar, providerId, providerName, providerAvatar, location, serviceType, price, status, verificationCode } = req.body;
         const newRequest = await Request.create({
             userId,
+            userName,
+            userAvatar,
             providerId,
+            providerName,
+            providerAvatar,
             location,
             serviceType,
             price,

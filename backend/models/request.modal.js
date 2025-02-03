@@ -6,9 +6,25 @@ const requestSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    userName: {
+        type:String,
+        required: true,
+    },
+    userAvatar: {
+        type:String,
+        required: true,
+    },
     providerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ServiceProvider',
+        required: true,
+    },
+    providerName: {
+        type:String,
+        required: true,
+    },
+    providerAvatar: {
+        type:String,
         required: true,
     },
     location: {
