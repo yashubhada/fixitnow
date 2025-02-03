@@ -47,15 +47,18 @@ const providerSchema = new mongoose.Schema({
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            default: null,
+        },
+        userName: {
+            type: String,
+        },
+        userAvatar: {
+            type: String,
         },
         rating: {
             type: Number,
-            default: null
         },
         message: {
             type: String,
-            default: null
         }
     }]
 }, { timestamps: true });

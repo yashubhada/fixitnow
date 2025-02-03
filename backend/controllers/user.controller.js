@@ -339,18 +339,14 @@ export const serviceComplete = async (req, res) => {
 
 export const addReview = async (req, res) => {
     const { providerId } = req.params;
-    const { userId, rating, message } = req.body;
-
-    if (!providerId || !userId || !rating || !message) {
-        return res.status(400).json({ success: false, message: "All fields are required" });
-    }
+    const { userId, userName, userAvatar, rating, message } = req.body;
 
     try {
         const provider = await Provider.findById(providerId);
         if (!provider) {
             return res.status(404).json({ success: false, message: "Provider not found" });
         }
-        provider.reviews.push({ userId, rating, message });
+        provider.reviews.push({ userId, userName, userAvatar, rating, message });
 
         await provider.save();
 
