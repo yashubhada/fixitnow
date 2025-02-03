@@ -166,12 +166,12 @@ const LandingPage: React.FC = () => {
                             >
                                 <li className='flex items-center font-medium'><i className="ri-shield-check-line mr-2 text-lg"></i>User Verification</li>
                             </NavLink>
-                            <a
-                                href="#"
+                            <NavLink
+                                to="/provider-dashboard/review"
                                 className='block py-2 px-3 hover:bg-gray-200 rounded'
                             >
                                 <li className='flex items-center font-medium'><i className="ri-chat-quote-line mr-2 text-lg"></i>Reviews</li>
-                            </a>
+                            </NavLink>
                         </ul>
 
                         <ul className='absolute bottom-5 w-full'>
