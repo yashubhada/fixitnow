@@ -185,7 +185,7 @@ const LandingPage: React.FC = () => {
                             </div>
                             <div
                                 onClick={providerLogout}
-                                className='py-2 px-3 hover:bg-gray-200 rounded text-black cursor-pointer'
+                                className='py-2 px-3 hover:bg-gray-200 rounded text-red-600 cursor-pointer'
                             >
                                 <li className='flex items-center font-medium'><i className="ri-logout-box-line mr-2 text-lg"></i>Logout</li>
                             </div>
