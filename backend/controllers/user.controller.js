@@ -337,6 +337,29 @@ export const serviceComplete = async (req, res) => {
     }
 }
 
+export const addReview = async (req, res) => {
+    const { providerId } = req.params;
+    const { userId, rating, message } = req.body;
+
+    if (!providerId || !userId || !rating || !message) {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    try {
+        const provider = await Provider.findById(providerId);
+        if (!provider) {
+            return res.status(404).json({ success: false, message: "Provider not found" });
+        }
+        provider.reviews.push({ userId, rating, message });
+
+        await provider.save();
+
+        res.status(201).json({ success: true, message: "Review added successfully" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 export const fetchSingleServiceRequest = async (req, res) => {
     try {
         const { id, verificationCode } = req.body;

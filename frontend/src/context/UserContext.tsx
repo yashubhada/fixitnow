@@ -42,7 +42,7 @@ interface UserContextType {
     handleChatReceiveMessage: () => void;
 
     // timmer component
-    isShowTimmer: boolean;
+    isShowTimmer: boolean | null;
     setIsShowTimmer: (isShowTimmer: boolean) => void;
     handleEmitTimmerComponent: (
         fromUserId: string,
@@ -81,7 +81,7 @@ const defaultValue: UserContextType = {
     handleChatReceiveMessage: () => { },
 
     // Timmer component
-    isShowTimmer: false,
+    isShowTimmer: null,
     setIsShowTimmer: () => { },
     handleEmitTimmerComponent: () => { },
     handleOnTimmerComponent: () => { },
@@ -285,7 +285,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     }
 
     // manage timmer component
-    const [isShowTimmer, setIsShowTimmer] = useState<boolean>(false);
+    const [isShowTimmer, setIsShowTimmer] = useState<boolean | null>(null);
 
     const handleEmitTimmerComponent = (
         fromUserId: string,

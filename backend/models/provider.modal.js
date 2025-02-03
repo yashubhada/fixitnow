@@ -36,13 +36,28 @@ const providerSchema = new mongoose.Schema({
     },
     isAvailable: {
         type: Boolean,
-        enumm: [true, false],
+        enum: [true, false],
         default: false
     },
     userRole: {
         type: String,
         default: 'serviceProvider'
-    }
+    },
+    reviews: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: null,
+        },
+        rating: {
+            type: Number,
+            default: null
+        },
+        message: {
+            type: String,
+            default: null
+        }
+    }]
 }, { timestamps: true });
 
 const Provider = mongoose.model('ServiceProvider', providerSchema);

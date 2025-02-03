@@ -79,9 +79,8 @@ const LandingPage: React.FC = () => {
                 showToast("Request accepted successfully!", "success");
                 navigate("/provider-dashboard/verify-code")
                 localStorage.setItem("takerId", requestData.requestData.user.id);
+                localStorage.setItem('requestId', response.data.requestId);
             }
-
-            localStorage.setItem('requestId', response.data.requestId);
 
             // Emit service request response
             handleEmitServiceRequestResponse(

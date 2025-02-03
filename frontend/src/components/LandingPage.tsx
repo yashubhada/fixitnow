@@ -23,6 +23,7 @@ import ServiceModal from './ServiceModal'
 import Address from './address.json'
 import PageLoading from './PageLoading'
 import Timmer from '../provider-dashboard/Timmer'
+import ReviewForm from './ReviewForm'
 
 const LandingPage: React.FC = () => {
 
@@ -169,19 +170,39 @@ const LandingPage: React.FC = () => {
     });
 
     const handleAcceptedService = (providerData: any): void => {
-        setIsOpenServiceProviderListModal(false);
-        setRequestedProvider(providerData); // Update requestedProvider state
-        localStorage.setItem("requestedProvider", JSON.stringify(providerData)); // Store in local storage
+        if (providerData) {
+            setIsOpenServiceProviderListModal(false);
+            setRequestedProvider(providerData); // Update requestedProvider state
+            localStorage.setItem("requestedProvider", JSON.stringify(providerData)); // Store in local storage
+        }
     };
 
     useEffect(() => {
         handleOnTimmerComponent();
     }, [socket]);
 
+    const [isShowReviewForm, setIsShowReviewForm] = useState<boolean>(false);
+
+    const closeReviewForm = () => {
+        setIsShowReviewForm(false);
+        setRequestedProvider(null);
+        localStorage.clear();
+    };
+
     useEffect(() => {
         if (isShowTimmer) {
-            setRequestedProvider(null);
-            localStorage.clear();
+            localStorage.removeItem("requestedProvider");
+            localStorage.removeItem("verificationCode");
+        } else if (isShowTimmer === false) {
+            setIsShowReviewForm(true);
+            localStorage.removeItem("stopwatchTime");
+            localStorage.removeItem("requestedProvider");
+            localStorage.removeItem("verificationCode");
+        }
+        else {
+            localStorage.removeItem("stopwatchTime");
+            localStorage.removeItem("requestedProvider");
+            localStorage.removeItem("verificationCode");
         }
     }, [isShowTimmer]);
 
@@ -506,6 +527,15 @@ const LandingPage: React.FC = () => {
 
             {
                 isShowTimmer && <Timmer showButton={false} />
+            }
+
+            {
+                isShowReviewForm && (
+                    <ReviewForm
+                        onClose={closeReviewForm}
+                        providerId={requestedProvider?._id}
+                    />
+                )
             }
         </>
     )

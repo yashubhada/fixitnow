@@ -9,7 +9,8 @@ import {
     fetchSingleServiceRequest,
     fetchSingleTaker,
     fetchSingleProvider,
-    serviceComplete
+    serviceComplete,
+    addReview
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -41,5 +42,6 @@ userRouter.get('/fetchSingleProvider', fetchSingleProvider);
 userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);
 userRouter.post('/fetchSingleServiceRequest', handleAuthentication, fetchSingleServiceRequest);
 userRouter.post('/serviceComplete', handleAuthentication, serviceComplete);
+userRouter.post('/addReview/:providerId', handleAuthentication, addReview);
 
 export default userRouter;
