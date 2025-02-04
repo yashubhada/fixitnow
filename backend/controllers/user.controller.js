@@ -379,3 +379,33 @@ export const fetchSingleServiceRequest = async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 }
+
+export const fetchUserHistory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const history = await Request.find({ userId: id });
+        if (!history) {
+            return res.status(404).json({ success: false, message: "History Not Found" });
+        }
+        res.status(200).json({ success: true, history });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+export const fetchProviderHistory = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const history = await Request.find({ providerId: id });
+
+        if (!history) {
+            return res.status(404).json({ success: false, message: "History Not Found" });
+        }
+
+        res.status(200).json({ success: true, history });
+    } catch (err) {
+        // Handle any errors and return a 500 status
+        res.status(500).json({ success: false, error: err.message });
+    }
+};

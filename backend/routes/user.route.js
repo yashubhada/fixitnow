@@ -10,7 +10,9 @@ import {
     fetchSingleTaker,
     fetchSingleProvider,
     serviceComplete,
-    addReview
+    addReview,
+    fetchProviderHistory,
+    fetchUserHistory
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -43,5 +45,9 @@ userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);
 userRouter.post('/fetchSingleServiceRequest', handleAuthentication, fetchSingleServiceRequest);
 userRouter.post('/serviceComplete', handleAuthentication, serviceComplete);
 userRouter.post('/addReview/:providerId', handleAuthentication, addReview);
+
+// history
+userRouter.get('/fetchProviderHistory/:id', fetchProviderHistory);
+userRouter.get('/fetchUserHistory/:id', fetchUserHistory);
 
 export default userRouter;

@@ -68,7 +68,7 @@ const LandingPage: React.FC = () => {
             location: userData.user.address,
             serviceType: userData.user.service,
             price: userData.user.price,
-            status: status === 'accepted' ? 'Accepted' : 'Canceled',
+            status: status === 'accepted' ? 'Completed' : 'Canceled',
             verificationCode,
         };
 

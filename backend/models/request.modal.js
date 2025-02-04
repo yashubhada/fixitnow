@@ -7,11 +7,11 @@ const requestSchema = new mongoose.Schema({
         required: true,
     },
     userName: {
-        type:String,
+        type: String,
         required: true,
     },
     userAvatar: {
-        type:String,
+        type: String,
         required: true,
     },
     providerId: {
@@ -20,11 +20,11 @@ const requestSchema = new mongoose.Schema({
         required: true,
     },
     providerName: {
-        type:String,
+        type: String,
         required: true,
     },
     providerAvatar: {
-        type:String,
+        type: String,
         required: true,
     },
     location: {
@@ -45,7 +45,7 @@ const requestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Accepted', 'Completed', 'Canceled'],
+        enum: ['Pending', 'Completed', 'Canceled'],
         default: 'Pending',
     },
     verificationCode: {
