@@ -82,16 +82,34 @@ export const fetchSingleTaker = async (req, res) => {
 export const handleUpdateTaker = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, avatar } = req.body;
+        const { name } = req.body;
+
+        const newData = {};
+        if (name) newData.name = name;
+        if (req.file.path) {
+            const avatarUpload = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'fixitnow',
+                transformation: [
+                    {
+                        width: 200,
+                        height: 200,
+                        crop: 'thumb',
+                        gravity: 'face',
+                    },
+                ]
+            });
+            newData.avatar = avatarUpload.secure_url;
+        }
+
         const taker = await User.findByIdAndUpdate(
             id,
-            { name, avatar },
+            newData,
             { new: true }
         )
         if (!taker) {
             return res.status(400).json({ success: false, message: 'User not found' });
         }
-        res.status(201).json({ success: true, message: 'Profile updated successfully' });
+        res.status(201).json({ success: true, taker, message: 'Profile updated successfully' });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }

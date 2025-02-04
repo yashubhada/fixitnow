@@ -1,19 +1,22 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserContext';
+import axios from 'axios';
 
 const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
 
     const { baseUrl, userData, showToast } = useContext(UserContext);
 
     interface ProfileType {
-        name: string;
-        avatar: any;
+        name?: string;
+        avatar?: any;
     }
 
     const [profile, setProfile] = useState<ProfileType>({
         name: userData?.user?.name,
         avatar: userData?.user?.avatar
     });
+
+    const [newProfile, setNewProfile] = useState<ProfileType>({});
 
     const avatarFileRef = useRef<HTMLInputElement>(null);
 
@@ -23,27 +26,73 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
         }
     };
 
-    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        const fileType = selectedFile?.type;
-        if (selectedFile && fileType) {
-            const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, files } = e.target;
 
+        // Handle file input (avatar)
+        if (name === "avatar" && files && files[0]) {
+            const selectedFile = files[0];
+            const fileType = selectedFile.type;
+
+            const validExtensions = ["image/jpeg", "image/png", "image/jpg"];
             if (validExtensions.includes(fileType)) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     setProfile((prevData) => ({
                         ...prevData,
                         avatar: reader.result,
-                    }))
+                    }));
+                    setNewProfile((prev) => ({
+                        ...prev,
+                        avatar: selectedFile,
+                    }));
                 };
                 reader.readAsDataURL(selectedFile);
-                console.log(selectedFile);
             } else {
                 showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
             }
         }
+        // Handle regular input changes
+        else {
+            setNewProfile((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+            setProfile((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
     };
+
+    const handleUpdateProfile: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        console.log("New profile", newProfile);
+        console.log(Object.keys(newProfile).length);
+        try {
+            const formData = new FormData();
+            if (newProfile.name) {
+                formData.append("name", newProfile.name);
+            }
+            if (newProfile.avatar) {
+                formData.append("avatar", newProfile.avatar);
+            }
+            const response = await axios.patch(`${baseUrl}api/user/handleUpdateTaker/${userData.user.id}`,
+                formData,
+                { withCredentials: true }
+            );
+            showToast(response.data.message, "success");
+            console.log(response.data);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        }
+    }
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -66,7 +115,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
                     <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Profile</h1>
-                    <form className='w-full'>
+                    <form onSubmit={handleUpdateProfile} className='w-full'>
                         <div className='flex justify-center mb-7'>
                             <div className='relative'>
                                 <img
@@ -82,7 +131,8 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                 <input
                                     type="file"
                                     ref={avatarFileRef}
-                                    onChange={handleAvatarChange}
+                                    onChange={handleFormChange}
+                                    name='avatar'
                                     className='hidden'
                                 />
                             </div>
@@ -96,6 +146,8 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                 autoComplete='off'
                                 placeholder='Enter your name'
                                 value={profile.name}
+                                name='name'
+                                onChange={handleFormChange}
                                 required
                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                             />

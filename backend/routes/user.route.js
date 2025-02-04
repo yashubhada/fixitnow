@@ -38,7 +38,7 @@ userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser)
 userRouter.post('/logout', handleAuthentication, handleLogout);
 
 //update profile
-userRouter.post('/handleUpdateTaker/:id', handleAuthentication, handleUpdateTaker);
+userRouter.patch('/handleUpdateTaker/:id', handleAuthentication, upload.single('avatar'), handleUpdateTaker);
 
 // fetch single user and service provider
 userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);
