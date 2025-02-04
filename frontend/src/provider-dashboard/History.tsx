@@ -115,7 +115,7 @@ const History: React.FC = () => {
                 )
                     :
                     (
-                        <p className='text-center text-gray-500 mt-20'>No history found.</p>
+                        <p className='text-center text-gray-500 mt-20'>No history found</p>
                     )
             }
         </div>

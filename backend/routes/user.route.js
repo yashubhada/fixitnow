@@ -12,7 +12,8 @@ import {
     serviceComplete,
     addReview,
     fetchProviderHistory,
-    fetchUserHistory
+    fetchUserHistory,
+    handleUpdateTaker
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -35,6 +36,9 @@ userRouter.post('/signin', handleSignIn);
 userRouter.get('/fetchAllProviders', fetchAllProviders);
 userRouter.post('/getLoggedInUser', handleAuthentication, handleGetLoggedInUser);
 userRouter.post('/logout', handleAuthentication, handleLogout);
+
+//update profile
+userRouter.post('/handleUpdateTaker/:id', handleAuthentication, handleUpdateTaker);
 
 // fetch single user and service provider
 userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);

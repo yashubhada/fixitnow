@@ -87,7 +87,7 @@ const ReviewPage: React.FC = () => {
                     </div>
                 ))
             ) : (
-                <p className='text-center text-gray-500 mt-20'>No reviews found.</p>
+                <p className='text-center text-gray-500 mt-20'>No reviews found</p>
             )}
         </div>
     );

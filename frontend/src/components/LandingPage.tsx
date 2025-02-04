@@ -25,6 +25,7 @@ import PageLoading from './PageLoading'
 import Timmer from '../provider-dashboard/Timmer'
 import ReviewForm from './ReviewForm'
 import HistoryPage from './HistoryPage'
+import Profile from './Profile'
 
 const LandingPage: React.FC = () => {
 
@@ -213,6 +214,9 @@ const LandingPage: React.FC = () => {
         };
     }, []);
 
+    const [isShowHistoryModel, setIShowHistoryModel] = useState<boolean>(false);
+    const [isShowProfileModel, setIShowProfileModel] = useState<boolean>(false);
+
     if (isLoading) {
         return <PageLoading />
     }
@@ -234,13 +238,13 @@ const LandingPage: React.FC = () => {
                                 </div>
                                 <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
                                     <ul>
-                                        <li>
+                                        <li onClick={() => setIShowProfileModel(true)}>
                                             <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
                                                 <i className="ri-user-3-line text-lg mr-3"></i>
                                                 <span className='text-lg'>Profile</span>
                                             </div>
                                         </li>
-                                        <li>
+                                        <li onClick={() => setIShowHistoryModel(true)}>
                                             <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
                                                 <i className="ri-history-line text-lg mr-3"></i>
                                                 <span className='text-lg'>History</span>
@@ -376,23 +380,27 @@ const LandingPage: React.FC = () => {
                                         view
                                     </button>
                                 </div>
-                                <div
-                                    onClick={openLoginModal}
-                                    tabIndex={4}
-                                    className="text-base mt-5 w-fit group relative cursor-pointer"
-                                >
-                                    <div className="text-sm md:text-base group-hover:text-black transition duration-300">
-                                        Already have an account? Sign in
+                                {
+                                    userData?.user?.role !== "serviceTaker"
+                                    &&
+                                    <div
+                                        onClick={openLoginModal}
+                                        tabIndex={4}
+                                        className="text-base mt-5 w-fit group relative cursor-pointer"
+                                    >
+                                        <div className="text-sm md:text-base group-hover:text-black transition duration-300">
+                                            Already have an account? Sign in
+                                        </div>
+                                        <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
+                                            <div
+                                                className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
+                                                style={{
+                                                    transformOrigin: 'left',
+                                                }}
+                                            ></div>
+                                        </div>
                                     </div>
-                                    <div className="w-full h-[1px] bg-[#cbcbcb] relative overflow-hidden">
-                                        <div
-                                            className="absolute inset-0 bg-black scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-in-out"
-                                            style={{
-                                                transformOrigin: 'left',
-                                            }}
-                                        ></div>
-                                    </div>
-                                </div>
+                                }
                             </form>
                         </div>
                     </div>
@@ -405,12 +413,12 @@ const LandingPage: React.FC = () => {
                             />
                         </div>
                     </div>
-                </div>
-            </section>
+                </div >
+            </section >
 
             {/* About us  */}
 
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20' >
                 <div className='grid grid-cols-1 md:grid-cols-2 items-center gap-10'>
                     <div className=''>
                         <img src={AboutImg} />
@@ -425,7 +433,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* services section */}
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20' >
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Our Services</h1>
                 <div className='grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-10 mt-10'>
                     {
@@ -444,7 +452,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* Key features */}
-            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20'>
+            <section className='max-w-[1360px] mx-auto px-4 pt-10 md:px-10 md:pt-20' >
                 <h1 className='text-black text-[36px] md:text-[52px] font-semibold leading-[44px] md:leading-[64px] font-poppins'>Key Features</h1>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-10'>
                     <div className='grid grid-cols-1 gap-5'>
@@ -482,7 +490,7 @@ const LandingPage: React.FC = () => {
             </section>
 
             {/* Footer */}
-            <footer className='bg-black w-full px-4 md:px-10 py-5 mt-10 md:mt-20'>
+            <footer className='bg-black w-full px-4 md:px-10 py-5 mt-10 md:mt-20' >
                 <div className='max-w-[1360px] mx-auto block md:flex items-center justify-between'>
                     <div className='flex md:block items-center justify-center'>
                         <img className='w-10' src={LogoWhite} />
@@ -511,9 +519,11 @@ const LandingPage: React.FC = () => {
                 />
             }
 
-            {requestedProvider && (
-                <ServiceModal providerData={requestedProvider} />
-            )}
+            {
+                requestedProvider && (
+                    <ServiceModal providerData={requestedProvider} />
+                )
+            }
 
             {
                 isShowTimmer && <Timmer showButton={false} />
@@ -529,7 +539,11 @@ const LandingPage: React.FC = () => {
             }
 
             {
-                <HistoryPage />
+                isShowHistoryModel && <HistoryPage onClose={() => setIShowHistoryModel(false)} />
+            }
+
+            {
+                isShowProfileModel && <Profile onClose={() => setIShowProfileModel(false)} />
             }
         </>
     )

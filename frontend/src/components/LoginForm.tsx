@@ -15,7 +15,7 @@ const LoginForm: React.FC = () => {
     }
 
     useEffect(() => {
-        if(emailInputRef.current){
+        if (emailInputRef.current) {
             emailInputRef.current.focus();
         }
     }, []);
@@ -208,20 +208,9 @@ const LoginForm: React.FC = () => {
                         </div>
                         <div
                             onClick={closeLoginModal}
-                            className='bg-black p-1 rounded-full absolute -top-3 -right-3 cursor-pointer'
+                            className='bg-black w-7 h-7 text-center rounded-full absolute -top-3 -right-3 cursor-pointer'
                         >
-                            <svg
-                                width="20px"
-                                height="20px"
-                                viewBox="0 0 24 24"
-                                tabIndex={0}
-                                className="focus:outline-none"
-                            >
-                                <path
-                                    d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"
-                                    fill="white"
-                                />
-                            </svg>
+                            <i className="ri-close-line text-white leading-7 text-xl"></i>
                         </div>
                     </div>
                 </div>

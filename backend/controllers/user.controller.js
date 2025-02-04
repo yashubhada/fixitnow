@@ -79,6 +79,24 @@ export const fetchSingleTaker = async (req, res) => {
     }
 }
 
+export const handleUpdateTaker = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, avatar } = req.body;
+        const taker = await User.findByIdAndUpdate(
+            id,
+            { name, avatar },
+            { new: true }
+        )
+        if (!taker) {
+            return res.status(400).json({ success: false, message: 'User not found' });
+        }
+        res.status(201).json({ success: true, message: 'Profile updated successfully' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
 export const handleProviderSignUp = async (req, res) => {
     try {
         const { name, email, service, price, address, password } = req.body;
