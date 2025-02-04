@@ -40,6 +40,16 @@ const History: React.FC = () => {
         }
     }, [id]);
 
+    const secondsToMinutes = (seconds: number): string => {
+        let newVal: string;
+        if (seconds >= 60) {
+            newVal = Math.floor(seconds / 60) + " mins";
+        } else {
+            newVal = seconds + "  sec";
+        }
+        return newVal;
+    };
+
     if (isLoading) {
         return (
             <div className='flex justify-center items-center w-full h-full'>
@@ -61,44 +71,53 @@ const History: React.FC = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-7">Dashboard History</h1>
-            <div className="overflow-x-auto">
-                <table className="min-w-full bg-white">
-                    <thead className="bg-gray-200 border border-gray-200">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">User</th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Total Time</th>
-                            {/* <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Location</th>
+            {
+                historyData.length > 0 ? (
+                    <div>
+                        <h1 className="text-2xl font-bold mb-7">Dashboard History</h1>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white">
+                                <thead className="bg-gray-200 border border-gray-200">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">User</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Total Time</th>
+                                        {/* <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Location</th>
                             <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Price</th>
                             <th className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider">Service Type</th> */}
-                        </tr>
-                    </thead>
-                    <tbody className="border border-gray-200">
-                        {historyData.map((row, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <div className='flex items-center'>
-                                        <img
-                                            src={row.userAvatar}
-                                            alt={row.userName}
-                                            className='w-10 h-10 rounded-full border mr-2'
-                                        />
-                                        <h1 className='text-base font-medium'>{row.userName}</h1>
-                                    </div>
-                                    {row.user}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 rounded-full b">
-                                    <span className={`px-2 py-1 ${row.status === "Completed" ? 'bg-green-100 border border-green-600 rounded-full text-green-600' : 'bg-red-100 border border-red-600 rounded-full text-red-600'}`}>
-                                        {row.status}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.totalTime}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                                    </tr>
+                                </thead>
+                                <tbody className="border border-gray-200">
+                                    {historyData.map((row, index) => (
+                                        <tr key={index}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <div className='flex items-center'>
+                                                    <img
+                                                        src={row.userAvatar}
+                                                        alt={row.userName}
+                                                        className='w-10 h-10 rounded-full border mr-2'
+                                                    />
+                                                    <h1 className='text-base font-medium'>{row.userName}</h1>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                <span className={`px-2 py-1 ${row.status === "Completed" ? 'bg-green-100 border border-green-600 rounded-full text-green-600' : 'bg-red-100 border border-red-600 rounded-full text-red-600'}`}>
+                                                    {row.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{secondsToMinutes(row.totalTime)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )
+                    :
+                    (
+                        <p className='text-center text-gray-500 mt-20'>No history found.</p>
+                    )
+            }
         </div>
     )
 }

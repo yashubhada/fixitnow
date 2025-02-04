@@ -24,6 +24,7 @@ import Address from './address.json'
 import PageLoading from './PageLoading'
 import Timmer from '../provider-dashboard/Timmer'
 import ReviewForm from './ReviewForm'
+import HistoryPage from './HistoryPage'
 
 const LandingPage: React.FC = () => {
 
@@ -525,6 +526,10 @@ const LandingPage: React.FC = () => {
                         providerId={requestedProvider?._id}
                     />
                 )
+            }
+
+            {
+                <HistoryPage />
             }
         </>
     )
