@@ -36,7 +36,7 @@ userRouter.post('/logout', handleAuthentication, handleLogout);
 
 // fetch single user and service provider
 userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);
-userRouter.get('/fetchSingleProvider', fetchSingleProvider);
+userRouter.get('/fetchSingleProvider/:id', fetchSingleProvider);
 
 // request
 userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);

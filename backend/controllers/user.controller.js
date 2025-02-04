@@ -141,7 +141,7 @@ export const handleProviderSignUp = async (req, res) => {
 
 export const fetchSingleProvider = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const provider = await Provider.findById(id);
         if (!provider) {
             return res.status(400).json({ success: false, message: 'Service provider not found' });
