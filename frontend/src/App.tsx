@@ -8,6 +8,7 @@ import VerifyCodeInput from './provider-dashboard/VerifyCodeInput'
 import ChatComponent from './provider-dashboard/ChatComponent'
 import NotFound from './provider-dashboard/NotFound'
 import ReviewPage from './provider-dashboard/ReviewPage'
+import ProviderProfile from './provider-dashboard/ProviderProfile'
 
 const App: React.FC = () => {
     return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
                             <Route path="chat" element={<ChatComponent />} />
                             <Route path="not-found" element={<NotFound />} />
                             <Route path="review" element={<ReviewPage />} />
+                            <Route path="profile" element={<ProviderProfile />} />
                         </Route>
                     </Routes>
                 </UserContextProvider>

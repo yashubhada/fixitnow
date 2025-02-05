@@ -86,7 +86,7 @@ export const handleUpdateTaker = async (req, res) => {
 
         const newData = {};
         if (name) newData.name = name;
-        if (req.file.path) {
+        if (req.file?.path) {
             const avatarUpload = await cloudinary.uploader.upload(req.file.path, {
                 folder: 'fixitnow',
                 transformation: [
@@ -199,74 +199,78 @@ export const handleSignIn = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
-        let isValidPassword, tokenData;
+        let tokenData, generateToken;
 
+        // If a user is found, validate password and send user data in response
         if (user) {
-            isValidPassword = await bcrypt.compare(password, user.password);
+            const isValidPassword = await bcrypt.compare(password, user.password);
             if (!isValidPassword) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid credentials",
+                    message: 'Invalid credentials',
                 });
             }
             tokenData = {
                 _id: user._id,
-                name: user.name,
-                email: user.email,
-                avatar: user.avatar,
                 userRole: user.userRole
             };
+
+            generateToken = jwt.sign(
+                tokenData,
+                process.env.SECRET_FIXITNOW_TOKEN,
+                { expiresIn: '1h' }
+            );
+
+            return res
+                .status(201)
+                .cookie('accessToken', generateToken, {
+                    httpOnly: true,
+                    secure: true,
+                    maxAge: 3600000
+                })
+                .json({ success: true, user: user, message: "Signin Successful 😊" });
         }
 
         if (provider) {
-            isValidPassword = await bcrypt.compare(password, provider.password);
+            const isValidPassword = await bcrypt.compare(password, provider.password);
             if (!isValidPassword) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid credentials",
+                    message: 'Invalid credentials',
                 });
             }
 
-            // Update isAvailable to true in MongoDB
-            await Provider.findOneAndUpdate(
+            const updatedProvider = await Provider.findOneAndUpdate(
                 { email },
                 { isAvailable: true },
                 { new: true } // Returns the updated document
             );
 
             tokenData = {
-                _id: provider._id,
-                name: provider.name,
-                email: provider.email,
-                service: provider.service,
-                price: provider.price,
-                address: provider.address,
-                avatar: provider.avatar,
-                identityProof: provider.identityProof,
-                userRole: provider.userRole
+                _id: updatedProvider._id,
+                userRole: updatedProvider.userRole
             };
+
+            generateToken = jwt.sign(
+                tokenData,
+                process.env.SECRET_FIXITNOW_TOKEN,
+                { expiresIn: '1h' }
+            );
+
+            return res
+                .status(201)
+                .cookie('accessToken', generateToken, {
+                    httpOnly: true,
+                    secure: true,
+                    maxAge: 3600000
+                })
+                .json({ success: true, user: updatedProvider, message: "Signin Successful 😊" });
         }
-
-        if (!tokenData) return res.status(401).json({ success: false, message: 'Token data not found' });
-
-        const generateToken = jwt.sign(
-            tokenData,
-            process.env.SECRET_FIXITNOW_TOKEN,
-            { expiresIn: '1h' }
-        );
-
-        res
-            .status(201)
-            .cookie('accessToken', generateToken, {
-                httpOnly: true,
-                secure: true,
-                maxAge: 3600000
-            })
-            .json({ success: true, user: tokenData, role: tokenData.role, message: "Signin Successful 😊" });
     } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
+        return res.status(500).json({ success: false, message: err.message });
     }
-}
+};
+
 
 export const fetchAllProviders = async (req, res) => {
     try {
@@ -277,17 +281,27 @@ export const fetchAllProviders = async (req, res) => {
     }
 }
 
-export const handleGetLoggedInUser = (req, res) => {
+export const handleGetLoggedInUser = async (req, res) => {
     try {
         const token = req.cookies.accessToken;
+        let user;
 
         if (!token) {
             return res.status(401).send({ success: false, message: "No token found, please log in" });
         }
 
+        if (req.user.userRole === "serviceTaker") {
+            user = await User.findById(req.user._id);
+        } else if (req.user.userRole === "serviceProvider") {
+            user = await Provider.findById(req.user._id);
+        }
+
+        if (!user) {
+            return res.status(401).send({ success: false, message: "User not found" });
+        }
         return res.status(200).json({
             success: true,
-            user: req.user || null
+            user
         });
 
     } catch (err) {

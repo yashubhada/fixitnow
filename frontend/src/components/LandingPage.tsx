@@ -224,45 +224,46 @@ const LandingPage: React.FC = () => {
     return (
         <>
             {/* if user is login */}
-            <section className='fixed top-3 right-3 w-[130px] z-10'>
+            <section className='fixed top-3 right-3 z-10'>
                 <div className='relative group w-full flex justify-end'>
                     {
                         userData?.userRole === "serviceTaker"
                             ?
-                            <>
-                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'>
+                            <div className='flex items-center justify-center'>
+                                <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white px-4 py-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'>
                                     <img className='w-10 h-10 shadow rounded-full bg-white' src={userData?.avatar} />
-                                    <div className='text-lg font-medium'>
-                                        {userData?.name}
+                                    <h1 className='font-medium text-lg'>{userData?.name}</h1>
+                                </div>
+                                <div className='absolute top-full w-[130px] pt-3'>
+                                    <div className='relative shadow bg-white border p-1 rounded-md hidden group-hover:block'>
+                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-gray-400"></div>
+                                        <ul>
+                                            <li onClick={() => setIShowProfileModel(true)}>
+                                                <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
+                                                    <i className="ri-user-3-line text-lg mr-3"></i>
+                                                    <span className='text-lg'>Profile</span>
+                                                </div>
+                                            </li>
+                                            <li onClick={() => setIShowHistoryModel(true)}>
+                                                <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
+                                                    <i className="ri-history-line text-lg mr-3"></i>
+                                                    <span className='text-lg'>History</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div onClick={handleLogout} className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
+                                                    <i className="ri-logout-box-line text-lg mr-3"></i>
+                                                    <span className='text-lg'>Logout</span>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
-                                    <ul>
-                                        <li onClick={() => setIShowProfileModel(true)}>
-                                            <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
-                                                <i className="ri-user-3-line text-lg mr-3"></i>
-                                                <span className='text-lg'>Profile</span>
-                                            </div>
-                                        </li>
-                                        <li onClick={() => setIShowHistoryModel(true)}>
-                                            <div className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
-                                                <i className="ri-history-line text-lg mr-3"></i>
-                                                <span className='text-lg'>History</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div onClick={handleLogout} className='flex items-center justify-center py-2 bg-white rounded-md transition-all duration-300 ease-in-out hover:bg-gray-200 cursor-pointer'>
-                                                <i className="ri-logout-box-line text-lg mr-3"></i>
-                                                <span className='text-lg'>Logout</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </>
+                            </div>
                             :
                             <div
                                 onClick={openLoginModal}
-                                className='w-full cursor-pointer flex items-center justify-center bg-white p-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'
+                                className='cursor-pointer flex items-center justify-center bg-white px-5 py-2 shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'
                             >
                                 <i className="ri-login-box-line text-xl mr-2"></i>
                                 <span className='text-lg'>Login</span>

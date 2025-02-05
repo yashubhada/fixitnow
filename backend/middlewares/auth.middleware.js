@@ -7,8 +7,6 @@ export const handleAuthentication = async (req, res, next) => {
     try {
         const token = req.cookies?.accessToken;
 
-        // console.log("token : ", req.cookies?.accessToken);
-
         if (!token) {
             return res.status(401).json({ success: false, message: 'Unauthorized user request' });
         }

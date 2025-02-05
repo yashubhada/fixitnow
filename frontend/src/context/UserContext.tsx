@@ -136,7 +136,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         try {
             const response = await axios.post(`${baseUrl}api/user/getLoggedInUser`, {}, { withCredentials: true });
             setUserData(response.data.user);
-            console.log(response.data.user);
         } catch (err) {
             if (axios.isAxiosError(err) && err.response?.status === 400) {
                 showToast(err.response.data.message || "An error occurred", "error");

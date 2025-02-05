@@ -146,12 +146,6 @@ const LandingPage: React.FC = () => {
                             >
                                 <li className='flex items-center font-medium'><i className="ri-history-line mr-2 text-lg"></i>History</li>
                             </NavLink>
-                            <a
-                                href="#"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded'
-                            >
-                                <li className='flex items-center'><i className="ri-wallet-3-line mr-2 text-lg"></i>Wallet</li>
-                            </a>
                             <NavLink
                                 to="/provider-dashboard/chat"
                                 className={({ isActive }) =>
@@ -168,14 +162,18 @@ const LandingPage: React.FC = () => {
                             </NavLink>
                             <NavLink
                                 to="/provider-dashboard/review"
-                                className='block py-2 px-3 hover:bg-gray-200 rounded'
+                                className={({ isActive }) =>
+                                    `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
                                 <li className='flex items-center font-medium'><i className="ri-chat-quote-line mr-2 text-lg"></i>Reviews</li>
                             </NavLink>
                         </ul>
 
                         <ul className='absolute bottom-5 w-full'>
-                            <div className='flex items-center py-2 px-3 hover:bg-gray-200 rounded cursor-pointer mb-3'>
+                            <NavLink
+                                to="/provider-dashboard/profile"
+                                className='flex items-center py-2 px-3 hover:bg-gray-200 rounded cursor-pointer mb-3'
+                            >
                                 <img
                                     src={userData?.avatar}
                                     className='w-10 h-10 rounded-full border mr-1'
@@ -185,7 +183,7 @@ const LandingPage: React.FC = () => {
                                     <h1 className='text-base font-medium'>{userData?.name}</h1>
                                     <p className='text-sm text-slate-500'>{userData?.email}</p>
                                 </div>
-                            </div>
+                            </NavLink>
                             <div
                                 onClick={providerLogout}
                                 className='py-2 px-3 hover:bg-gray-200 rounded text-red-600 cursor-pointer'

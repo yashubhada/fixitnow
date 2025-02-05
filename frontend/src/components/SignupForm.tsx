@@ -229,7 +229,7 @@ const SignupForm: React.FC = () => {
         }
     }
 
-    //select service
+    //select address
     interface AddressType {
         address: string;
     };
