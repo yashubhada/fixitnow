@@ -210,11 +210,11 @@ export const handleSignIn = async (req, res) => {
                 });
             }
             tokenData = {
-                id: user._id,
+                _id: user._id,
                 name: user.name,
                 email: user.email,
                 avatar: user.avatar,
-                role: user.userRole
+                userRole: user.userRole
             };
         }
 
@@ -235,7 +235,7 @@ export const handleSignIn = async (req, res) => {
             );
 
             tokenData = {
-                id: provider._id,
+                _id: provider._id,
                 name: provider.name,
                 email: provider.email,
                 service: provider.service,
@@ -243,7 +243,7 @@ export const handleSignIn = async (req, res) => {
                 address: provider.address,
                 avatar: provider.avatar,
                 identityProof: provider.identityProof,
-                role: provider.userRole
+                userRole: provider.userRole
             };
         }
 

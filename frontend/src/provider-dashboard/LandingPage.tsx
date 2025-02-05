@@ -20,7 +20,7 @@ const LandingPage: React.FC = () => {
 
     useEffect(() => {
         // Register user with socket
-        handleSocketRegister(userData?.user?.id);
+        handleSocketRegister(userData?._id);
 
         // Sync requestData from local storage
         const storedRequestData = localStorage.getItem("requestData");
@@ -59,15 +59,15 @@ const LandingPage: React.FC = () => {
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
         const verificationCode = generateVerificationCode();
         const newRequestData = {
-            userId: requestData.requestData.user.id,
-            userName: requestData.requestData.user.name,
-            userAvatar: requestData.requestData.user.avatar,
-            providerId: userData.user.id,
-            providerName: userData.user.name,
-            providerAvatar: userData.user.avatar,
-            location: userData.user.address,
-            serviceType: userData.user.service,
-            price: userData.user.price,
+            userId: requestData.requestData._id,
+            userName: requestData.requestData.name,
+            userAvatar: requestData.requestData.avatar,
+            providerId: userData._id,
+            providerName: userData.name,
+            providerAvatar: userData.avatar,
+            location: userData.address,
+            serviceType: userData.service,
+            price: userData.price,
             status: status === 'accepted' ? 'Completed' : 'Canceled',
             verificationCode,
         };
@@ -82,14 +82,14 @@ const LandingPage: React.FC = () => {
             if (status === 'accepted' && response.data.success) {
                 showToast("Request accepted successfully!", "success");
                 navigate("/provider-dashboard/verify-code")
-                localStorage.setItem("takerId", requestData.requestData.user.id);
+                localStorage.setItem("takerId", requestData.requestData._id);
                 localStorage.setItem('requestId', response.data.requestId);
             }
 
             // Emit service request response
             handleEmitServiceRequestResponse(
-                userData.user.id, // toUserId
-                requestData.requestData.user.id,   // fromUserId
+                userData._id, // toUserId
+                requestData.requestData._id,   // fromUserId
                 status,           // status
                 verificationCode  // verificationCode
             );
@@ -110,7 +110,7 @@ const LandingPage: React.FC = () => {
 
     // Redirect if user is not logged in or not a service provider
     useEffect(() => {
-        if (!isLoading && (!userData?.user || userData?.user?.role !== "serviceProvider")) {
+        if (!isLoading && (!userData || userData?.userRole !== "serviceProvider")) {
             showToast("Login first to access your dashboard", "error");
             navigate('/');
         }
@@ -121,7 +121,7 @@ const LandingPage: React.FC = () => {
     }, [socket]);
 
     // Do not render if user is invalid
-    if (!userData?.user || userData?.user?.role !== "serviceProvider") {
+    if (!userData || userData?.userRole !== "serviceProvider") {
         return null;
     }
 
@@ -177,13 +177,13 @@ const LandingPage: React.FC = () => {
                         <ul className='absolute bottom-5 w-full'>
                             <div className='flex items-center py-2 px-3 hover:bg-gray-200 rounded cursor-pointer mb-3'>
                                 <img
-                                    src={userData?.user?.avatar}
+                                    src={userData?.avatar}
                                     className='w-10 h-10 rounded-full border mr-1'
                                     alt="User Avatar"
                                 />
                                 <div>
-                                    <h1 className='text-base font-medium'>{userData?.user?.name}</h1>
-                                    <p className='text-sm text-slate-500'>{userData?.user?.email}</p>
+                                    <h1 className='text-base font-medium'>{userData?.name}</h1>
+                                    <p className='text-sm text-slate-500'>{userData?.email}</p>
                                 </div>
                             </div>
                             <div

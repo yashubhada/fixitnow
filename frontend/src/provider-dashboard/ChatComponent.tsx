@@ -61,11 +61,11 @@ const ChatComponent: React.FC = () => {
         const takerId = localStorage.getItem("takerId");
         if (takerId && chatInput.trim()) {
             const newMessage: Message = {
-                fromUserId: userData.user.id,
+                fromUserId: userData._id,
                 toUserId: takerId,
                 message: chatInput,
             };
-            handleChatSendMessage(userData.user.id, takerId, chatInput);
+            handleChatSendMessage(userData._id, takerId, chatInput);
             setMessages((prevMessages) => [...prevMessages, newMessage]);
             setChatInput("");
         } else {
@@ -86,7 +86,7 @@ const ChatComponent: React.FC = () => {
                     ...prevMessages,
                     {
                         fromUserId: data.fromUserId,
-                        toUserId: userData.user.id,
+                        toUserId: userData._id,
                         message: data.message,
                     },
                 ]);
@@ -150,11 +150,11 @@ const ChatComponent: React.FC = () => {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex ${msg.fromUserId === userData.user.id ? "justify-end" : "justify-start"
+                        className={`flex ${msg.fromUserId === userData._id ? "justify-end" : "justify-start"
                             } mb-4`}
                     >
                         <div
-                            className={`max-w-[70%] p-3 rounded-md ${msg.fromUserId === userData.user.id
+                            className={`max-w-[70%] p-3 rounded-md ${msg.fromUserId === userData._id
                                 ? "bg-gray-200 text-black rounded-tr-none" // Sender message
                                 : "bg-black text-white rounded-tl-none" // Receiver message
                                 }`}

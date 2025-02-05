@@ -34,9 +34,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onClose, providerId }) => {
             try {
                 const response = await axios.post(`${baseUrl}api/user/addReview/${providerId}`,
                     {
-                        userId: userData.user.id,
-                        userName: userData.user.name,
-                        userAvatar: userData.user.avatar,
+                        userId: userData._id,
+                        userName: userData.name,
+                        userAvatar: userData.avatar,
                         rating: formData.rating,
                         message: formData.message
                     },

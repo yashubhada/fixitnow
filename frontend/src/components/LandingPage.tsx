@@ -192,7 +192,7 @@ const LandingPage: React.FC = () => {
     };
 
     useEffect(() => {
-        if (isShowTimmer === false && isShowTimmer !== null && userData.user.role === "serviceTaker") {
+        if (isShowTimmer === false && isShowTimmer !== null && userData.userRole === "serviceTaker") {
             setIsShowReviewForm(true);
         }
     }, [isShowTimmer]);
@@ -227,13 +227,13 @@ const LandingPage: React.FC = () => {
             <section className='fixed top-3 right-3 w-[130px] z-10'>
                 <div className='relative group w-full flex justify-end'>
                     {
-                        userData?.user?.role === "serviceTaker"
+                        userData?.userRole === "serviceTaker"
                             ?
                             <>
                                 <div className='w-full cursor-pointer flex items-center justify-center gap-x-3 bg-white p-2 border shadow rounded-lg transition-all duration-300 ease-in-out hover:bg-gray-200'>
-                                    <img className='w-10 h-10 shadow rounded-full bg-white' src={userData?.user?.avatar} />
+                                    <img className='w-10 h-10 shadow rounded-full bg-white' src={userData?.avatar} />
                                     <div className='text-lg font-medium'>
-                                        {userData?.user?.name}
+                                        {userData?.name}
                                     </div>
                                 </div>
                                 <div className='absolute top-full left-0 w-full shadow bg-white p-1 rounded-md hidden group-hover:block'>
@@ -381,7 +381,7 @@ const LandingPage: React.FC = () => {
                                     </button>
                                 </div>
                                 {
-                                    userData?.user?.role !== "serviceTaker"
+                                    userData?.userRole !== "serviceTaker"
                                     &&
                                     <div
                                         onClick={openLoginModal}

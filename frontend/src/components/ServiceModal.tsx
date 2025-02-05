@@ -60,18 +60,18 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
             e.preventDefault();
             if (chatInput.trim()) {
                 const newMessage: Message = {
-                    fromUserId: userData.user.id,
+                    fromUserId: userData._id,
                     toUserId: providerData._id,
                     message: chatInput,
                 };
-                handleChatSendMessage(userData.user.id, providerData._id, chatInput);
+                handleChatSendMessage(userData._id, providerData._id, chatInput);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                 setChatInput("");
             } else {
                 console.error("Chat input is empty");
             }
         },
-        [chatInput, handleChatSendMessage, providerData._id, userData.user.id]
+        [chatInput, handleChatSendMessage, providerData._id, userData._id]
     );
 
     const handleChatInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                     ...prevMessages,
                     {
                         fromUserId: data.fromUserId,
-                        toUserId: userData.user.id,
+                        toUserId: userData._id,
                         message: data.message,
                     },
                 ]);
@@ -98,7 +98,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                 socket.off('receiveMessage', listener);
             };
         }
-    }, [socket, userData.user.id]);
+    }, [socket, userData._id]);
 
     useEffect(() => {
         return handleChatReceiveMessage();
@@ -227,11 +227,11 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`flex ${msg.fromUserId === userData.user.id ? "justify-end" : "justify-start"
+                                className={`flex ${msg.fromUserId === userData._id ? "justify-end" : "justify-start"
                                     } mb-4`}
                             >
                                 <div
-                                    className={`max-w-[70%] p-3 rounded-lg ${msg.fromUserId === userData.user.id
+                                    className={`max-w-[70%] p-3 rounded-lg ${msg.fromUserId === userData._id
                                         ? "bg-gray-200 text-black" // Sender message
                                         : "bg-black text-white" // Receiver message
                                         }`}

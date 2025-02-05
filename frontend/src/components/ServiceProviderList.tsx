@@ -28,12 +28,12 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
     useEffect(() => {
         if (userData) {
-            handleSocketRegister(userData?.user?.id);
+            handleSocketRegister(userData?._id);
         }
     }, [userData]);
 
     useEffect(() => {
-        if (!userData || userData.user.role !== "serviceTaker") {
+        if (!userData || userData.userRole !== "serviceTaker") {
             closeClick();
             showToast("Login first to book your service", "error");
         }
@@ -81,7 +81,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         if (userData) {
             setSelectedProvider(provider);
             handleEmitServiceRequest(
-                userData.user.id,
+                userData._id,
                 provider._id,
                 userData
             );
@@ -133,7 +133,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     }, [providers, loading]);
 
-    if (!userData?.user || userData?.user?.role !== "serviceTaker") {
+    if (!userData || userData?.userRole !== "serviceTaker") {
         return null;
     }
 

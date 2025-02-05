@@ -9,8 +9,8 @@ const ReviewPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (userData?.user?.id) {
-            setId(userData.user.id);
+        if (userData?._id) {
+            setId(userData._id);
         }
     }, [userData]);
 

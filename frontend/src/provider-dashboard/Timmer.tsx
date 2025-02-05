@@ -47,7 +47,7 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
     // Set requestId and providerId
     useEffect(() => {
         setRequestId(localStorage.getItem('requestId'));
-        setProviderId(userData.user.id);
+        setProviderId(userData._id);
     }, [userData]);
 
     const [takerId, setTakerId] = useState<string | null>(null);

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
 
-    const { baseUrl, userData, showToast } = useContext(UserContext);
+    const { baseUrl, userData, setUserData, showToast } = useContext(UserContext);
 
     interface ProfileType {
         name?: string;
@@ -12,8 +12,8 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
     }
 
     const [profile, setProfile] = useState<ProfileType>({
-        name: userData?.user?.name,
-        avatar: userData?.user?.avatar
+        name: userData?.name,
+        avatar: userData?.avatar
     });
 
     const [newProfile, setNewProfile] = useState<ProfileType>({});
@@ -78,12 +78,14 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
             if (newProfile.avatar) {
                 formData.append("avatar", newProfile.avatar);
             }
-            const response = await axios.patch(`${baseUrl}api/user/handleUpdateTaker/${userData.user.id}`,
+            const response = await axios.patch(`${baseUrl}api/user/handleUpdateTaker/${userData._id}`,
                 formData,
                 { withCredentials: true }
             );
             showToast(response.data.message, "success");
-            console.log(response.data);
+            if(response.data.success){
+                setUserData(response.data.taker)
+            }
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 if (err.response) {
@@ -162,7 +164,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                             <input
                                 type="text"
                                 autoComplete='off'
-                                value={userData?.user?.email}
+                                value={userData?.email}
                                 readOnly
                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                             />

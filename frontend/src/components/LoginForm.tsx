@@ -67,13 +67,13 @@ const LoginForm: React.FC = () => {
         try {
             const response = await axios.post(`${baseUrl}api/user/signin`, loginData, { withCredentials: true });
             // console.log(response?.data?.user);
-            setUserData(response?.data);
+            setUserData(response?.data?.user);
             showToast(response.data.message, "success");
             if (response.data.success) {
-                if (response.data.role === 'serviceProvider') {
+                if (response.data.user.userRole === 'serviceProvider') {
                     navigate('/provider-dashboard');
                 }
-                if (response.data.role === 'serviceTaker') {
+                if (response.data.user.userRole === 'serviceTaker') {
                     navigate('/');
                 }
                 closeLoginModal();

@@ -94,11 +94,11 @@ const RequestModal: React.FC<PropsData> = ({ data, handleServiceResponse, close 
                     </div>
                     <div>
                         <img
-                            src={data?.requestData?.user?.avatar}
+                            src={data?.requestData?.avatar}
                             className='w-20 h-20 rounded-full border shadow-md mx-auto'
                         />
-                        <p className='mt-3 text-center text-lg font-semibold '>{data?.requestData?.user?.name}</p>
-                        <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.requestData?.user?.email}</p>
+                        <p className='mt-3 text-center text-lg font-semibold '>{data?.requestData?.name}</p>
+                        <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.requestData?.email}</p>
                     </div>
                     <div className='grid grid-cols-2 gap-5 mt-5'>
                         <button

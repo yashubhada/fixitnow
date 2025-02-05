@@ -25,7 +25,7 @@ const VerifyCodeInput: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        setProviderId(userData.user.id);
+        setProviderId(userData._id);
     }, []);
 
     const inputRef = useRef<HTMLInputElement>(null);
