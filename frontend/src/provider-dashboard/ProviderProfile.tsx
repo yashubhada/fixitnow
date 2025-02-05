@@ -31,13 +31,15 @@ const ProviderProfile: React.FC = () => {
         avatar: userData?.avatar,
         service: userData?.service,
         price: userData?.price,
-        address: userData?.address
+        address: userData?.address,
+        identityProof: userData?.identityProof
     });
 
     const [newProfile, setNewProfile] = useState<ProfileType>({});
 
     const [isDisableBtn, setIsDisableBtn] = useState<boolean>(true);
     const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
+    const [providerIdentityProof, setProviderIdentityProof] = useState<string | null>(null);
 
     const avatarFileRef = useRef<HTMLInputElement>(null);
 
@@ -129,6 +131,19 @@ const ProviderProfile: React.FC = () => {
             } else {
                 showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
             }
+        } else if (name === "identityProof" && files && files[0]) {
+            const selectedFile = files[0];
+            const fileType = selectedFile.type;
+            const validExtensions = ["application/pdf"];
+            if (validExtensions.includes(fileType)) {
+                setProviderIdentityProof(selectedFile.name);
+                setNewProfile((prev) => ({
+                    ...prev,
+                    identityProof: selectedFile,
+                }));
+            } else {
+                showToast("Only PDF files are allowed", "error");
+            }
         } else if (name === "service") {
             setNewProfile((prev) => ({ ...prev, service: value }));
             setProfile((prev) => ({ ...prev, service: value }));
@@ -159,6 +174,7 @@ const ProviderProfile: React.FC = () => {
 
     const handleUpdateProfile: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
+        console.log("New profile", newProfile);
         // setIsBtnLoading(true);
         // try {
         //     const formData = new FormData();
@@ -193,7 +209,7 @@ const ProviderProfile: React.FC = () => {
         <div className="w-full h-full flex items-center justify-center">
             <div className="w-[400px]">
                 <form onSubmit={handleUpdateProfile} className='w-full'>
-                    <div className='flex justify-center mb-7'>
+                    <div className='flex justify-center mb-5'>
                         <div className='relative'>
                             <img
                                 src={profile.avatar}
@@ -345,12 +361,34 @@ const ProviderProfile: React.FC = () => {
                             type="number"
                             autoComplete='off'
                             onChange={handleFormChange}
-                            value={userData?.price}
+                            value={profile?.price}
                             name="price"
                             required
                             placeholder='Enter service price (e.g., ₹499)'
                             className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                         />
+                    </div>
+                    <div
+                        className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                    >
+                        <i className="ri-id-card-line text-xl mr-3"></i>
+                        <label htmlFor="providerIdentityProof" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent mr-3 outline-none focus:text-black truncate">
+                            {providerIdentityProof ? providerIdentityProof : "Upload your work license"}
+                        </label>
+                        <input
+                            id="providerIdentityProof"
+                            type="file"
+                            onChange={handleFormChange}
+                            name="identityProof"
+                            className="hidden"
+                        />
+                        <a
+                            href={profile?.identityProof}
+                            target="_blank"
+                            className="bg-black px-3 py-1 rounded text-white"
+                        >
+                            view
+                        </a>
                     </div>
                     <button
                         type="submit"

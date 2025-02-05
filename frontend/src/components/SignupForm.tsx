@@ -704,7 +704,6 @@ const SignupForm: React.FC = () => {
                                                 onChange={handleProviderAvatarChange}
                                                 className="hidden"
                                             />
-
                                         </div>
                                         <div
                                             className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
@@ -719,7 +718,6 @@ const SignupForm: React.FC = () => {
                                                 onChange={handleProviderIdentityProofChange}
                                                 className="hidden"
                                             />
-
                                         </div>
                                         <button
                                             type="submit"
