@@ -18,6 +18,9 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
 
     const [newProfile, setNewProfile] = useState<ProfileType>({});
 
+    const [isDisableBtn, setIsDisableBtn] = useState<boolean>(true);
+    const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
+
     const avatarFileRef = useRef<HTMLInputElement>(null);
 
     const handleEditAvatarClick = () => {
@@ -27,9 +30,9 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
     };
 
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsDisableBtn(false);
         const { name, value, files } = e.target;
 
-        // Handle file input (avatar)
         if (name === "avatar" && files && files[0]) {
             const selectedFile = files[0];
             const fileType = selectedFile.type;
@@ -52,7 +55,6 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                 showToast("Only .jpg, .jpeg, and .png images are allowed", "error");
             }
         }
-        // Handle regular input changes
         else {
             setNewProfile((prev) => ({
                 ...prev,
@@ -67,8 +69,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
 
     const handleUpdateProfile: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        console.log("New profile", newProfile);
-        console.log(Object.keys(newProfile).length);
+        setIsBtnLoading(true);
         try {
             const formData = new FormData();
             if (newProfile.name) {
@@ -91,6 +92,8 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                     }
                 }
             }
+        } finally {
+            setIsBtnLoading(false);
         }
     }
 
@@ -132,7 +135,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                     type="file"
                                     ref={avatarFileRef}
                                     onChange={handleFormChange}
-                                    name='avatar'
+                                    name="avatar"
                                     className='hidden'
                                 />
                             </div>
@@ -167,10 +170,10 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                         <button
                             type="submit"
                             className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                        // disabled={isUserSignUpFormLoading}
+                            disabled={isDisableBtn || isBtnLoading}
                         >
-                            {/* {
-                                isUserSignUpFormLoading
+                            {
+                                isBtnLoading
                                     ?
                                     <>
                                         <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -188,12 +191,11 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                             ></path>
                                         </svg>
-                                        Signing up...
+                                        saving...
                                     </>
                                     :
-                                    'Sign up'
-                            } */}
-                            save changes
+                                    'save changes'
+                            }
                         </button>
                     </form>
                     <div
