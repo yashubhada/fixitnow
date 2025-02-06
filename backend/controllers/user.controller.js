@@ -99,6 +99,7 @@ export const handleUpdateTaker = async (req, res) => {
                 ]
             });
             newData.avatar = avatarUpload.secure_url;
+            fs.unlinkSync(req.file.path);
         }
 
         const taker = await User.findByIdAndUpdate(
