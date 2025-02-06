@@ -74,7 +74,7 @@ const History: React.FC = () => {
             {
                 historyData.length > 0 ? (
                     <div>
-                        <h1 className="text-2xl font-bold mb-7">Dashboard History</h1>
+                        <h1 className="text-2xl font-bold mb-7 text-center md:text-left">Dashboard History</h1>
                         <div className="overflow-x-auto">
                             <table className="min-w-full bg-white">
                                 <thead className="bg-gray-200 border border-gray-200">

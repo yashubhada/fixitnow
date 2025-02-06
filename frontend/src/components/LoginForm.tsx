@@ -82,7 +82,7 @@ const LoginForm: React.FC<{ openForgotPasswordModel: () => void; }> = ({ openFor
             if (axios.isAxiosError(err)) {
                 // Check for Axios-specific errors
                 if (err.response) {
-                    if (err.status === 400) {
+                    if (err) {
                         showToast(err.response.data.message, "error");
                     }
                 }

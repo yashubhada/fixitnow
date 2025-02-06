@@ -3,7 +3,7 @@ import React from 'react';
 const Home: React.FC = () => {
     return (
         <div className="min-h-full">
-            <h1 className="text-2xl font-bold text-black mb-7">Dashboard Overview</h1>
+            <h1 className="text-2xl font-bold text-black mb-7 text-center md:text-left">Dashboard Overview</h1>
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">

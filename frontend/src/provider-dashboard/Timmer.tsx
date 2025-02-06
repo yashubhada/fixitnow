@@ -85,9 +85,7 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
             } catch (err) {
                 if (axios.isAxiosError(err)) {
                     if (err.response) {
-                        if (err.status === 400) {
-                            showToast(err.response.data.message, "error");
-                        }
+                        showToast(err.response.data.message, "error");
                     }
                 }
             }

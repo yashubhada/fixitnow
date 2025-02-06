@@ -11,18 +11,18 @@ import Timmer from './Timmer';
 const LandingPage: React.FC = () => {
     const { baseUrl, userData, handleLogout, showToast, isLoading, socket, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, handleOnTimmerComponent, isShowTimmer } = useContext(UserContext);
     const navigate = useNavigate();
-    const location = useLocation(); // Get the current location
+    const location = useLocation();
 
     const [requestData, setRequestData] = useState<any>(() => {
         const storedData = localStorage.getItem("requestData");
         return storedData ? JSON.parse(storedData) : null;
     });
 
+    const [toggleMenu, setToggleMenu] = useState<boolean>(false); // Moved to the top
+
     useEffect(() => {
-        // Register user with socket
         handleSocketRegister(userData?._id);
 
-        // Sync requestData from local storage
         const storedRequestData = localStorage.getItem("requestData");
         if (storedRequestData) {
             try {
@@ -33,18 +33,27 @@ const LandingPage: React.FC = () => {
             }
         }
 
-        // Listen for service requests
         handleOnServiceRequest();
     }, [userData]);
 
     useEffect(() => {
         if (socketData) {
-            setRequestData(socketData); // Update requestData when socketData changes
-            localStorage.setItem("requestData", JSON.stringify(socketData)); // Sync with local storage
+            setRequestData(socketData);
+            localStorage.setItem("requestData", JSON.stringify(socketData));
         }
     }, [socketData]);
 
-    // Generate verification code
+    useEffect(() => {
+        if (!isLoading && (!userData || userData?.userRole !== "serviceProvider")) {
+            showToast("Login first to access your dashboard", "error");
+            navigate('/');
+        }
+    }, [userData, isLoading, navigate, showToast]);
+
+    useEffect(() => {
+        handleOnTimmerComponent();
+    }, [socket]);
+
     const generateVerificationCode = (): string => {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let verificationCode = "";
@@ -86,15 +95,13 @@ const LandingPage: React.FC = () => {
                 localStorage.setItem('requestId', response.data.requestId);
             }
 
-            // Emit service request response
             handleEmitServiceRequestResponse(
-                userData._id, // toUserId
-                requestData.requestData._id,   // fromUserId
-                status,           // status
-                verificationCode  // verificationCode
+                userData._id,
+                requestData.requestData._id,
+                status,
+                verificationCode
             );
 
-            // Clear requestData from state and local storage
             localStorage.removeItem('requestData');
             setRequestData(null);
         } catch (error) {
@@ -102,25 +109,15 @@ const LandingPage: React.FC = () => {
         }
     };
 
-    // Logout function
     const providerLogout = (): void => {
         handleLogout();
         navigate('/');
     };
 
-    // Redirect if user is not logged in or not a service provider
-    useEffect(() => {
-        if (!isLoading && (!userData || userData?.userRole !== "serviceProvider")) {
-            showToast("Login first to access your dashboard", "error");
-            navigate('/');
-        }
-    }, [userData, isLoading, navigate, showToast]);
+    const handleToggleMenu = () => {
+        setToggleMenu(!toggleMenu);
+    }
 
-    useEffect(() => {
-        handleOnTimmerComponent();
-    }, [socket]);
-
-    // Do not render if user is invalid
     if (!userData || userData?.userRole !== "serviceProvider") {
         return null;
     }
@@ -128,12 +125,13 @@ const LandingPage: React.FC = () => {
     return (
         <>
             <section className='w-full h-screen flex'>
-                <div className='w-[250px] py-4 px-3 border-gray-300 border-r shadow-xl'>
+                <div className={`absolute bg-white h-full md:static z-10 w-[250px] transition-all duration-300 ease-in-out ${toggleMenu ? '-translate-x-[250px]' : 'translate-x-0 border-gray-300 border-r shadow-xl'} py-4 px-3`}>
                     <nav className='dashboard-main-nav relative h-full'>
                         <img src={Logo} className='w-10 mb-5 mx-auto' alt="FixItNow Logo" />
                         <ul className='space-y-3'>
                             <NavLink
                                 to="/provider-dashboard"
+                                onClick={handleToggleMenu}
                                 className={({ isActive }) =>
                                     `block py-2 px-3 rounded ${isActive && location.pathname === '/provider-dashboard' ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
@@ -141,6 +139,7 @@ const LandingPage: React.FC = () => {
                             </NavLink>
                             <NavLink
                                 to="/provider-dashboard/history"
+                                onClick={handleToggleMenu}
                                 className={({ isActive }) =>
                                     `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
@@ -148,6 +147,7 @@ const LandingPage: React.FC = () => {
                             </NavLink>
                             <NavLink
                                 to="/provider-dashboard/chat"
+                                onClick={handleToggleMenu}
                                 className={({ isActive }) =>
                                     `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
@@ -155,6 +155,7 @@ const LandingPage: React.FC = () => {
                             </NavLink>
                             <NavLink
                                 to="/provider-dashboard/verify-code"
+                                onClick={handleToggleMenu}
                                 className={({ isActive }) =>
                                     `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
@@ -162,6 +163,7 @@ const LandingPage: React.FC = () => {
                             </NavLink>
                             <NavLink
                                 to="/provider-dashboard/review"
+                                onClick={handleToggleMenu}
                                 className={({ isActive }) =>
                                     `block py-2 px-3 rounded ${isActive ? 'bg-black text-white' : 'hover:bg-gray-200 text-black'}`}
                             >
@@ -172,6 +174,7 @@ const LandingPage: React.FC = () => {
                         <ul className='absolute bottom-5 w-full'>
                             <NavLink
                                 to="/provider-dashboard/profile"
+                                onClick={handleToggleMenu}
                                 className='flex items-center py-2 px-3 hover:bg-gray-200 rounded cursor-pointer mb-3'
                             >
                                 <img
@@ -191,10 +194,17 @@ const LandingPage: React.FC = () => {
                                 <li className='flex items-center font-medium'><i className="ri-logout-box-line mr-2 text-lg"></i>Logout</li>
                             </div>
                         </ul>
+                        {/* toggle button */}
+                        <div
+                            onClick={handleToggleMenu}
+                            className='h-10 w-10 absolute bg-gray-200 text-center rounded-br -top-4 -right-[52px] md:hidden'
+                        >
+                            <i className="ri-menu-line leading-10 text-xl font-bold"></i>
+                        </div>
                     </nav>
                 </div>
                 {/* Main Content */}
-                <div className="w-[calc(100%-250px)] py-4 px-3">
+                <div className="w-full md:w-[calc(100%-250px)] py-4 px-3">
                     {location.pathname === '/provider-dashboard' && (
                         <Home />
                     )}

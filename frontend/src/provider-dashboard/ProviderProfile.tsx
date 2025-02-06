@@ -211,9 +211,7 @@ const ProviderProfile: React.FC = () => {
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message, "error");
-                    }
+                    showToast(err.response.data.message, "error");
                 }
             }
         } finally {

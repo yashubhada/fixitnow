@@ -83,16 +83,14 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                 { withCredentials: true }
             );
             showToast(response.data.message, "success");
-            if(response.data.success){
+            if (response.data.success) {
                 setUserData(response.data.taker);
                 onClose();
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message, "error");
-                    }
+                    showToast(err.response.data.message, "error");
                 }
             }
         } finally {

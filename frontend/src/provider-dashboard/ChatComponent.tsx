@@ -154,7 +154,7 @@ const ChatComponent: React.FC = () => {
                             } mb-4`}
                     >
                         <div
-                            className={`max-w-[70%] p-3 rounded-md ${msg.fromUserId === userData._id
+                            className={`max-w-[70%] p-3 rounded-xl ${msg.fromUserId === userData._id
                                 ? "bg-gray-200 text-black rounded-tr-none" // Sender message
                                 : "bg-black text-white rounded-tl-none" // Receiver message
                                 }`}

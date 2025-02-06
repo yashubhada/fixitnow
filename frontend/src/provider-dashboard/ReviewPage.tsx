@@ -24,9 +24,7 @@ const ReviewPage: React.FC = () => {
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 if (err.response) {
-                    if (err.response.status === 400) {
-                        showToast(err.response.data.message, "error");
-                    }
+                    showToast(err.response.data.message, "error");
                 }
             }
         } finally {
@@ -61,6 +59,7 @@ const ReviewPage: React.FC = () => {
 
     return (
         <div className='w-full md:w-[600px] mx-auto'>
+            <h1 className="text-2xl font-bold mb-7 text-center md:text-left">Reviews</h1>
             {reviews.length > 0 ? (
                 reviews.map((review, index) => (
                     <div key={index} className='border-b pb-5 mb-5'>

@@ -210,7 +210,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                                 <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
                                                     <img
                                                         src={provider.avatar}
-                                                        className='w-36 rounded'
+                                                        className='w-28 md:w-36 rounded'
                                                     />
                                                     <div>
                                                         <div className="flex items-center gap-x-1 mb-1">

@@ -70,9 +70,7 @@ const VerifyCodeInput: React.FC = () => {
             if (axios.isAxiosError(err)) {
                 // Check for Axios-specific errors
                 if (err.response) {
-                    if (err.status === 400) {
-                        showToast(err.response.data.message, "error");
-                    }
+                    showToast(err.response.data.message, "error");
                 }
             }
         } finally {
