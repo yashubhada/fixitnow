@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC<{ openForgotPasswordModel: () => void; }> = ({ openForgotPasswordModel }) => {
 
     const { baseUrl, closeLoginModal, openSignupForm, showToast, setUserData } = useContext(UserContext);
     const navigate = useNavigate();
@@ -161,12 +161,15 @@ const LoginForm: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className='mt-5 text-right'>
-                                    <a
-                                        href='#'
-                                        className='text-black hover:underline'
+                                    <span
+                                        onClick={() => {
+                                            closeLoginModal();
+                                            openForgotPasswordModel();
+                                        }}
+                                        className='text-black cursor-pointer hover:underline'
                                     >
                                         forgot password?
-                                    </a>
+                                    </span>
                                 </div>
                                 <button
                                     type="submit"

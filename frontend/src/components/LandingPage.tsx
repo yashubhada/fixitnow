@@ -218,6 +218,8 @@ const LandingPage: React.FC = () => {
     const [isShowHistoryModel, setIShowHistoryModel] = useState<boolean>(false);
     const [isShowProfileModel, setIShowProfileModel] = useState<boolean>(false);
 
+    const [isShowForgotPassword, setIsShowForgotPassword] = useState<boolean>(false);
+
     if (isLoading) {
         return <PageLoading />
     }
@@ -504,7 +506,7 @@ const LandingPage: React.FC = () => {
             </footer>
 
             {
-                loginFormModal && <LoginForm />
+                loginFormModal && <LoginForm openForgotPasswordModel={() => setIsShowForgotPassword(true)} />
             }
 
             {
@@ -549,7 +551,7 @@ const LandingPage: React.FC = () => {
             }
 
             {
-                <ForgotPassword />
+                isShowForgotPassword && <ForgotPassword onClose={()=>setIsShowForgotPassword(false)} />
             }
         </>
     )

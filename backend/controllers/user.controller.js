@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
 import { v2 as cloudinary } from 'cloudinary';
+import nodemailer from 'nodemailer';
 import fs from 'fs';
 
 dotenv.config();
@@ -14,6 +15,30 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// Create a transporter using Gmail SMTP
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.USER_MAIL,
+        pass: process.env.USER_MAIL_PASSWORD,
+    },
+});
+
+const sendEmail = (userMail, verifyCode) => {
+    transporter.sendMail({
+        from: process.env.USER_MAIL,
+        to: userMail,
+        subject: "Fixitnow - verify email",
+        text: `verification code is ${verifyCode}`,
+    }, (error, info) => {
+        if (error) {
+            console.error("Error sending email:", error);
+        } else {
+            console.log("Email sent:", info.response);
+        }
+    });
+}
 
 export const handleUserSignUp = async (req, res) => {
     try {
@@ -506,7 +531,96 @@ export const fetchProviderHistory = async (req, res) => {
 
         res.status(200).json({ success: true, history });
     } catch (err) {
-        // Handle any errors and return a 500 status
         res.status(500).json({ success: false, error: err.message });
     }
 };
+
+// forgot password
+// email verification and code generate
+
+export const forgotPassVerifyEmail = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const taker = await User.findOne({ email });
+        const provider = await Provider.findOne({ email });
+
+        if (!taker && !provider) {
+            return res.status(404).json({ success: false, message: "Invalid email" });
+        }
+
+        const generateVerificationCode = () => Math.floor(100000 + Math.random() * 900000);
+        const verifyCode = generateVerificationCode();
+
+        await Promise.all([
+            taker && User.updateOne({ _id: taker._id }, { verificationCode: verifyCode }),
+            provider && Provider.updateOne({ _id: provider._id }, { verificationCode: verifyCode })
+        ]);
+
+        let userData = taker
+            ? { _id: taker._id, userRole: taker.userRole }
+            : { _id: provider._id, userRole: provider.userRole };
+
+        sendEmail(email, verifyCode);
+
+        res.status(200).json({ success: true, userData, message: "Verification code has been sent to your email" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+export const forgotPassVerifyCode = async (req, res) => {
+    try {
+        const { id, role, verifyCode } = req.body;
+        if (role === "serviceTaker") {
+            const taker = await User.findById(id);
+            if (!taker) {
+                return res.status(404).json({ success: false, message: "user not found" });
+            }
+            if (String(taker.verificationCode) === String(verifyCode)) {
+                await User.updateOne({ _id: id }, { verificationCode: null });
+                return res.status(201).json({ success: true, message: "Verification successful" });
+            }
+        }
+        if (role === "serviceProvider") {
+            const provider = await Provider.findById(id);
+            if (!provider) {
+                return res.status(404).json({ success: false, message: "user not found" });
+            }
+            if (String(provider.verificationCode) === String(verifyCode)) {
+                await Provider.updateOne({ _id: id }, { verificationCode: null });
+                return res.status(201).json({ success: true, message: "Verification successful" });
+            }
+        }
+
+        res.status(400).json({ success: false, message: "Incorrect verification code" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+export const forgotPassResetPassword = async (req, res) => {
+    try {
+        const { id, role, password } = req.body;
+        if (role === "serviceTaker") {
+            const taker = await User.findById(id);
+            if (!taker) {
+                return res.status(404).json({ success: false, message: "user not found" });
+            }
+            const hashedPassword = await bcrypt.hash(password, 8);
+            await User.updateOne({ _id: id }, { password: hashedPassword });
+        }
+        if (role === "serviceProvider") {
+            const provider = await Provider.findById(id);
+            if (!provider) {
+                return res.status(404).json({ success: false, message: "user not found" });
+            }
+            const hashedPassword = await bcrypt.hash(password, 8);
+            await Provider.updateOne({ _id: id }, { password: hashedPassword });
+        }
+
+        res.status(201).json({ success: true, message: "Password reset successful" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}

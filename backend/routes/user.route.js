@@ -14,7 +14,10 @@ import {
     fetchProviderHistory,
     fetchUserHistory,
     handleUpdateTaker,
-    handleUpdateProvider
+    handleUpdateProvider,
+    forgotPassVerifyEmail,
+    forgotPassVerifyCode,
+    forgotPassResetPassword
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -55,5 +58,10 @@ userRouter.post('/addReview/:providerId', handleAuthentication, addReview);
 // history
 userRouter.get('/fetchProviderHistory/:id', fetchProviderHistory);
 userRouter.get('/fetchUserHistory/:id', fetchUserHistory);
+
+//forgot password
+userRouter.post('/forgotPassVerifyEmail', forgotPassVerifyEmail);
+userRouter.post('/forgotPassVerifyCode', forgotPassVerifyCode);
+userRouter.post('/forgotPassResetPassword', forgotPassResetPassword);
 
 export default userRouter;

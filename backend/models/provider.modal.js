@@ -43,6 +43,10 @@ const providerSchema = new mongoose.Schema({
         type: String,
         default: 'serviceProvider'
     },
+    verificationCode: {
+        type: Number,
+        default: null
+    },
     reviews: [{
         userId: {
             type: mongoose.Schema.Types.ObjectId,

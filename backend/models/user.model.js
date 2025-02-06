@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     userRole: {
         type: String,
         default: 'serviceTaker'
+    },
+    verificationCode: {
+        type: Number,
+        default: null
     }
 }, { timestamps: true });
 

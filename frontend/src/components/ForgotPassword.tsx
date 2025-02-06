@@ -1,6 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import axios from 'axios';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { UserContext } from '../context/UserContext';
 
-const ForgotPassword: React.FC = () => {
+const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
+
+    const { baseUrl, showToast } = useContext(UserContext);
 
     useEffect(() => {
         // Disable scroll and hide scrollbar when the component is mounted
@@ -22,6 +26,22 @@ const ForgotPassword: React.FC = () => {
     const [isEmailVerifyBtnLoading, setIsEmailVerifyBtnLoading] = useState<boolean>(false);
     const [isCodeVerificationBtnLoading, setIsCodeVerificationBtnLoading] = useState<boolean>(false);
     const [isForgotPasswordBtnLoading, setIsForgotPasswordBtnLoading] = useState<boolean>(false);
+
+    // data
+    interface UserData {
+        email: string;
+        id: string;
+        role: string;
+        password: string;
+        confirmPassword: string;
+    }
+    const [data, setData] = useState<UserData>({
+        email: "",
+        id: "",
+        role: "",
+        password: "",
+        confirmPassword: ""
+    });
 
     // email input ref
     const emailInputRef = useRef<HTMLInputElement>(null);
@@ -47,6 +67,132 @@ const ForgotPassword: React.FC = () => {
         }
     }, []);
 
+    // verify code design
+    const [verifyCode, setVerifyCode] = useState(["", "", "", "", "", ""]);
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+    const handleVerifyCodeChange = (index: number, value: string) => {
+        if (!/^\d?$/.test(value)) return;
+        const code = [...verifyCode];
+        code[index] = value;
+        setVerifyCode(code);
+
+        if (value && index < verifyCode.length - 1) {
+            inputRefs.current[index + 1]?.focus();
+        }
+    };
+    const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Backspace" && !verifyCode[index] && index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    }
+
+    // handle email verification submit
+    const handleVerifyEmailSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        setIsEmailVerifyBtnLoading(true);
+        try {
+            const response = await axios.post(`${baseUrl}api/user/forgotPassVerifyEmail`, {
+                email: data.email
+            });
+            if (response.data.success) {
+                setIsEmailVerification(false);
+                setIsCodeVerification(true);
+
+                setData((prev) => ({
+                    ...prev,
+                    id: response.data.userData._id,
+                    role: response.data.userData.userRole
+                }));
+
+                showToast(response.data.message, "success");
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                // Check for Axios-specific errors
+                if (err.response) {
+                    if (err) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        } finally {
+            setIsEmailVerifyBtnLoading(false);
+        }
+    }
+
+    // handle code verification submit
+    const handleVerifyCodeSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        setIsCodeVerificationBtnLoading(true);
+        const codeNumber = parseInt(verifyCode.join(""), 10); // convert array into int
+        try {
+            const response = await axios.post(`${baseUrl}api/user/forgotPassVerifyCode`, {
+                id: data.id,
+                role: data.role,
+                verifyCode: codeNumber
+            });
+            if (response.data.success) {
+                setIsCodeVerification(false);
+                setIsForgotPassword(true);
+                showToast(response.data.message, "success");
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                // Check for Axios-specific errors
+                if (err.response) {
+                    if (err) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        } finally {
+            setIsCodeVerificationBtnLoading(false);
+        }
+    }
+
+    // handle reset password
+    const handleResetPasswordSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
+        if (data.password.length < 8 && data.confirmPassword.length < 8) {
+            return showToast("Password length must be 8 characters or longer", "error");
+        }
+        if (data.password !== data.confirmPassword) {
+            return showToast("Password and confirm password do not match", "error");
+        }
+        setIsForgotPasswordBtnLoading(true);
+        try {
+            const response = await axios.post(`${baseUrl}api/user/forgotPassResetPassword`, {
+                id: data.id,
+                role: data.role,
+                password: data.confirmPassword
+            });
+            if (response.data.success) {
+                showToast(response.data.message, "success");
+                onClose();
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                // Check for Axios-specific errors
+                if (err.response) {
+                    if (err) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        } finally {
+            setIsForgotPasswordBtnLoading(false);
+        }
+    }
+
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             {/* Background Overlay */}
@@ -60,7 +206,7 @@ const ForgotPassword: React.FC = () => {
                         &&
                         <div>
                             <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Email verification</h1>
-                            <form className='w-full'>
+                            <form onSubmit={handleVerifyEmailSubmit} className='w-full'>
                                 <div
                                     className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
@@ -69,6 +215,8 @@ const ForgotPassword: React.FC = () => {
                                         type="email"
                                         name="email"
                                         ref={emailInputRef}
+                                        onChange={handleFormChange}
+                                        value={data.email}
                                         autoComplete='off'
                                         placeholder='Enter your email'
                                         required
@@ -99,7 +247,7 @@ const ForgotPassword: React.FC = () => {
                                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                                     ></path>
                                                 </svg>
-                                                Verifing...
+                                                Verifying...
                                             </>
                                             :
                                             'Verify'
@@ -113,20 +261,21 @@ const ForgotPassword: React.FC = () => {
                         &&
                         <div>
                             <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Code verification</h1>
-                            <form className='w-full'>
-                                <div
-                                    className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                                >
-                                    <i className="ri-shield-check-line text-xl mr-3"></i>
-                                    <input
-                                        type="number"
-                                        name="verifyCode"
-                                        ref={verifyCodeInputRef}
-                                        autoComplete='off'
-                                        placeholder='Enter your code'
-                                        required
-                                        className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                                    />
+                            <form onSubmit={handleVerifyCodeSubmit} className='w-full'>
+                                <div className="flex justify-between">
+                                    {verifyCode.map((digit, index) => (
+                                        <input
+                                            key={index}
+                                            ref={(el) => (inputRefs.current[index] = el)}
+                                            type="text"
+                                            maxLength={1}
+                                            value={digit}
+                                            onChange={(e) => handleVerifyCodeChange(index, e.target.value)}
+                                            onKeyDown={(e) => handleKeyDown(index, e)}
+                                            required
+                                            className="w-10 md:w-12 h-10 md:h-12 text-center text-base md:text-xl font-medium border-2 border-gray-300 rounded-md focus:outline-none focus:border-black focus:bg-white"
+                                        />
+                                    ))}
                                 </div>
                                 <button
                                     type="submit"
@@ -152,7 +301,7 @@ const ForgotPassword: React.FC = () => {
                                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                                                     ></path>
                                                 </svg>
-                                                Verifing...
+                                                Verifying...
                                             </>
                                             :
                                             'Verify'
@@ -166,7 +315,7 @@ const ForgotPassword: React.FC = () => {
                         &&
                         <div>
                             <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Reset password</h1>
-                            <form className='w-full'>
+                            <form onSubmit={handleResetPasswordSubmit} className='w-full'>
                                 <div
                                     className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
@@ -175,6 +324,8 @@ const ForgotPassword: React.FC = () => {
                                         type="text"
                                         name="password"
                                         ref={forgotPasswordInputRef}
+                                        value={data.password}
+                                        onChange={handleFormChange}
                                         autoComplete='off'
                                         placeholder='Enter new password'
                                         required
@@ -182,18 +333,25 @@ const ForgotPassword: React.FC = () => {
                                     />
                                 </div>
                                 <div
-                                    className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                    className='mb-1 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
                                     <i className="ri-lock-line text-xl mr-3"></i>
                                     <input
                                         type="text"
                                         name="confirmPassword"
+                                        value={data.confirmPassword}
+                                        onChange={handleFormChange}
                                         autoComplete='off'
                                         placeholder='Enter confirm password'
                                         required
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                     />
                                 </div>
+                                {
+                                    data.password !== data.confirmPassword
+                                    &&
+                                    <p className='text-red-500 text-sm'>Password and confirm password do not match</p>
+                                }
                                 <button
                                     type="submit"
                                     className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
@@ -227,6 +385,12 @@ const ForgotPassword: React.FC = () => {
                             </form>
                         </div>
                     }
+                    <div
+                        onClick={onClose}
+                        className='bg-black w-7 h-7 text-center rounded-full absolute -top-3 -right-3 cursor-pointer'
+                    >
+                        <i className="ri-close-line text-white leading-7 text-xl"></i>
+                    </div>
                 </div>
             </div>
 
