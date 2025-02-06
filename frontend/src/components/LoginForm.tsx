@@ -109,7 +109,7 @@ const LoginForm: React.FC<{ openForgotPasswordModel: () => void; }> = ({ openFor
                 {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                     <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
-                        <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Welcome back</h1>
+                        <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Welcome back</h1>
                         <div className='w-full'>
                             <form onSubmit={handleSignIn} className='w-full'>
                                 <div

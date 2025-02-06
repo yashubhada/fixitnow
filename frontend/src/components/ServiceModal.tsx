@@ -198,7 +198,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
 
                 {/* Chat Container */}
                 <div
-                    className={`z-10 md:w-96 fixed bottom-0 right-2 bg-white border rounded-t-md transform transition-transform duration-300 ease-in-out ${isChatVisible ? "translate-y-0" : "translate-y-full"
+                    className={`z-10 w-full md:w-96 fixed bottom-0 right-0 md:right-2 bg-white border rounded-t-md transform transition-transform duration-300 ease-in-out ${isChatVisible ? "translate-y-0" : "translate-y-full"
                         }`}
                 >
                     <div className='flex items-center justify-between p-2 border-b'>

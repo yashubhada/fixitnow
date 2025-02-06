@@ -118,7 +118,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
             {/* Modal Content */}
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
-                    <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Profile</h1>
+                    <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Profile</h1>
                     <form onSubmit={handleUpdateProfile} className='w-full'>
                         <div className='flex justify-center mb-7'>
                             <div className='relative'>

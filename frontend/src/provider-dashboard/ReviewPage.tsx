@@ -58,10 +58,10 @@ const ReviewPage: React.FC = () => {
     }
 
     return (
-        <div className='w-full md:w-[600px] mx-auto'>
-            <h1 className="text-2xl font-bold mb-7 text-center md:text-left">Reviews</h1>
-            {reviews.length > 0 ? (
-                reviews.map((review, index) => (
+        reviews.length > 0 ? (
+            <div className='w-full md:w-[600px] mx-auto'>
+                <h1 className="text-2xl font-bold mb-7 text-center md:text-left">Reviews</h1>
+                {reviews.map((review, index) => (
                     <div key={index} className='border-b pb-5 mb-5'>
                         <div className='flex items-center mb-2'>
                             <img
@@ -83,11 +83,11 @@ const ReviewPage: React.FC = () => {
                         </div>
                         <p className='pl-[64px] text-base'>{review.message}</p>
                     </div>
-                ))
-            ) : (
-                <p className='text-center text-gray-500 mt-20'>No reviews found</p>
-            )}
-        </div>
+                ))}
+            </div>
+        ) : (
+            <p className='text-center text-gray-500 mt-20'>No reviews found</p>
+        )
     );
 };
 

@@ -273,7 +273,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     const handleChatReceiveMessage = () => {
         if (socket) {
             const listener = (data: any) => {
-                console.log("receive: ", data);
+                // console.log("receive: ", data);
             };
             socket.on('receiveMessage', listener);
 
@@ -294,11 +294,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
     ) => {
         if (socket) {
             socket.emit('toggleTimmerComponent', {
-                fromUserId,
-                toUserId,
-                action
-            });
-            console.log("Timmer Emit", {
                 fromUserId,
                 toUserId,
                 action

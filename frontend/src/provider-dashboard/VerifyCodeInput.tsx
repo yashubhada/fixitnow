@@ -84,7 +84,7 @@ const VerifyCodeInput: React.FC = () => {
                 onSubmit={handleVerifyCode}
                 className="bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in shadow-xl border"
             >
-                <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Verify User Code</h1>
+                <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Verify User Code</h1>
                 <div
                     className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                 >

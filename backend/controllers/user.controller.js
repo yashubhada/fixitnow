@@ -84,7 +84,7 @@ export const handleUserSignUp = async (req, res) => {
             avatar: avatarUpload.secure_url,
         });
 
-        res.status(201).json({ success: true, message: "Signup successfull! 😊" });
+        res.status(201).json({ success: true, message: "Signup successful" });
 
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
@@ -195,7 +195,7 @@ export const handleProviderSignUp = async (req, res) => {
             identityProof: identityProofUpload.secure_url,
         });
 
-        res.status(201).json({ success: true, message: 'Signup Successful 😊' });
+        res.status(201).json({ success: true, message: 'Signup successful' });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
@@ -304,7 +304,7 @@ export const handleSignIn = async (req, res) => {
                     secure: true,
                     maxAge: 3600000
                 })
-                .json({ success: true, user: user, message: "Signin Successful 😊" });
+                .json({ success: true, user: user, message: "Signin successful" });
         }
 
         if (provider) {
@@ -340,7 +340,7 @@ export const handleSignIn = async (req, res) => {
                     secure: true,
                     maxAge: 3600000
                 })
-                .json({ success: true, user: updatedProvider, message: "Signin Successful 😊" });
+                .json({ success: true, user: updatedProvider, message: "Signin successful" });
         }
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
@@ -387,8 +387,8 @@ export const handleGetLoggedInUser = async (req, res) => {
 
 export const handleLogout = async (req, res) => {
     try {
-        if (req.user.role === 'serviceProvider') {
-            const id = req.user.id;
+        if (req.user.userRole === 'serviceProvider') {
+            const id = req.user._id;
             // Update isAvailable to true in MongoDB
             await Provider.findByIdAndUpdate(
                 id,
@@ -401,7 +401,7 @@ export const handleLogout = async (req, res) => {
             httpOnly: true,
             secure: true,
         });
-        res.status(201).json({ success: true, message: "Logout Successful 👋" });
+        res.status(201).json({ success: true, message: "Logout successful" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -461,7 +461,7 @@ export const serviceComplete = async (req, res) => {
             { isAvailable: true },
             { new: true }
         );
-        res.status(201).json({ success: true, message: "Service completed successfully 🎉" });
+        res.status(201).json({ success: true, message: "Service completed successfully" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -500,7 +500,7 @@ export const fetchSingleServiceRequest = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid Verification Code" });
         }
 
-        res.status(200).json({ success: true, message: "Verification Successful 👍" });
+        res.status(200).json({ success: true, message: "Verification successful" });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }

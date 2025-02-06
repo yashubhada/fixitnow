@@ -205,7 +205,7 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                         isEmailVerification
                         &&
                         <div>
-                            <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Email verification</h1>
+                            <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Email verification</h1>
                             <form onSubmit={handleVerifyEmailSubmit} className='w-full'>
                                 <div
                                     className='flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
@@ -260,7 +260,7 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                         isCodeVerification
                         &&
                         <div>
-                            <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Code verification</h1>
+                            <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Code verification</h1>
                             <form onSubmit={handleVerifyCodeSubmit} className='w-full'>
                                 <div className="flex justify-between">
                                     {verifyCode.map((digit, index) => (
@@ -314,7 +314,7 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                         isForgotPassword
                         &&
                         <div>
-                            <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">Reset password</h1>
+                            <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">Reset password</h1>
                             <form onSubmit={handleResetPasswordSubmit} className='w-full'>
                                 <div
                                     className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'

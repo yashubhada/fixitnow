@@ -70,7 +70,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onClose, providerId }) => {
 
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
-                    <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-7">Share Your Experience</h1>
+                    <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-7">Share Your Experience</h1>
                     <form onSubmit={handleSubmit}>
                         <div className="flex justify-between items-center mb-4">
                             {[...Array(5)].map((_, index) => (

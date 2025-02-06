@@ -131,7 +131,7 @@ const ChatComponent: React.FC = () => {
     return (
         <div className='w-full md:w-[600px] bg-white rounded-t-md mx-auto'>
             {/* Chat Header */}
-            <div className='flex items-center pb-2 border-b'>
+            <div className='flex items-center pb-2 border-b justify-center md:justify-start'>
                 <div className='relative mr-2'>
                     <img
                         className='w-10 rounded-full'
@@ -146,7 +146,7 @@ const ChatComponent: React.FC = () => {
             </div>
 
             {/* Message Container */}
-            <div className='w-full h-[calc(100vh-130px)] bg-white overflow-y-auto p-4'>
+            <div className='w-full h-[calc(100vh-130px)] bg-white overflow-y-auto p-0 md:p-4'>
                 {messages.map((msg, index) => (
                     <div
                         key={index}

@@ -292,7 +292,7 @@ const LandingPage: React.FC = () => {
                             >
                                 <div
                                     onClick={handleLocationInputRef}
-                                    className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                    className='relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
                                     <i className="ri-map-pin-line text-xl mr-3"></i>
                                     <input
@@ -333,7 +333,7 @@ const LandingPage: React.FC = () => {
                                 </div>
                                 <div
                                     onClick={handleServicesInputRef}
-                                    className='relative flex items-center justify-between py-[10px] px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                                    className='relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] cursor-text w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
                                     <i className="ri-tools-fill text-xl mr-3"></i>
                                     <input
@@ -379,7 +379,7 @@ const LandingPage: React.FC = () => {
                                 <div className='w-fit'>
                                     <button
                                         tabIndex={3}
-                                        className='font-poppins py-3 px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'
+                                        className='font-poppins py-2 md:py-3 px-5 md:px-[25px] text-white bg-black hover:bg-[#333] rounded-md text-base font-medium leading-[20px]'
                                     >
                                         view
                                     </button>

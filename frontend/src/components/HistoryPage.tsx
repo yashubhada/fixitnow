@@ -90,7 +90,7 @@ const HistoryPage: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                             :
                             historyData.length > 0 ? (
                                 <div>
-                                    <h1 className="text-black text-center text-2xl font-semibold font-poppins mb-5">History</h1>
+                                    <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-5">History</h1>
                                     <div className="max-h-[403px] overflow-y-auto overflow-x-auto">
                                         <table className="min-w-full bg-white">
                                             <thead className="bg-gray-200 border border-gray-200">
