@@ -213,6 +213,7 @@ export const handleUpdateProvider = async (req, res) => {
                 ]
             });
             newData.avatar = avatarUpload.secure_url;
+            fs.unlinkSync(req.files.avatar[0].path);
         }
 
         if (req.files?.identityProof) {
@@ -220,6 +221,7 @@ export const handleUpdateProvider = async (req, res) => {
                 folder: 'fixitnow',
             });
             newData.identityProof = identityProofUpload.secure_url;
+            fs.unlinkSync(req.files.identityProof[0].path);
         }
 
         const provider = await Provider.findByIdAndUpdate(
