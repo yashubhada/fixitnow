@@ -12,10 +12,13 @@ import SmartHome from '../images/smart-home.png'
 import HomeRenovation from '../images/renovation.png'
 import Flooring from '../images/flooring.png'
 import Address from '../components/address.json'
+import { useNavigate } from "react-router-dom";
 
 const ProviderProfile: React.FC = () => {
 
     const { baseUrl, userData, setUserData, showToast } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     interface ProfileType {
         name?: string;
@@ -175,34 +178,47 @@ const ProviderProfile: React.FC = () => {
     const handleUpdateProfile: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         console.log("New profile", newProfile);
-        // setIsBtnLoading(true);
-        // try {
-        //     const formData = new FormData();
-        //     if (newProfile.name) {
-        //         formData.append("name", newProfile.name);
-        //     }
-        //     if (newProfile.avatar) {
-        //         formData.append("avatar", newProfile.avatar);
-        //     }
-        //     const response = await axios.patch(`${baseUrl}api/user/handleUpdateTaker/${userData._id}`,
-        //         formData,
-        //         { withCredentials: true }
-        //     );
-        //     showToast(response.data.message, "success");
-        //     if (response.data.success) {
-        //         // setUserData(response.data.taker);
-        //     }
-        // } catch (err) {
-        //     if (axios.isAxiosError(err)) {
-        //         if (err.response) {
-        //             if (err.response.status === 400) {
-        //                 showToast(err.response.data.message, "error");
-        //             }
-        //         }
-        //     }
-        // } finally {
-        //     setIsBtnLoading(false);
-        // }
+        setIsBtnLoading(true);
+        try {
+            const formData = new FormData();
+            if (newProfile.name) {
+                formData.append("name", newProfile.name);
+            }
+            if (newProfile.avatar) {
+                formData.append("avatar", newProfile.avatar);
+            }
+            if (newProfile.service) {
+                formData.append("service", newProfile.service);
+            }
+            if (newProfile.price) {
+                formData.append("price", newProfile.price !== null ? newProfile.price.toString() : "");
+            }
+            if (newProfile.address) {
+                formData.append("address", newProfile.address);
+            }
+            if (newProfile.identityProof) {
+                formData.append("identityProof", newProfile.identityProof);
+            }
+            const response = await axios.patch(`${baseUrl}api/user/handleUpdateProvider/${userData._id}`,
+                formData,
+                { withCredentials: true }
+            );
+            if (response.data.success) {
+                showToast(response.data.message, "success");
+                setUserData(response.data.provider);
+                navigate("/provider-dashboard");
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    if (err.response.status === 400) {
+                        showToast(err.response.data.message, "error");
+                    }
+                }
+            }
+        } finally {
+            setIsBtnLoading(false);
+        }
     }
 
     return (
@@ -395,7 +411,7 @@ const ProviderProfile: React.FC = () => {
                         className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
                         disabled={isDisableBtn || isBtnLoading}
                     >
-                        {/* {
+                        {
                             isBtnLoading
                                 ?
                                 <>
@@ -418,8 +434,7 @@ const ProviderProfile: React.FC = () => {
                                 </>
                                 :
                                 'Save Changes'
-                        } */}
-                        Save Changes
+                        }
                     </button>
                 </form>
             </div>

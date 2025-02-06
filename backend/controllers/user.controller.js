@@ -188,6 +188,54 @@ export const fetchSingleProvider = async (req, res) => {
     }
 }
 
+export const handleUpdateProvider = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, service, price, address } = req.body;
+
+        const newData = {};
+
+        if (name) newData.name = name;
+        if (service) newData.service = service;
+        if (price) newData.price = price;
+        if (address) newData.address = address;
+
+        if (req.files?.avatar[0].path) {
+            const avatarUpload = await cloudinary.uploader.upload(req.files.avatar[0].path, {
+                folder: 'fixitnow',
+                transformation: [
+                    {
+                        width: 200,
+                        height: 200,
+                        crop: 'thumb',
+                        gravity: 'face',
+                    },
+                ]
+            });
+            newData.avatar = avatarUpload.secure_url;
+        }
+
+        if (req.files?.identityProof[0].path) {
+            const identityProofUpload = await cloudinary.uploader.upload(req.files.identityProof[0].path, {
+                folder: 'fixitnow',
+            });
+            newData.identityProof = identityProofUpload.secure_url;
+        }
+
+        const provider = await Provider.findByIdAndUpdate(
+            id,
+            newData,
+            { new: true }
+        )
+        if (!provider) {
+            return res.status(400).json({ success: false, message: 'Service provider not found' });
+        }
+        res.status(201).json({ success: true, provider, message: 'Profile updated successfully' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
 export const handleSignIn = async (req, res) => {
     try {
         const { email, password } = req.body;

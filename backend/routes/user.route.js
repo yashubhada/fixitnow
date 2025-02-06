@@ -13,7 +13,8 @@ import {
     addReview,
     fetchProviderHistory,
     fetchUserHistory,
-    handleUpdateTaker
+    handleUpdateTaker,
+    handleUpdateProvider
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -39,6 +40,7 @@ userRouter.post('/logout', handleAuthentication, handleLogout);
 
 //update profile
 userRouter.patch('/handleUpdateTaker/:id', handleAuthentication, upload.single('avatar'), handleUpdateTaker);
+userRouter.patch('/handleUpdateProvider/:id', handleAuthentication, uploadAvatarIdentity, handleUpdateProvider);
 
 // fetch single user and service provider
 userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);
