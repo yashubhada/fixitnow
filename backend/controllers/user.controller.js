@@ -200,7 +200,7 @@ export const handleUpdateProvider = async (req, res) => {
         if (price) newData.price = price;
         if (address) newData.address = address;
 
-        if (req.files?.avatar[0].path) {
+        if (req.files?.avatar) {
             const avatarUpload = await cloudinary.uploader.upload(req.files.avatar[0].path, {
                 folder: 'fixitnow',
                 transformation: [
@@ -215,7 +215,7 @@ export const handleUpdateProvider = async (req, res) => {
             newData.avatar = avatarUpload.secure_url;
         }
 
-        if (req.files?.identityProof[0].path) {
+        if (req.files?.identityProof) {
             const identityProofUpload = await cloudinary.uploader.upload(req.files.identityProof[0].path, {
                 folder: 'fixitnow',
             });

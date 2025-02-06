@@ -177,7 +177,7 @@ const ProviderProfile: React.FC = () => {
 
     const handleUpdateProfile: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        console.log("New profile", newProfile);
+        // console.log("New profile", newProfile);
         setIsBtnLoading(true);
         try {
             const formData = new FormData();

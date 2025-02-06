@@ -19,8 +19,7 @@ const ReviewPage: React.FC = () => {
         try {
             const response = await axios.get(`${baseUrl}api/user/fetchSingleProvider/${id}`);
             if (response.data.success) {
-                setReviews(response.data.provider.reviews); // Set the reviews array
-                console.log(response.data.provider.reviews);
+                setReviews(response.data.provider.reviews);
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
