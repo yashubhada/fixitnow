@@ -26,6 +26,7 @@ import Timmer from '../provider-dashboard/Timmer'
 import ReviewForm from './ReviewForm'
 import HistoryPage from './HistoryPage'
 import Profile from './Profile'
+import ForgotPassword from './ForgotPassword'
 
 const LandingPage: React.FC = () => {
 
@@ -545,6 +546,10 @@ const LandingPage: React.FC = () => {
 
             {
                 isShowProfileModel && <Profile onClose={() => setIShowProfileModel(false)} />
+            }
+
+            {
+                <ForgotPassword />
             }
         </>
     )

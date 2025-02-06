@@ -160,6 +160,14 @@ const LoginForm: React.FC = () => {
                                         }
                                     </div>
                                 </div>
+                                <div className='mt-5 text-right'>
+                                    <a
+                                        href='#'
+                                        className='text-black hover:underline'
+                                    >
+                                        forgot password?
+                                    </a>
+                                </div>
                                 <button
                                     type="submit"
                                     className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
