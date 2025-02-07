@@ -27,6 +27,7 @@ import ReviewForm from './ReviewForm'
 import HistoryPage from './HistoryPage'
 import Profile from './Profile'
 import ForgotPassword from './ForgotPassword'
+import Payment from './Payment'
 
 const LandingPage: React.FC = () => {
 
@@ -185,6 +186,7 @@ const LandingPage: React.FC = () => {
     }, [socket]);
 
     const [isShowReviewForm, setIsShowReviewForm] = useState<boolean>(false);
+    const [isShowPaymentModel, setIsShowPaymentModel] = useState<boolean>(false);
 
     const closeReviewForm = () => {
         setIsShowReviewForm(false);
@@ -192,9 +194,15 @@ const LandingPage: React.FC = () => {
         localStorage.clear();
     };
 
+    const closePaymentModel = () => {
+        setIsShowPaymentModel(false);
+        setIsShowReviewForm(true);
+    }
+
     useEffect(() => {
         if (isShowTimmer === false && isShowTimmer !== null && userData.userRole === "serviceTaker") {
-            setIsShowReviewForm(true);
+            // setIsShowReviewForm(true);
+            setIsShowPaymentModel(true);
         }
     }, [isShowTimmer]);
 
@@ -552,6 +560,10 @@ const LandingPage: React.FC = () => {
 
             {
                 isShowForgotPassword && <ForgotPassword onClose={() => setIsShowForgotPassword(false)} />
+            }
+
+            {
+                isShowPaymentModel && <Payment onClose={closePaymentModel} />
             }
         </>
     )
