@@ -219,13 +219,17 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                         filteredProviders.length !== 0
                                             ?
                                             filteredProviders.map((provider, idx) =>
-                                                <div key={idx} onClick={() => openSingleServiceProviderModel(provider)} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded cursor-pointer'>
+                                                <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
                                                     <img
                                                         src={provider.avatar}
-                                                        className='w-28 md:w-36 rounded'
+                                                        className='w-28 md:w-36 rounded cursor-pointer'
+                                                        onClick={() => openSingleServiceProviderModel(provider)}
                                                     />
                                                     <div>
-                                                        <div className="flex items-center gap-x-1 mb-1">
+                                                        <div
+                                                            onClick={() => openSingleServiceProviderModel(provider)}
+                                                            className="flex items-center gap-x-1 mb-1 cursor-pointer"
+                                                        >
                                                             <h1 className="text-base md:text-xl font-medium text-black">{provider.name}</h1>
                                                             <i className="ri-verified-badge-line text-lg mr-2"></i>
                                                         </div>

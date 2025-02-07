@@ -59,31 +59,33 @@ const ReviewPage: React.FC = () => {
 
     return (
         reviews.length > 0 ? (
-            <div className='w-full md:w-[600px] mx-auto'>
+            <div className='w-full md:w-[600px] mx-auto h-full flex flex-col'>
                 <h1 className="text-2xl font-bold mb-7 text-center md:text-left">Reviews</h1>
-                {reviews.map((review, index) => (
-                    <div key={index} className='border-b pb-5 mb-5'>
-                        <div className='flex items-center mb-2'>
-                            <img
-                                src={review.userAvatar}
-                                alt={review.userName}
-                                className='w-14 h-14 rounded-full border mr-2'
-                            />
-                            <div>
-                                <h1 className='text-lg font-medium'>{review.userName}</h1>
+                <div className='flex-1 overflow-y-auto max-h-[calc(100vh-150px)]'>
+                    {reviews.map((review, index) => (
+                        <div key={index} className='border-b pb-5 mb-5'>
+                            <div className='flex items-center mb-2'>
+                                <img
+                                    src={review.userAvatar}
+                                    alt={review.userName}
+                                    className='w-14 h-14 rounded-full border mr-2'
+                                />
                                 <div>
-                                    {Array.from({ length: 5 }, (_, i) => (
-                                        <i
-                                            key={i}
-                                            className={`ri-star-${i < review.rating ? 'fill' : 'line'}`}
-                                        ></i>
-                                    ))}
+                                    <h1 className='text-lg font-medium'>{review.userName}</h1>
+                                    <div>
+                                        {Array.from({ length: 5 }, (_, i) => (
+                                            <i
+                                                key={i}
+                                                className={`ri-star-${i < review.rating ? 'fill' : 'line'}`}
+                                            ></i>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
+                            <p className='pl-[64px] text-base'>{review.message}</p>
                         </div>
-                        <p className='pl-[64px] text-base'>{review.message}</p>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         ) : (
             <p className='text-center text-gray-500 mt-20'>No reviews found</p>

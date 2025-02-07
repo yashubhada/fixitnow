@@ -74,21 +74,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onClose, providerId }) => {
                     <form onSubmit={handleSubmit}>
                         <div className="flex justify-between items-center mb-4">
                             {[...Array(5)].map((_, index) => (
-                                <span
+                                <i
                                     key={index}
                                     onClick={() => handleSpanClick(index)}
-                                    className={`h-6 w-6 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300
-                                        ${formData.rating === index + 1
-                                            ? "bg-black border-2 border-black"
-                                            : "bg-gray-300"}`}
-                                >
-                                    {formData.rating === index + 1 && (
-                                        <div className="h-3 w-3 bg-white rounded-full"></div>
-                                    )}
-                                </span>
+                                    className={`text-3xl cursor-pointer transition-all duration-300 ${formData.rating >= index + 1 ? "ri-star-fill text-black" : "ri-star-line text-gray-400"
+                                        }`}
+                                ></i>
                             ))}
-                        </div>
 
+                        </div>
                         <div className="h-2 w-full bg-gray-300 rounded-full relative mb-4">
                             <div
                                 className="h-full bg-black rounded-full transition-all duration-300"
