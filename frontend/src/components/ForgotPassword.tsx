@@ -27,6 +27,10 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
     const [isCodeVerificationBtnLoading, setIsCodeVerificationBtnLoading] = useState<boolean>(false);
     const [isForgotPasswordBtnLoading, setIsForgotPasswordBtnLoading] = useState<boolean>(false);
 
+    // password show
+    const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+    const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
+
     // data
     interface UserData {
         email: string;
@@ -321,7 +325,7 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                 >
                                     <i className="ri-lock-line text-xl mr-3"></i>
                                     <input
-                                        type="text"
+                                        type={isShowPassword ? "text" : "password"}
                                         name="password"
                                         ref={forgotPasswordInputRef}
                                         value={data.password}
@@ -331,13 +335,17 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                         required
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                     />
+                                    <i
+                                        onClick={() => setIsShowPassword(!isShowPassword)}
+                                        className={`${isShowPassword ? 'ri-eye-line' : 'ri-eye-off-line'} text-xl cursor-pointer ml-3`}
+                                    ></i>
                                 </div>
                                 <div
                                     className='mb-1 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                                 >
                                     <i className="ri-lock-line text-xl mr-3"></i>
                                     <input
-                                        type="text"
+                                        type={isShowConfirmPassword ? "text" : "password"}
                                         name="confirmPassword"
                                         value={data.confirmPassword}
                                         onChange={handleFormChange}
@@ -346,6 +354,10 @@ const ForgotPassword: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                         required
                                         className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                                     />
+                                    <i
+                                        onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+                                        className={`${isShowConfirmPassword ? 'ri-eye-line' : 'ri-eye-off-line'} text-xl cursor-pointer ml-3`}
+                                    ></i>
                                 </div>
                                 {
                                     data.password !== data.confirmPassword
