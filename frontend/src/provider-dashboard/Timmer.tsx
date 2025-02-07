@@ -93,7 +93,7 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
     };
 
     return (
-        <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
+        <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-20">
             {/* Background Overlay */}
             <div className="absolute inset-0 bg-black opacity-50"></div>
 

@@ -27,7 +27,6 @@ import ReviewForm from './ReviewForm'
 import HistoryPage from './HistoryPage'
 import Profile from './Profile'
 import ForgotPassword from './ForgotPassword'
-import SingleProviderModel from './SingleProviderModel'
 
 const LandingPage: React.FC = () => {
 
@@ -553,10 +552,6 @@ const LandingPage: React.FC = () => {
 
             {
                 isShowForgotPassword && <ForgotPassword onClose={() => setIsShowForgotPassword(false)} />
-            }
-
-            {
-                <SingleProviderModel />
             }
         </>
     )

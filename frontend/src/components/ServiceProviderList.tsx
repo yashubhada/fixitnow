@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 import ServiceRequestLoading from './ServiceRequestLoading';
+import SingleProviderModel from './SingleProviderModel';
 
 interface ServiceInformation {
     serviceAddress: string | undefined;
@@ -11,19 +12,16 @@ interface ServiceInformation {
 }
 
 const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
-
     const { baseUrl, userData, showToast, socketData, handleSocketRegister, handleEmitServiceRequest, handleOnServiceRequestResponse } = useContext(UserContext);
 
     useEffect(() => {
-        // Disable scroll and hide scrollbar when the component is mounted
         document.body.style.overflow = 'hidden';
         document.body.style.paddingRight = '0px';
 
-        // Cleanup on unmount
         return () => {
             document.body.style.overflow = 'auto';
             document.body.style.paddingRight = '';
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -39,7 +37,6 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     }, [userData, closeClick]);
 
-
     interface Provider {
         _id: string;
         name: string;
@@ -51,6 +48,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         identityProof: string;
         isAvailable: boolean;
         userRole: string;
+        reviews: any;
         createdAt: string;
         updatedAt: string;
     }
@@ -89,6 +87,19 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
         }
     };
 
+    const [isShowSingleProvider, setIsShowSingleProvider] = useState<boolean>(false);
+    const [singleProvider, setSingleProvider] = useState<Provider[]>([]);
+
+    const openSingleServiceProviderModel = (provider: any): void => {
+        setSingleProvider(provider);
+        setIsShowSingleProvider(true);
+    }
+
+    const closeSingleServiceProviderModel = () => {
+        setSelectedProvider(null);
+        setIsShowSingleProvider(false);
+    }
+
     useEffect(() => {
         if (isRequestLoading) {
             const timeoutId = setTimeout(() => {
@@ -115,12 +126,16 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
             if (socketData.status === "accepted") {
                 showToast("Your request has been successfully accepted", "success");
-
-                // Use the ref to access the latest selectedProvider
                 handleAcceptedService(selectedProviderRef.current);
             }
         }
     }, [socketData]);
+
+    const calculateAverageRating = (reviews: any) => {
+        if (reviews.length === 0) return 0;
+        const totalRating = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+        return totalRating / reviews.length;
+    };
 
     useEffect(() => {
         if (loading === false && providers) {
@@ -140,10 +155,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
     return (
         <>
             <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
-                {/* Background Overlay */}
                 <div className="absolute inset-0 bg-black opacity-50"></div>
-
-                {/* Modal Content */}
                 <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                     <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[500px] animate-fade-in">
                         <div className='grid grid-cols-2 gap-5 mb-5'>
@@ -171,7 +183,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                             </div>
                         </div>
                         <div>
-                            <div className='grid grid-cols-1 gap-y-5 max-h-[350px] md:max-h-[400px] overflow-y-scroll'>
+                            <div className='grid grid-cols-1 gap-y-5 max-h-[350px] md:max-h-[400px] overflow-y-auto'>
                                 {
                                     loading
                                         ?
@@ -207,7 +219,7 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                                         filteredProviders.length !== 0
                                             ?
                                             filteredProviders.map((provider, idx) =>
-                                                <div key={idx} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded'>
+                                                <div key={idx} onClick={() => openSingleServiceProviderModel(provider)} className='flex items-center gap-x-3 border border-[#dfdfdf] p-2 rounded cursor-pointer'>
                                                     <img
                                                         src={provider.avatar}
                                                         className='w-28 md:w-36 rounded'
@@ -224,20 +236,14 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
 
                                                         <div className="flex items-center gap-1">
                                                             {Array.from({ length: 5 }, (_, index) => (
-                                                                <svg
+                                                                <i
                                                                     key={index}
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    aria-label="Rating"
-                                                                    className="focus:outline-none w-[13px] md:w-[15px]"
-                                                                >
-                                                                    <path
-                                                                        d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z"
-                                                                        fill={index < 4 ? "rgba(234,113,46,1)" : "#555"}
-                                                                    />
-                                                                </svg>
+                                                                    className={`ri-star-${index < Math.round(calculateAverageRating(provider.reviews)) ? 'fill' : 'line'}`}
+                                                                ></i>
                                                             ))}
-                                                            <div className="text-gray-500 text-sm md:text-base">(4.5)</div>
+                                                            <div className="text-gray-500 text-sm md:text-base">
+                                                                ({calculateAverageRating(provider.reviews).toFixed(1)})
+                                                            </div>
                                                         </div>
 
                                                         <button
@@ -278,8 +284,16 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
             {
                 isRequestLoading && <ServiceRequestLoading providerName={selectedProvider?.name} />
             }
-        </>
-    )
-}
 
-export default ServiceProviderList
+            {
+                isShowSingleProvider &&
+                <SingleProviderModel
+                    provider={singleProvider}
+                    closeModel={closeSingleServiceProviderModel}
+                />
+            }
+        </>
+    );
+};
+
+export default ServiceProviderList;
