@@ -42,10 +42,10 @@ const HistoryPage: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
 
     const secondsToMinutes = (seconds: number): string => {
         let newVal: string;
-        if (seconds >= 60) {
-            newVal = Math.floor(seconds / 60) + " mins";
-        } else {
+        if (seconds !== null) {
             newVal = seconds + "  sec";
+        } else {
+            newVal = "Request canceld"
         }
         return newVal;
     };

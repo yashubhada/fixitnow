@@ -45,7 +45,11 @@ const History: React.FC = () => {
         if (seconds >= 60) {
             newVal = Math.floor(seconds / 60) + " mins";
         } else {
-            newVal = seconds + "  sec";
+            if (seconds !== null) {
+                newVal = seconds + "  sec";
+            } else {
+                newVal = "Request canceld"
+            }
         }
         return newVal;
     };
