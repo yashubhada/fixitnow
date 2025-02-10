@@ -311,6 +311,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                     setIsShowTimmer(false);
                     console.log("Timer component closed");
                 }
+                setSocketData(null);
             };
 
             // Attach the listener to the 'componentToggled' event
