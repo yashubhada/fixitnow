@@ -13,6 +13,24 @@ const LandingPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // reaload warning
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            // Prevent the default action (required for some browsers)
+            event.preventDefault();
+            // Custom message (not all browsers will display this)
+            event.returnValue = 'Are you sure you want to leave? Your changes may not be saved.';
+        };
+
+        // Add the event listener
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
     const [requestData, setRequestData] = useState<any>(() => {
         const storedData = localStorage.getItem("requestData");
         return storedData ? JSON.parse(storedData) : null;
