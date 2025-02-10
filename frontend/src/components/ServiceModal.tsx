@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { UserContext } from '../context/UserContext';
 
 interface ProviderData {
@@ -81,7 +81,6 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
     const handleChatReceiveMessage = useCallback(() => {
         if (socket) {
             const listener = (data: { fromUserId: string; message: string }) => {
-                console.log("receive: ", data);
                 setMessages((prevMessages) => [
                     ...prevMessages,
                     {
@@ -102,7 +101,15 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
 
     useEffect(() => {
         return handleChatReceiveMessage();
-    }, [handleChatReceiveMessage]);
+    }, [handleChatReceiveMessage, socket]);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null); // Define ref type explicitly
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
@@ -240,6 +247,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                                 </div>
                             </div>
                         ))}
+                        <div ref={messagesEndRef}></div>
                     </div>
                     {/* Send Message */}
                     <div className='w-full p-2 border-t'>

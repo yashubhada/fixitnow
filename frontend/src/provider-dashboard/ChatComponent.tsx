@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -81,7 +81,6 @@ const ChatComponent: React.FC = () => {
     const handleChatReceiveMessage = () => {
         if (socket) {
             const listener = (data: { fromUserId: string; message: string }) => {
-                console.log("receive: ", data);
                 setMessages((prevMessages) => [
                     ...prevMessages,
                     {
@@ -104,6 +103,14 @@ const ChatComponent: React.FC = () => {
     useEffect(() => {
         return handleChatReceiveMessage();
     }, [socket]);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null); // Define ref type explicitly
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     // Loading spinner
     if (isLoading) {
@@ -163,6 +170,7 @@ const ChatComponent: React.FC = () => {
                         </div>
                     </div>
                 ))}
+                <div ref={messagesEndRef}></div>
             </div>
 
             {/* Send Message Form */}

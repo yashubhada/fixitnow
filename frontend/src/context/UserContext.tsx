@@ -262,19 +262,12 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 toUserId,
                 message
             });
-            console.log("send", {
-                fromUserId,
-                toUserId,
-                message
-            });
         }
     }
 
     const handleChatReceiveMessage = () => {
         if (socket) {
-            const listener = (data: any) => {
-                // console.log("receive: ", data);
-            };
+            const listener = () => { };
             socket.on('receiveMessage', listener);
 
             // Cleanup listener
@@ -306,10 +299,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             const listener = ({ action }: { action: 'open' | 'close' }) => {
                 if (action === 'open') {
                     setIsShowTimmer(true);
-                    console.log("Timer component opened");
                 } else if (action === 'close') {
                     setIsShowTimmer(false);
-                    console.log("Timer component closed");
                 }
                 setSocketData(null);
             };
