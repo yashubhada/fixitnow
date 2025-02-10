@@ -41,17 +41,18 @@ const History: React.FC = () => {
     }, [id]);
 
     const secondsToMinutes = (seconds: number): string => {
-        let newVal: string;
-        if (seconds >= 60) {
-            newVal = Math.floor(seconds / 60) + " mins";
-        } else {
-            if (seconds !== null) {
-                newVal = seconds + "  sec";
-            } else {
-                newVal = "Request canceld"
-            }
+        if (seconds === null || seconds === undefined) {
+            return "Request canceled";
         }
-        return newVal;
+
+        if (seconds < 60) {
+            return `${seconds} sec`;
+        }
+
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+
+        return remainingSeconds > 0 ? `${minutes} min ${remainingSeconds} sec` : `${minutes} min`;
     };
 
     if (isLoading) {

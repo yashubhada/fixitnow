@@ -51,6 +51,36 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [chatInput, setChatInput] = useState<string>("");
 
+    // typing message
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUserId, setTypingUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (socket) {
+            const handleTyping = (data: { fromUserId: string }) => {
+                if (data.fromUserId === providerData._id) {
+                    setIsTyping(true);
+                    setTypingUserId(data.fromUserId);
+                }
+            };
+
+            const handleStopTyping = (data: { fromUserId: string }) => {
+                if (data.fromUserId === providerData._id) {
+                    setIsTyping(false);
+                    setTypingUserId(null);
+                }
+            };
+
+            socket.on('typing', handleTyping);
+            socket.on('stopTyping', handleStopTyping);
+
+            return () => {
+                socket.off('typing', handleTyping);
+                socket.off('stopTyping', handleStopTyping);
+            };
+        }
+    }, [socket, providerData._id]);
+
     const toggleChat = useCallback(() => {
         setIsChatVisible((prev) => !prev);
     }, []);
@@ -76,7 +106,26 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
 
     const handleChatInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setChatInput(e.target.value);
-    }, []);
+
+        if (socket) {
+            // Emit typing event when the user starts typing
+            socket.emit('typing', {
+                fromUserId: userData._id,
+                toUserId: providerData._id,
+            });
+
+            // Clear typing event after a delay (e.g., 1 second)
+            const timeout = setTimeout(() => {
+                socket.emit('stopTyping', {
+                    fromUserId: userData._id,
+                    toUserId: providerData._id,
+                });
+            }, 1000);
+
+            // Clear the timeout if the user continues typing
+            return () => clearTimeout(timeout);
+        }
+    }, [socket, userData._id, providerData._id]);
 
     const handleChatReceiveMessage = useCallback(() => {
         if (socket) {
@@ -247,6 +296,16 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                                 </div>
                             </div>
                         ))}
+                        {/* Typing Indicator */}
+                        {isTyping && typingUserId === providerData._id && (
+                            <div className="flex justify-start">
+                                <div className="max-w-[70%] px-2 py-3 flex items-center gap-1 rounded-xl bg-black rounded-tl-none">
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                                    <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                                </div>
+                            </div>
+                        )}
                         <div ref={messagesEndRef}></div>
                     </div>
                     {/* Send Message */}

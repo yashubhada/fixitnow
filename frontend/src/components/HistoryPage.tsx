@@ -41,13 +41,18 @@ const HistoryPage: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
     }, [id]);
 
     const secondsToMinutes = (seconds: number): string => {
-        let newVal: string;
-        if (seconds !== null) {
-            newVal = seconds + "  sec";
-        } else {
-            newVal = "Request canceld"
+        if (seconds === null || seconds === undefined) {
+            return "Request canceled";
         }
-        return newVal;
+
+        if (seconds < 60) {
+            return `${seconds} sec`;
+        }
+
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+
+        return remainingSeconds > 0 ? `${minutes} min ${remainingSeconds} sec` : `${minutes} min`;
     };
 
     useEffect(() => {

@@ -97,6 +97,20 @@ io.on('connection', (socket) => {
     }
   });
 
+  // show typing animation
+  socket.on('typing', ({ fromUserId, toUserId }) => {
+    const targetSocketId = userSockets.get(toUserId);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('typing', { fromUserId });
+    }
+  });
+  socket.on('stopTyping', ({ fromUserId, toUserId }) => {
+    const targetSocketId = userSockets.get(toUserId);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('stopTyping', { fromUserId });
+    }
+  });
+
   // Handle Timmer component toggle (open/close)
   socket.on('toggleTimmerComponent', ({ fromUserId, toUserId, action }) => {
     const targetSocketId = userSockets.get(toUserId);

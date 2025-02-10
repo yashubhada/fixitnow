@@ -19,6 +19,10 @@ const ChatComponent: React.FC = () => {
     const [chatInput, setChatInput] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
 
+    // typing message
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUserId, setTypingUserId] = useState<string | null>(null);
+
     // Fetch taker data
     const fetchTakerData = async () => {
         setIsLoading(true);
@@ -73,8 +77,57 @@ const ChatComponent: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        if (socket) {
+            const handleTyping = (data: { fromUserId: string }) => {
+                if (data.fromUserId === takerData?._id) {
+                    setIsTyping(true);
+                    setTypingUserId(data.fromUserId);
+                }
+            };
+
+            const handleStopTyping = (data: { fromUserId: string }) => {
+                if (data.fromUserId === takerData?._id) {
+                    setIsTyping(false);
+                    setTypingUserId(null);
+                }
+            };
+
+            socket.on('typing', handleTyping);
+            socket.on('stopTyping', handleStopTyping);
+
+            // Cleanup listeners
+            return () => {
+                socket.off('typing', handleTyping);
+                socket.off('stopTyping', handleStopTyping);
+            };
+        }
+    }, [socket, takerData?._id]);
+
     const handleChatInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChatInput(e.target.value);
+
+        if (socket) {
+            const takerId = localStorage.getItem("takerId");
+            if (takerId) {
+                // Emit typing event when the user starts typing
+                socket.emit('typing', {
+                    fromUserId: userData._id,
+                    toUserId: takerId,
+                });
+
+                // Clear typing event after a delay (e.g., 1 second)
+                const timeout = setTimeout(() => {
+                    socket.emit('stopTyping', {
+                        fromUserId: userData._id,
+                        toUserId: takerId,
+                    });
+                }, 1000);
+
+                // Clear the timeout if the user continues typing
+                return () => clearTimeout(timeout);
+            }
+        }
     };
 
     // Handle receiving messages
@@ -153,7 +206,7 @@ const ChatComponent: React.FC = () => {
             </div>
 
             {/* Message Container */}
-            <div className='w-full h-[calc(100vh-130px)] bg-white overflow-y-auto p-0 md:p-4'>
+            <div className='w-full h-[calc(100vh-130px)] bg-white overflow-y-auto py-4'>
                 {messages.map((msg, index) => (
                     <div
                         key={index}
@@ -170,6 +223,16 @@ const ChatComponent: React.FC = () => {
                         </div>
                     </div>
                 ))}
+                {/* Typing Indicator */}
+                {isTyping && typingUserId === takerData._id && (
+                    <div className="flex justify-start">
+                        <div className="max-w-[70%] px-2 py-3 flex items-center gap-1 rounded-xl bg-black rounded-tl-none">
+                            <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                            <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                            <span className="w-1 h-1 bg-white rounded-full animate-bounce"></span>
+                        </div>
+                    </div>
+                )}
                 <div ref={messagesEndRef}></div>
             </div>
 
