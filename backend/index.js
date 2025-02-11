@@ -1,11 +1,13 @@
 import express from "express";
 import userRouter from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import cors from 'cors';
 import { ConnectMongo } from "./Config.js";
 import { Server } from 'socket.io';
 import http from 'http';
 
+dotenv.config();
 ConnectMongo();
 
 const app = express();
@@ -137,7 +139,7 @@ io.on('connection', (socket) => {
 });
 
 // Use server.listen instead of app.listen
-const port = 9797;
+const port = process.env.FIXITNOW_BACKEND_PORT;
 server.listen(port, () => {
   console.log(`Fixitnow app listening on port ${port}`);
 });

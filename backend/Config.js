@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export const ConnectMongo = () => {
-    mongoose.connect('mongodb://localhost:27017/fixitnow')
+    mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
         .then(() => {
             console.log('MongoDB connected successfully!');
         })
