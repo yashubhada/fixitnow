@@ -414,12 +414,6 @@ export const handleLogout = async (req, res) => {
 
 export const createNewRequest = async (req, res) => {
     try {
-        const token = req.cookies.accessToken;
-
-        if (!token) {
-            return res.status(401).send({ success: false, message: "No token found, please log in" });
-        }
-
         const { userId, userName, userAvatar, providerId, providerName, providerAvatar, location, serviceType, price, status, verificationCode } = req.body;
         const newRequest = await Request.create({
             userId,
