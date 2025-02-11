@@ -402,6 +402,9 @@ export const handleLogout = async (req, res) => {
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: true,
+            sameSite: 'None',
+            domain: 'fixitnow.onrender.com',
+            path: '/'
         });
         res.status(201).json({ success: true, message: "Logout successful" });
     } catch (err) {
