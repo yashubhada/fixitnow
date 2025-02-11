@@ -102,7 +102,8 @@ const LandingPage: React.FC = () => {
         try {
             const response = await axios.post(
                 `${baseUrl}api/user/createNewRequest`,
-                newRequestData
+                newRequestData,
+                { withCredentials: true }
             );
 
             if (status === 'accepted' && response.data.success) {

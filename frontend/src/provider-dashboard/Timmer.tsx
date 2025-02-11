@@ -72,7 +72,8 @@ const Timmer: React.FC<{ showButton: boolean }> = ({ showButton }) => {
             try {
                 const response = await axios.post(
                     `${baseUrl}api/user/serviceComplete`,
-                    { requestId, providerId, totalTime: timeElapsed }
+                    { requestId, providerId, totalTime: timeElapsed },
+                    { withCredentials: true }
                 );
                 if (response.data.success) {
                     showToast(`Task ended. Time spent: ${formatTime(timeElapsed)}`, "success");
