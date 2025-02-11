@@ -279,7 +279,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ providerData }) => {
                         </div>
                     </div>
                     {/* Message Container */}
-                    <div className='w-full h-[calc(100vh-118px)] bg-white overflow-y-auto p-2'>
+                    <div className='w-full h-[calc(100vh-180px)] md:h-[calc(100vh-118px)] bg-white overflow-y-auto p-2'>
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
