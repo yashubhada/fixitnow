@@ -302,6 +302,8 @@ export const handleSignIn = async (req, res) => {
                 .cookie('accessToken', generateToken, {
                     httpOnly: true,
                     secure: true,
+                    sameSite: 'None',
+                    domain: 'fixitnow.onrender.com',
                     maxAge: 3600000
                 })
                 .json({ success: true, user: user, message: "Signin successful" });
