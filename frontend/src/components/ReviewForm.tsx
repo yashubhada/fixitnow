@@ -39,8 +39,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onClose, providerId }) => {
                         userAvatar: userData.avatar,
                         rating: formData.rating,
                         message: formData.message
-                    },
-                    { withCredentials: true });
+                    }
+                );
                 if (response.data.success) {
                     showToast(response.data.message, "success");
                     onClose();

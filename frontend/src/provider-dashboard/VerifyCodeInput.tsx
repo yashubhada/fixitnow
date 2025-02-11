@@ -54,8 +54,7 @@ const VerifyCodeInput: React.FC = () => {
         setIsVerifyLoading(true);
         try {
             const response = await axios.post(`${baseUrl}api/user/fetchSingleServiceRequest`,
-                { id, verificationCode },
-                { withCredentials: true }
+                { id, verificationCode }
             );
             if (response.data.success) {
                 if (providerId && takerId) {

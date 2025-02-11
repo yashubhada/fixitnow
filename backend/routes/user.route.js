@@ -50,10 +50,10 @@ userRouter.get('/fetchSingleTaker/:id', fetchSingleTaker);
 userRouter.get('/fetchSingleProvider/:id', fetchSingleProvider);
 
 // request
-userRouter.post('/createNewRequest', handleAuthentication, createNewRequest);
-userRouter.post('/fetchSingleServiceRequest', handleAuthentication, fetchSingleServiceRequest);
-userRouter.post('/serviceComplete', handleAuthentication, serviceComplete);
-userRouter.post('/addReview/:providerId', handleAuthentication, addReview);
+userRouter.post('/createNewRequest', createNewRequest);
+userRouter.post('/fetchSingleServiceRequest', fetchSingleServiceRequest);
+userRouter.post('/serviceComplete', serviceComplete);
+userRouter.post('/addReview/:providerId', addReview);
 
 // history
 userRouter.get('/fetchProviderHistory/:id', fetchProviderHistory);
