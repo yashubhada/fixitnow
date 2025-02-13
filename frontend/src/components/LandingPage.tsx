@@ -21,7 +21,6 @@ import ServiceProviderList from './ServiceProviderList'
 import { UserContext } from '../context/UserContext'
 import ServiceModal from './ServiceModal'
 import Address from './address.json'
-import PageLoading from './PageLoading'
 import Timmer from '../provider-dashboard/Timmer'
 import ReviewForm from './ReviewForm'
 import HistoryPage from './HistoryPage'
@@ -229,7 +228,22 @@ const LandingPage: React.FC = () => {
     const [isShowForgotPassword, setIsShowForgotPassword] = useState<boolean>(false);
 
     if (isLoading) {
-        return <PageLoading />
+        return (
+            <div className='h-screen w-full flex items-center justify-center bg-white'>
+                <div className="spinner">
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <div
+                            key={i}
+                            className="spinner-blade"
+                            style={{
+                                animationDelay: `${i * 0.083}s`,
+                                transform: `rotate(${i * 30}deg)`,
+                            }}
+                        ></div>
+                    ))}
+                </div>
+            </div>
+        )
     }
 
     return (

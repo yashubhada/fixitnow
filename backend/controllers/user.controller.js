@@ -391,7 +391,7 @@ export const handleGetLoggedInUser = async (req, res) => {
 
 export const handleLogout = async (req, res) => {
     try {
-        if (req.user.userRole === 'serviceProvider') {
+        if (req.user.userRole === "serviceProvider") {
             const id = req.user._id;
             // Update isAvailable to true in MongoDB
             await Provider.findByIdAndUpdate(

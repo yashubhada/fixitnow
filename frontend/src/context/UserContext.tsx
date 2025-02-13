@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { io, Socket } from "socket.io-client";
-import PageLoading from "../components/PageLoading";
 
 // Define the context type
 interface UserContextType {
@@ -353,7 +352,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         >
             {children}
             <Toaster />
-            {isLoading && <PageLoading />}
         </UserContext.Provider>
     );
 };
