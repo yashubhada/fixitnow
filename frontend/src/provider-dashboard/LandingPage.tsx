@@ -143,7 +143,7 @@ const LandingPage: React.FC = () => {
     return (
         <>
             <section className='w-full h-screen flex'>
-                <div className={`absolute bg-white h-full md:static z-20 w-[250px] transition-all duration-300 ease-in-out ${toggleMenu ? 'translate-x-0 border-r shadow-xl' : '-translate-x-[250px] md:translate-x-0'} py-4 px-3 border-gray-300 md:border-r md:shadow-xl`}>
+                <div className={`absolute bg-white h-screen md:static z-20 w-[250px] transition-all duration-300 ease-in-out ${toggleMenu ? 'translate-x-0 border-r shadow-xl' : '-translate-x-[250px] md:translate-x-0'} py-4 px-3 border-gray-300 md:border-r md:shadow-xl`}>
                     <nav className='dashboard-main-nav relative h-full'>
                         <img src={Logo} className='w-10 mb-5 mx-auto' alt="FixItNow Logo" />
                         <ul className='space-y-3'>
