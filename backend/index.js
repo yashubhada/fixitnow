@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app); // Use HTTP server with Express
 const io = new Server(server, {
   cors: {
-    origin: "https://fixitnow-service.netlify.app", // Match your frontend origin
+    origin: "http://localhost:5173", //"https://fixitnow-service.netlify.app", // Match your frontend origin
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -24,7 +24,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "https://fixitnow-service.netlify.app", // Frontend origin
+  origin: "http://localhost:5173", //"https://fixitnow-service.netlify.app", // Match your frontend origin
   credentials: true,
 }));
 
