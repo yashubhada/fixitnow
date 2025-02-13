@@ -300,6 +300,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             const listener = ({ action }: { action: 'open' | 'close' }) => {
                 if (action === 'open') {
                     setIsShowTimmer(true);
+                    setSocketData(null);
                 } else if (action === 'close') {
                     setIsShowTimmer(false);
                 }

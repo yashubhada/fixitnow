@@ -12,7 +12,7 @@ interface ServiceInformation {
 }
 
 const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, serviceType, handleAcceptedService, closeClick }) => {
-    const { baseUrl, userData, showToast, socketData, handleSocketRegister, handleEmitServiceRequest, handleOnServiceRequestResponse } = useContext(UserContext);
+    const { baseUrl, userData, showToast, socketData, setSocketData, handleSocketRegister, handleEmitServiceRequest, handleOnServiceRequestResponse } = useContext(UserContext);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -128,6 +128,9 @@ const ServiceProviderList: React.FC<ServiceInformation> = ({ serviceAddress, ser
                 showToast("Your request has been successfully accepted", "success");
                 handleAcceptedService(selectedProviderRef.current);
             }
+
+            const timeout = setTimeout(() => setSocketData(null), 500);
+            return () => clearTimeout(timeout);
         }
     }, [socketData]);
 
