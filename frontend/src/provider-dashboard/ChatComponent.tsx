@@ -168,17 +168,19 @@ const ChatComponent: React.FC = () => {
     // Loading spinner
     if (isLoading) {
         return (
-            <div className="spinner">
-                {Array.from({ length: 12 }, (_, i) => (
-                    <div
-                        key={i}
-                        className="spinner-blade"
-                        style={{
-                            animationDelay: `${i * 0.083}s`,
-                            transform: `rotate(${i * 30}deg)`,
-                        }}
-                    ></div>
-                ))}
+            <div className='flex justify-center items-center w-full h-full'>
+                <div className="spinner">
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <div
+                            key={i}
+                            className="spinner-blade"
+                            style={{
+                                animationDelay: `${i * 0.083}s`,
+                                transform: `rotate(${i * 30}deg)`,
+                            }}
+                        ></div>
+                    ))}
+                </div>
             </div>
         );
     }
