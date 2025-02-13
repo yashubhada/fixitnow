@@ -9,7 +9,7 @@ import Timmer from './Timmer';
 
 
 const LandingPage: React.FC = () => {
-    const { baseUrl, userData, handleLogout, showToast, isLoading, socket, socketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, handleOnTimmerComponent, isShowTimmer } = useContext(UserContext);
+    const { baseUrl, userData, handleLogout, showToast, isLoading, socket, socketData, setSocketData, handleSocketRegister, handleOnServiceRequest, handleEmitServiceRequestResponse, handleOnTimmerComponent, isShowTimmer } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -84,6 +84,7 @@ const LandingPage: React.FC = () => {
     };
 
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
+        setSocketData(null);
         const verificationCode = generateVerificationCode();
         const newRequestData = {
             userId: requestData.requestData._id,

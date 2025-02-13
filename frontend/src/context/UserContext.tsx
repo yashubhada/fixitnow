@@ -23,6 +23,7 @@ interface UserContextType {
     // Socket
     socket: Socket | null;
     socketData: any | null;
+    setSocketData: (socketData: any | null) => void;
     handleSocketRegister: (id: string) => void;
     handleEmitServiceRequest: (fromUserId: string, toUserId: string, requestData: any) => void;
     handleOnServiceRequest: () => void;
@@ -71,6 +72,7 @@ const defaultValue: UserContextType = {
     // Socket
     socket: null,
     socketData: null,
+    setSocketData: () => { },
     handleSocketRegister: () => { },
     handleEmitServiceRequest: () => { },
     handleOnServiceRequest: () => { },
@@ -301,7 +303,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 } else if (action === 'close') {
                     setIsShowTimmer(false);
                 }
-                setSocketData(null);
             };
 
             // Attach the listener to the 'componentToggled' event
@@ -335,6 +336,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
                 // Socket
                 socket,
                 socketData,
+                setSocketData,
                 handleSocketRegister,
                 handleEmitServiceRequest,
                 handleOnServiceRequest,
