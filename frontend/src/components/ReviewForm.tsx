@@ -61,14 +61,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onClose, providerId }) => {
         }
     };
 
-    console.log(providerId);
-
     const ratingTitles = ["Poor", "Average", "Good", "Very Good", "Excellent"];
 
     return (
         <div className="fixed top-0 left-0 h-screen w-full overflow-hidden z-10">
             <div className="absolute inset-0 bg-black opacity-50"></div>
-
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white p-5 rounded-md z-10 w-full md:w-[400px] animate-fade-in">
                     <h1 className="text-black text-center text-lg md:text-2xl font-semibold font-poppins mb-7">Share Your Experience</h1>

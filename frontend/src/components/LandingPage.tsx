@@ -199,7 +199,7 @@ const LandingPage: React.FC = () => {
     }
 
     useEffect(() => {
-        if (isShowTimmer === false && isShowTimmer !== null && userData.userRole === "serviceTaker") {
+        if (isShowTimmer === false && isShowTimmer !== null && userData?.userRole === "serviceTaker") {
             // setIsShowReviewForm(true);
             setIsShowPaymentModel(true);
         }
