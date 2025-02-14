@@ -153,8 +153,10 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         getLoggedInUserData();
     }, []);
 
+    const [isLogoutLoading, setIsLogoutLoading] = useState<boolean>(false);
     // Logout function
     const handleLogout = async () => {
+        setIsLogoutLoading(true);
         try {
             const response = await axios.post(`${baseUrl}api/user/logout`, {}, { withCredentials: true });
             if (response.data.success) {
@@ -168,6 +170,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             } else {
                 console.error("Unexpected error:", err);
             }
+        } finally {
+            setIsLogoutLoading(false);
         }
     };
 
@@ -315,6 +319,25 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
             };
         }
     };
+
+    if (isLogoutLoading) {
+        return (
+            <div className='h-screen w-full flex items-center justify-center bg-white'>
+                <div className="spinner">
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <div
+                            key={i}
+                            className="spinner-blade"
+                            style={{
+                                animationDelay: `${i * 0.083}s`,
+                                transform: `rotate(${i * 30}deg)`,
+                            }}
+                        ></div>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     return (
         <UserContext.Provider
