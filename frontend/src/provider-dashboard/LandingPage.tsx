@@ -83,7 +83,9 @@ const LandingPage: React.FC = () => {
         return verificationCode;
     };
 
+    const [isRequestModelBtnLoading, setIsRequestModelBtnLoading] = useState<boolean>(false);
     const handleServiceResponse = async (status: 'accepted' | 'declined') => {
+        setIsRequestModelBtnLoading(true);
         const verificationCode = generateVerificationCode();
         const newRequestData = {
             userId: requestData.requestData._id,
@@ -124,6 +126,8 @@ const LandingPage: React.FC = () => {
             setRequestData(null);
         } catch (error) {
             console.error("Error creating new request:", error);
+        } finally {
+            setIsRequestModelBtnLoading(false);
         }
     };
 
@@ -236,6 +240,7 @@ const LandingPage: React.FC = () => {
                 <RequestModal
                     data={requestData}
                     close={() => setRequestData(null)}
+                    isRequestModelBtnLoading={isRequestModelBtnLoading}
                     handleServiceResponse={handleServiceResponse}
                 />
             )}

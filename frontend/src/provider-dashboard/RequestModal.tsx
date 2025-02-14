@@ -5,9 +5,10 @@ interface PropsData {
     data: any;
     handleServiceResponse: (status: 'accepted' | 'declined') => void;
     close: () => void; // Ensure close is included in the props
+    isRequestModelBtnLoading: boolean;
 }
 
-const RequestModal: React.FC<PropsData> = ({ data, handleServiceResponse, close }) => {
+const RequestModal: React.FC<PropsData> = ({ data, handleServiceResponse, close, isRequestModelBtnLoading }) => {
 
     const { showToast } = useContext(UserContext);
 
@@ -100,20 +101,46 @@ const RequestModal: React.FC<PropsData> = ({ data, handleServiceResponse, close 
                         <p className='mt-3 text-center text-lg font-semibold '>{data?.requestData?.name}</p>
                         <p className='mt-1 text-center text-gray-500 text-sm font-medium'>{data?.requestData?.email}</p>
                     </div>
-                    <div className='grid grid-cols-2 gap-5 mt-5'>
-                        <button
-                            onClick={() => handleServiceResponse("accepted")}
-                            className='w-full bg-black hover:bg-[#333] text-white py-2 rounded'
-                        >
-                            Accept
-                        </button>
-                        <button
-                            onClick={() => handleServiceResponse("declined")}
-                            className='w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded'
-                        >
-                            Decline
-                        </button>
-                    </div>
+                    {
+                        isRequestModelBtnLoading
+                            ?
+                            (
+                                <div className='w-full rounded py-2 bg-[#333] flex items-center justify-center cursor-not-allowed mt-5'>
+                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                            )
+                            :
+                            (
+                                <div className='grid grid-cols-2 gap-5 mt-5'>
+                                    <button
+                                        onClick={() => handleServiceResponse("accepted")}
+                                        className='w-full bg-black hover:bg-[#333] text-white py-2 rounded'
+                                    >
+                                        Accept
+                                    </button>
+                                    <button
+                                        onClick={() => handleServiceResponse("declined")}
+                                        className='w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded'
+                                    >
+                                        Decline
+                                    </button>
+                                </div>
+                            )
+                    }
                 </div>
             </div>
         </div>

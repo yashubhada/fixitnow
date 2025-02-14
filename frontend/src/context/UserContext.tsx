@@ -140,8 +140,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         } catch (err) {
             if (axios.isAxiosError(err) && err.response?.status === 400) {
                 showToast(err.response.data.message || "An error occurred", "error");
-            } else {
-                console.error("Unexpected error:", err);
             }
         } finally {
             setIsLoading(false);
@@ -167,8 +165,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         } catch (err) {
             if (axios.isAxiosError(err) && err.response?.status === 400) {
                 showToast(err.response.data.message || "An error occurred", "error");
-            } else {
-                console.error("Unexpected error:", err);
             }
         } finally {
             setIsLogoutLoading(false);
