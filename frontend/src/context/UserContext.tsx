@@ -320,64 +320,71 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
         }
     };
 
-    if (isLogoutLoading) {
-        return (
-            <div className='h-screen w-full flex items-center justify-center bg-white'>
-                <div className="spinner">
-                    {Array.from({ length: 12 }, (_, i) => (
-                        <div
-                            key={i}
-                            className="spinner-blade"
-                            style={{
-                                animationDelay: `${i * 0.083}s`,
-                                transform: `rotate(${i * 30}deg)`,
-                            }}
-                        ></div>
-                    ))}
-                </div>
-            </div>
-        )
-    }
-
     return (
-        <UserContext.Provider
-            value={{
-                baseUrl,
-                isSignupForm,
-                setIsSignupForm,
-                openSignupForm,
-                closeSignupForm,
-                loginFormModal,
-                setLoginFormModal,
-                openLoginModal,
-                closeLoginModal,
-                showToast,
-                userData,
-                setUserData,
-                handleLogout,
-                isLoading,
+        <>
+            {
+                isLogoutLoading
+                    ?
+                    (
+                        <div className='h-screen w-full flex items-center justify-center bg-white'>
+                            <div className="spinner">
+                                {Array.from({ length: 12 }, (_, i) => (
+                                    <div
+                                        key={i}
+                                        className="spinner-blade"
+                                        style={{
+                                            animationDelay: `${i * 0.083}s`,
+                                            transform: `rotate(${i * 30}deg)`,
+                                        }}
+                                    ></div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                    :
+                    (
+                        <UserContext.Provider
+                            value={{
+                                baseUrl,
+                                isSignupForm,
+                                setIsSignupForm,
+                                openSignupForm,
+                                closeSignupForm,
+                                loginFormModal,
+                                setLoginFormModal,
+                                openLoginModal,
+                                closeLoginModal,
+                                showToast,
+                                userData,
+                                setUserData,
+                                handleLogout,
+                                isLoading,
 
-                // Socket
-                socket,
-                socketData,
-                setSocketData,
-                handleSocketRegister,
-                handleEmitServiceRequest,
-                handleOnServiceRequest,
-                handleEmitServiceRequestResponse,
-                handleOnServiceRequestResponse,
-                handleChatSendMessage,
-                handleChatReceiveMessage,
+                                // Socket
+                                socket,
+                                socketData,
+                                setSocketData,
+                                handleSocketRegister,
+                                handleEmitServiceRequest,
+                                handleOnServiceRequest,
+                                handleEmitServiceRequestResponse,
+                                handleOnServiceRequestResponse,
+                                handleChatSendMessage,
+                                handleChatReceiveMessage,
 
-                //timmer component
-                isShowTimmer,
-                setIsShowTimmer,
-                handleOnTimmerComponent,
-                handleEmitTimmerComponent
-            }}
-        >
-            {children}
+                                //timmer component
+                                isShowTimmer,
+                                setIsShowTimmer,
+                                handleOnTimmerComponent,
+                                handleEmitTimmerComponent
+                            }}
+                        >
+                            {children}
+                        </UserContext.Provider>
+                    )
+            }
             <Toaster />
-        </UserContext.Provider>
+        </>
+
     );
 };
