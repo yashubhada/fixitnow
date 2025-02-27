@@ -8,9 +8,10 @@ const socketAuth = async (socket, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.SECRET_FIXITNOW_TOKEN);
-        if(decoded){
-            next();
+        if(!decoded){
+            return next(new Error('Authentication error: Invalid User'));
         }
+        next();
     } catch (error) {
         next(new Error('Authentication error: Invalid token'));
     }
