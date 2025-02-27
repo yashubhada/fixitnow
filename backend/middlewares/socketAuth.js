@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/user.model.js';
 
 const socketAuth = async (socket, next) => {
     try {
@@ -9,14 +8,9 @@ const socketAuth = async (socket, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.SECRET_FIXITNOW_TOKEN);
-        const user = await User.findById(decoded._id).select('-password');
-
-        if (!user) {
-            return next(new Error('Authentication error: User not found'));
+        if(decoded){
+            next();
         }
-
-        socket.user = user;  // Attach user data to the socket
-        next();
     } catch (error) {
         next(new Error('Authentication error: Invalid token'));
     }
