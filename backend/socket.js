@@ -1,7 +1,4 @@
-import socketAuth from "./middlewares/socketAuth.js";
-
 const mainSocket = (io) => {
-    io.use(socketAuth);
     const userSockets = new Map(); // Map to store userId and socketId
     io.on('connection', (socket) => {
         console.log(`User connected: ${socket.id}`);
