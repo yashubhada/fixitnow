@@ -50,10 +50,10 @@ const DeleteProfileModel: React.FC<{ close: () => void }> = ({ close }) => {
             <div className="relative h-full w-full flex items-center justify-center px-5 md:px-0">
                 <div className="relative bg-white rounded-md z-10 w-full md:w-[400px] animate-fade-in">
                     <div className='flex items-center gap-3 p-3 border-b'>
-                        <div className='text-red-500 text-4xl'>
+                        <div className='text-red-500 text-3xl md:text-4xl'>
                             <i className="ri-alert-line"></i>
                         </div>
-                        <p className='text-xl text-red-500 font-semibold'>Danger zone</p>
+                        <p className='text-lg md:text-xl text-red-500 font-semibold'>Delete Account</p>
                     </div>
                     <p className='p-3 font-semibold'>Are you sure you want to delete your account?</p>
                     <div className='flex items-center justify-end gap-3 p-3 border-t'>
