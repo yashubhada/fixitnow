@@ -17,7 +17,8 @@ import {
     handleUpdateProvider,
     forgotPassVerifyEmail,
     forgotPassVerifyCode,
-    forgotPassResetPassword
+    forgotPassResetPassword,
+    deleteAccount
 } from "../controllers/user.controller.js";
 import { Router } from 'express';
 import { handleAuthentication } from "../middlewares/auth.middleware.js";
@@ -63,5 +64,9 @@ userRouter.get('/fetchUserHistory/:id', fetchUserHistory);
 userRouter.post('/forgotPassVerifyEmail', forgotPassVerifyEmail);
 userRouter.post('/forgotPassVerifyCode', forgotPassVerifyCode);
 userRouter.post('/forgotPassResetPassword', forgotPassResetPassword);
+
+// Delete Account
+userRouter.delete('/deleteAccount', handleAuthentication, deleteAccount);
+
 
 export default userRouter;

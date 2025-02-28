@@ -99,7 +99,7 @@ interface UserContextProviderProps {
 // Provider component
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({ children }) => {
     // Server URL
-    const baseUrl = "http://localhost:9797/"; //"https://fixitnow.onrender.com/";
+    const baseUrl =  "https://fixitnow.onrender.com/"; //"http://localhost:9797/";
 
     // Toast function
     const showToast = (message: string, type: "success" | "error") => {
@@ -177,8 +177,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
 
     // Initialize socket connection
     useEffect(() => {
-        // const newSocket = io("https://fixitnow.onrender.com", { withCredentials: true });
-        const newSocket = io("http://localhost:9797", { withCredentials: true });
+        const newSocket = io("https://fixitnow.onrender.com", { withCredentials: true });
+        // const newSocket = io("http://localhost:9797", { withCredentials: true });
         setSocket(newSocket);
 
         const storedRequestData = localStorage.getItem("requestData");

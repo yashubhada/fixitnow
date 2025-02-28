@@ -330,7 +330,7 @@ export const handleSignIn = async (req, res) => {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'None',
-                    // domain: 'fixitnow.onrender.com',
+                    domain: 'fixitnow.onrender.com',
                     maxAge: 3600000
                 })
                 .json({ success: true, user: user, message: "Signin successful" });
@@ -368,7 +368,7 @@ export const handleSignIn = async (req, res) => {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'None',
-                    // domain: 'fixitnow.onrender.com',
+                    domain: 'fixitnow.onrender.com',
                     maxAge: 3600000
                 })
                 .json({ success: true, user: updatedProvider, message: "Signin successful" });
@@ -398,9 +398,9 @@ export const handleGetLoggedInUser = async (req, res) => {
         }
 
         if (req.user.userRole === "serviceTaker") {
-            user = await User.findById(req.user._id).select("-password -avatarPublicId");
+            user = await User.findById(req.user._id).select("-password");
         } else if (req.user.userRole === "serviceProvider") {
-            user = await Provider.findById(req.user._id).select("-password -avatarPublicId -identityProofPublicId");
+            user = await Provider.findById(req.user._id).select("-password");
         }
 
         if (!user) {
@@ -432,12 +432,37 @@ export const handleLogout = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            // domain: 'fixitnow.onrender.com',
+            domain: 'fixitnow.onrender.com',
             path: '/'
         });
         res.status(201).json({ success: true, message: "Logout successful" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+export const deleteAccount = async (req, res) => {
+    try {
+        const { id, avatarPublicId, identityProofPublicId, userRole } = req.body;
+        console.log({ id, avatarPublicId, identityProofPublicId, userRole });
+        if (userRole === "serviceProvider") {
+            await cloudinary.uploader.destroy(avatarPublicId);
+            await cloudinary.uploader.destroy(identityProofPublicId);
+            await Provider.findByIdAndDelete(id);
+        } else {
+            await cloudinary.uploader.destroy(avatarPublicId);
+            await User.findByIdAndDelete(id);
+        }
+        res.clearCookie('accessToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None',
+            domain: 'fixitnow.onrender.com',
+            path: '/'
+        });
+        res.status(201).json({ success: true, message: "Account deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -472,7 +497,7 @@ export const createNewRequest = async (req, res) => {
 
         res.status(201).json({ success: true, requestId: newRequest._id, message: "New Request Generated! 🎉🚀" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -491,7 +516,7 @@ export const serviceComplete = async (req, res) => {
         );
         res.status(201).json({ success: true, message: "Service completed successfully" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -510,7 +535,7 @@ export const addReview = async (req, res) => {
 
         res.status(201).json({ success: true, message: "Review added successfully" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -530,7 +555,7 @@ export const fetchSingleServiceRequest = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Verification successful" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -543,7 +568,7 @@ export const fetchUserHistory = async (req, res) => {
         }
         res.status(200).json({ success: true, history });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -559,7 +584,7 @@ export const fetchProviderHistory = async (req, res) => {
 
         res.status(200).json({ success: true, history });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -593,7 +618,7 @@ export const forgotPassVerifyEmail = async (req, res) => {
 
         res.status(200).json({ success: true, userData, message: "Verification code has been sent to your email" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
@@ -623,7 +648,7 @@ export const forgotPassVerifyCode = async (req, res) => {
 
         res.status(400).json({ success: false, message: "Incorrect verification code" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }
 
@@ -649,6 +674,6 @@ export const forgotPassResetPassword = async (req, res) => {
 
         res.status(201).json({ success: true, message: "Password reset successful" });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 }

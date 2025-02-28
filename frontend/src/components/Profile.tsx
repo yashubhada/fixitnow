@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext } from '../context/UserContext';
 import axios from 'axios';
 
-const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
+const Profile: React.FC<{ onClose: () => void; onDelete: () => void  }> = ({ onClose, onDelete }) => {
 
     const { baseUrl, userData, setUserData, showToast } = useContext(UserContext);
 
@@ -171,36 +171,45 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
                                 className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                             />
                         </div>
-                        <button
-                            type="submit"
-                            className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                            disabled={isDisableBtn || isBtnLoading}
-                        >
-                            {
-                                isBtnLoading
-                                    ?
-                                    <>
-                                        <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle
-                                                className="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                            ></circle>
-                                            <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                            ></path>
-                                        </svg>
-                                        Saving...
-                                    </>
-                                    :
-                                    'Save Changes'
-                            }
-                        </button>
+                        <div className='grid grid-cols-2 gap-3 md:gap-5'>
+                            <button
+                                type="submit"
+                                className='w-full flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
+                                disabled={isDisableBtn || isBtnLoading}
+                            >
+                                {
+                                    isBtnLoading
+                                        ?
+                                        <>
+                                            <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                ></path>
+                                            </svg>
+                                            Saving...
+                                        </>
+                                        :
+                                        'Save Changes'
+                                }
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onDelete}
+                                className='w-full flex justify-center items-center font-poppins py-[10px] text-red-600 bg-red-200 border-red-600 border rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
+                            >
+                                Delete Account
+                            </button>
+                        </div>
                     </form>
                     <div
                         onClick={onClose}

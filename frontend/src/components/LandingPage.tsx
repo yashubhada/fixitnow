@@ -27,6 +27,7 @@ import HistoryPage from './HistoryPage'
 import Profile from './Profile'
 import ForgotPassword from './ForgotPassword'
 import Payment from './Payment'
+import DeleteProfileModel from './DeleteProfileModel'
 
 const LandingPage: React.FC = () => {
 
@@ -224,7 +225,12 @@ const LandingPage: React.FC = () => {
 
     const [isShowHistoryModel, setIShowHistoryModel] = useState<boolean>(false);
     const [isShowProfileModel, setIShowProfileModel] = useState<boolean>(false);
+    const [isDeleteProfileModel, setIsDeleteProfileModel] = useState<boolean>(false);
 
+    const accountDeleteCloseAllModel = () => {
+        setIsDeleteProfileModel(false);
+        setIShowProfileModel(false);
+    };
     const [isShowForgotPassword, setIsShowForgotPassword] = useState<boolean>(false);
 
     if (isLoading) {
@@ -569,8 +575,12 @@ const LandingPage: React.FC = () => {
             }
 
             {
-                isShowProfileModel && <Profile onClose={() => setIShowProfileModel(false)} />
+                isShowProfileModel && <Profile onDelete={() => setIsDeleteProfileModel(true)} onClose={() => setIShowProfileModel(false)} />
             }
+
+            {isDeleteProfileModel && (
+                <DeleteProfileModel close={accountDeleteCloseAllModel} />
+            )}
 
             {
                 isShowForgotPassword && <ForgotPassword onClose={() => setIsShowForgotPassword(false)} />

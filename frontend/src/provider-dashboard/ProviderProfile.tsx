@@ -13,6 +13,7 @@ import HomeRenovation from '../images/renovation.png'
 import Flooring from '../images/flooring.png'
 import Address from '../components/address.json'
 import { useNavigate } from "react-router-dom";
+import DeleteProfileModel from "../components/DeleteProfileModel";
 
 const ProviderProfile: React.FC = () => {
 
@@ -225,224 +226,240 @@ const ProviderProfile: React.FC = () => {
         }
     }
 
+    const [isDeleteProfileModel, setIsDeleteProfileModel] = useState<boolean>(false);
+
     return (
-        <div className="w-full h-full flex items-center justify-center">
-            <div className="w-[400px]">
-                <form onSubmit={handleUpdateProfile} className='w-full'>
-                    <div className='flex justify-center mb-5'>
-                        <div className='relative'>
-                            <img
-                                src={profile.avatar}
-                                className='w-28 h-28 rounded-full shadow border'
-                            />
-                            <div
-                                onClick={handleEditAvatarClick}
-                                className='bg-white w-9 h-9 text-center rounded-full absolute -top-1 -right-1 cursor-pointer shadow'
-                            >
-                                <i className="ri-pencil-fill leading-9 text-xl"></i>
+        <>
+            <div className="w-full h-full flex items-center justify-center">
+                <div className="w-[400px]">
+                    <form onSubmit={handleUpdateProfile} className='w-full'>
+                        <div className='flex justify-center mb-5'>
+                            <div className='relative'>
+                                <img
+                                    src={profile.avatar}
+                                    className='w-28 h-28 rounded-full shadow border'
+                                />
+                                <div
+                                    onClick={handleEditAvatarClick}
+                                    className='bg-white w-9 h-9 text-center rounded-full absolute -top-1 -right-1 cursor-pointer shadow'
+                                >
+                                    <i className="ri-pencil-fill leading-9 text-xl"></i>
+                                </div>
+                                <input
+                                    type="file"
+                                    ref={avatarFileRef}
+                                    onChange={handleFormChange}
+                                    name="avatar"
+                                    className='hidden'
+                                />
                             </div>
+                        </div>
+                        <div
+                            className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <i className="ri-user-line text-xl mr-3"></i>
                             <input
-                                type="file"
-                                ref={avatarFileRef}
+                                type="text"
+                                autoComplete='off'
+                                placeholder='Enter your name'
                                 onChange={handleFormChange}
-                                name="avatar"
-                                className='hidden'
+                                value={profile.name}
+                                name="name"
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
                             />
                         </div>
-                    </div>
-                    <div
-                        className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                    >
-                        <i className="ri-user-line text-xl mr-3"></i>
-                        <input
-                            type="text"
-                            autoComplete='off'
-                            placeholder='Enter your name'
-                            onChange={handleFormChange}
-                            value={profile.name}
-                            name="name"
-                            required
-                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                        />
-                    </div>
-                    <div
-                        className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                    >
-                        <i className="ri-mail-line text-xl mr-3"></i>
-                        <input
-                            type="text"
-                            autoComplete='off'
-                            value={userData?.email}
-                            readOnly
-                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                        />
-                    </div>
-                    <div
-                        className='mb-5 relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                    >
-                        <i className="ri-tools-fill text-xl mr-3"></i>
-                        <input
-                            type="text"
-                            autoComplete='off'
-                            onChange={handleFormChange}
-                            name="service"
-                            value={profile.service}
-                            placeholder='Enter your service (e.g., Electrician)'
-                            required
-                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                        />
-                        {
-                            filteredServiceCategory.length > 0 &&
-                            <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
-                                {filteredServiceCategory.length > 0 ? (
-                                    filteredServiceCategory.map((service, index) => (
-                                        <li
-                                            key={index}
-                                            className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
-                                            onClick={
-                                                (): void => {
-                                                    setNewProfile((prevData) => ({
-                                                        ...prevData,
-                                                        service: service?.title,
-                                                    }));
-                                                    setProfile((prevData) => ({
-                                                        ...prevData,
-                                                        service: service?.title,
-                                                    }));
-                                                    setFilteredServiceCategory([])
-                                                }
-                                            }
-                                        >
-                                            <div>
-                                                <div className='h-[20px] w-[20px]'>
-                                                    <img src={service?.icon} className='w-full h-full object-contain' />
-                                                </div>
-                                            </div>
-                                            <div>{service?.title}</div>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-gray-500 p-2">No results found</li>
-                                )}
-                            </ul>
-                        }
-                    </div>
-                    <div
-                        className='mb-5 relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                    >
-                        <i className="ri-map-pin-line text-xl mr-3"></i>
-                        <input
-                            type="text"
-                            autoComplete='off'
-                            onChange={handleFormChange}
-                            name="address"
-                            value={profile.address}
-                            placeholder='Enter your service address'
-                            required
-                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                        />
-                        {
-                            filteredAddress.length > 0 &&
-                            <ul className='absolute z-10 max-h-[150px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
-                                {filteredAddress.length > 0 ? (
-                                    filteredAddress.map((ary, index) => (
-                                        <li
-                                            key={index}
-                                            className='flex items-center cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
-                                            onClick={
-                                                (): void => {
-                                                    setNewProfile((prevData) => ({
-                                                        ...prevData,
-                                                        address: ary?.address,
-                                                    }));
-                                                    setProfile((prevData) => ({
-                                                        ...prevData,
-                                                        address: ary?.address,
-                                                    }));
-                                                    setFilteredAddress([])
-                                                }
-                                            }
-                                        >
-                                            <i className="ri-map-pin-line text-lg mr-3"></i>
-                                            {ary?.address}
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="text-gray-500 p-2">No results found</li>
-                                )}
-                            </ul>
-                        }
-                    </div>
-                    <div
-                        className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
-                    >
-                        <i className="ri-money-rupee-circle-line text-xl mr-3"></i>
-                        <input
-                            type="number"
-                            autoComplete='off'
-                            onChange={handleFormChange}
-                            value={profile?.price}
-                            name="price"
-                            required
-                            placeholder='Enter service price (e.g., ₹499)'
-                            className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
-                        />
-                    </div>
-                    <div
-                        className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
-                    >
-                        <i className="ri-id-card-line text-xl mr-3"></i>
-                        <label htmlFor="providerIdentityProof" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent mr-3 outline-none focus:text-black truncate">
-                            {providerIdentityProof ? providerIdentityProof : "Upload your work license"}
-                        </label>
-                        <input
-                            id="providerIdentityProof"
-                            type="file"
-                            onChange={handleFormChange}
-                            name="identityProof"
-                            className="hidden"
-                        />
-                        <a
-                            href={profile?.identityProof}
-                            target="_blank"
-                            className="bg-black px-3 py-1 rounded text-white"
+                        <div
+                            className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
                         >
-                            view
-                        </a>
-                    </div>
-                    <button
-                        type="submit"
-                        className='w-full mt-5 flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
-                        disabled={isDisableBtn || isBtnLoading}
-                    >
-                        {
-                            isBtnLoading
-                                ?
-                                <>
-                                    <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        ></circle>
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                        ></path>
-                                    </svg>
-                                    Saving...
-                                </>
-                                :
-                                'Save Changes'
-                        }
-                    </button>
-                </form>
+                            <i className="ri-mail-line text-xl mr-3"></i>
+                            <input
+                                type="text"
+                                autoComplete='off'
+                                value={userData?.email}
+                                readOnly
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                        </div>
+                        <div
+                            className='mb-5 relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <i className="ri-tools-fill text-xl mr-3"></i>
+                            <input
+                                type="text"
+                                autoComplete='off'
+                                onChange={handleFormChange}
+                                name="service"
+                                value={profile.service}
+                                placeholder='Enter your service (e.g., Electrician)'
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                            {
+                                filteredServiceCategory.length > 0 &&
+                                <ul className='absolute z-10 max-h-[220px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                    {filteredServiceCategory.length > 0 ? (
+                                        filteredServiceCategory.map((service, index) => (
+                                            <li
+                                                key={index}
+                                                className='flex items-center gap-x-3 cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                onClick={
+                                                    (): void => {
+                                                        setNewProfile((prevData) => ({
+                                                            ...prevData,
+                                                            service: service?.title,
+                                                        }));
+                                                        setProfile((prevData) => ({
+                                                            ...prevData,
+                                                            service: service?.title,
+                                                        }));
+                                                        setFilteredServiceCategory([])
+                                                    }
+                                                }
+                                            >
+                                                <div>
+                                                    <div className='h-[20px] w-[20px]'>
+                                                        <img src={service?.icon} className='w-full h-full object-contain' />
+                                                    </div>
+                                                </div>
+                                                <div>{service?.title}</div>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="text-gray-500 p-2">No results found</li>
+                                    )}
+                                </ul>
+                            }
+                        </div>
+                        <div
+                            className='mb-5 relative flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <i className="ri-map-pin-line text-xl mr-3"></i>
+                            <input
+                                type="text"
+                                autoComplete='off'
+                                onChange={handleFormChange}
+                                name="address"
+                                value={profile.address}
+                                placeholder='Enter your service address'
+                                required
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                            {
+                                filteredAddress.length > 0 &&
+                                <ul className='absolute z-10 max-h-[150px] overflow-x-hidden overflow-y-scroll custom-scrollbar top-[50px] py-3 text-base left-0 w-full rounded-md bg-white text-black' style={{ boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.16)' }}>
+                                    {filteredAddress.length > 0 ? (
+                                        filteredAddress.map((ary, index) => (
+                                            <li
+                                                key={index}
+                                                className='flex items-center cursor-pointer hover:bg-[#f3f3f3] p-2 overflow-hidden'
+                                                onClick={
+                                                    (): void => {
+                                                        setNewProfile((prevData) => ({
+                                                            ...prevData,
+                                                            address: ary?.address,
+                                                        }));
+                                                        setProfile((prevData) => ({
+                                                            ...prevData,
+                                                            address: ary?.address,
+                                                        }));
+                                                        setFilteredAddress([])
+                                                    }
+                                                }
+                                            >
+                                                <i className="ri-map-pin-line text-lg mr-3"></i>
+                                                {ary?.address}
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li className="text-gray-500 p-2">No results found</li>
+                                    )}
+                                </ul>
+                            }
+                        </div>
+                        <div
+                            className='mb-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white'
+                        >
+                            <i className="ri-money-rupee-circle-line text-xl mr-3"></i>
+                            <input
+                                type="number"
+                                autoComplete='off'
+                                onChange={handleFormChange}
+                                value={profile?.price}
+                                name="price"
+                                required
+                                placeholder='Enter service price (e.g., ₹499)'
+                                className='w-full border-none bg-transparent outline-none text-[#5E5E5E] focus:text-black'
+                            />
+                        </div>
+                        <div
+                            className="mt-5 flex items-center justify-between py-[6px] md:py-[10px] px-2 md:px-5 bg-[#f3f3f3] w-full border-2 border-[#f3f3f3] rounded-md focus-within:border-black focus-within:bg-white"
+                        >
+                            <i className="ri-id-card-line text-xl mr-3"></i>
+                            <label htmlFor="providerIdentityProof" className="w-full text-[#5E5E5E] cursor-pointer bg-transparent mr-3 outline-none focus:text-black truncate">
+                                {providerIdentityProof ? providerIdentityProof : "Upload your work license"}
+                            </label>
+                            <input
+                                id="providerIdentityProof"
+                                type="file"
+                                onChange={handleFormChange}
+                                name="identityProof"
+                                className="hidden"
+                            />
+                            <a
+                                href={profile?.identityProof}
+                                target="_blank"
+                                className="bg-black px-3 py-1 rounded text-white"
+                            >
+                                view
+                            </a>
+                        </div>
+                        <div className='grid grid-cols-2 gap-3 md:gap-5 mt-3'>
+                            <button
+                                type="submit"
+                                className='w-full flex justify-center items-center font-poppins py-[10px] text-white bg-black hover:bg-[#333] rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
+                                disabled={isDisableBtn || isBtnLoading}
+                            >
+                                {
+                                    isBtnLoading
+                                        ?
+                                        <>
+                                            <svg className="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                                ></path>
+                                            </svg>
+                                            Saving...
+                                        </>
+                                        :
+                                        'Save Changes'
+                                }
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setIsDeleteProfileModel(true)}
+                                className='w-full flex justify-center items-center font-poppins py-[10px] text-red-600 bg-red-200 border-red-600 border rounded-md text-sm font-medium leading-[20px] select-none disabled:bg-[#333] disabled:cursor-not-allowed'
+                            >
+                                Delete Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+            {
+                isDeleteProfileModel && <DeleteProfileModel close={() => setIsDeleteProfileModel(false)} />
+            }
+        </>
     );
 }
 
