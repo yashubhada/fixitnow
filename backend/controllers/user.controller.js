@@ -132,6 +132,18 @@ export const handleUpdateTaker = async (req, res) => {
             newData,
             { new: true }
         )
+
+        await Provider.updateMany(
+            { "reviews.userId": id },
+            {
+                $set: {
+                    "reviews.$[elem].userName": name,   // Update userName if name exists
+                    "reviews.$[elem].userAvatar": newData.avatar // Update avatar if updated
+                }
+            },
+            { arrayFilters: [{ "elem.userId": id }] } // Apply the update only to matching elements in the array
+        );
+
         if (!taker) {
             return res.status(400).json({ success: false, message: 'User not found' });
         }
