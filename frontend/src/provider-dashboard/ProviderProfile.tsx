@@ -26,16 +26,20 @@ const ProviderProfile: React.FC = () => {
         price?: number;
         address?: string;
         avatar?: any;
+        avatarPublicId?: string;
         identityProof?: any;
+        identityProofPublicId?: string;
     }
 
     const [profile, setProfile] = useState<ProfileType>({
         name: userData?.name,
         avatar: userData?.avatar,
+        avatarPublicId: userData?.avatarPublicId,
         service: userData?.service,
         price: userData?.price,
         address: userData?.address,
-        identityProof: userData?.identityProof
+        identityProof: userData?.identityProof,
+        identityProofPublicId: userData?.identityProofPublicId
     });
 
     const [newProfile, setNewProfile] = useState<ProfileType>({});
@@ -186,6 +190,7 @@ const ProviderProfile: React.FC = () => {
             }
             if (newProfile.avatar) {
                 formData.append("avatar", newProfile.avatar);
+                formData.append("avatarPublicId", profile.avatarPublicId || "");
             }
             if (newProfile.service) {
                 formData.append("service", newProfile.service);
@@ -198,6 +203,7 @@ const ProviderProfile: React.FC = () => {
             }
             if (newProfile.identityProof) {
                 formData.append("identityProof", newProfile.identityProof);
+                formData.append("identityProofPublicId", profile.identityProofPublicId || "");
             }
             const response = await axios.patch(`${baseUrl}api/user/handleUpdateProvider/${userData._id}`,
                 formData,

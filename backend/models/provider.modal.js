@@ -30,7 +30,15 @@ const providerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatarPublicId: {
+        type: String,
+        required: true
+    },
     identityProof: {
+        type: String,
+        required: true
+    },
+    identityProofPublicId: {
         type: String,
         required: true
     },

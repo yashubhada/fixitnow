@@ -82,6 +82,7 @@ export const handleUserSignUp = async (req, res) => {
             email,
             password: hashedPassword,
             avatar: avatarUpload.secure_url,
+            avatarPublicId: avatarUpload.public_id
         });
 
         res.status(201).json({ success: true, message: "Signup successful" });
@@ -107,7 +108,7 @@ export const fetchSingleTaker = async (req, res) => {
 export const handleUpdateTaker = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name } = req.body;
+        const { name, avatarPublicId } = req.body;
 
         const newData = {};
         if (name) newData.name = name;
@@ -123,7 +124,12 @@ export const handleUpdateTaker = async (req, res) => {
                     },
                 ]
             });
+
             newData.avatar = avatarUpload.secure_url;
+            newData.avatarPublicId = avatarUpload.public_id;
+
+            await cloudinary.uploader.destroy(avatarPublicId);
+
             fs.unlinkSync(req.file.path);
         }
 
@@ -204,7 +210,9 @@ export const handleProviderSignUp = async (req, res) => {
             address,
             password: await bcrypt.hash(password, 8),
             avatar: avatarUpload.secure_url,
+            avatarPublicId: avatarUpload.public_id,
             identityProof: identityProofUpload.secure_url,
+            identityProofPublicId: identityProofUpload.public_id
         });
 
         res.status(201).json({ success: true, message: 'Signup successful' });
@@ -229,7 +237,7 @@ export const fetchSingleProvider = async (req, res) => {
 export const handleUpdateProvider = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, service, price, address } = req.body;
+        const { name, service, price, address, avatarPublicId, identityProofPublicId } = req.body;
 
         const newData = {};
 
@@ -251,6 +259,10 @@ export const handleUpdateProvider = async (req, res) => {
                 ]
             });
             newData.avatar = avatarUpload.secure_url;
+            newData.avatarPublicId = avatarUpload.public_id;
+
+            await cloudinary.uploader.destroy(avatarPublicId);
+
             fs.unlinkSync(req.files.avatar[0].path);
         }
 
@@ -259,6 +271,9 @@ export const handleUpdateProvider = async (req, res) => {
                 folder: 'fixitnow',
             });
             newData.identityProof = identityProofUpload.secure_url;
+            newData.identityProofPublicId = identityProofUpload.public_id;
+
+            await cloudinary.uploader.destroy(identityProofPublicId);
             fs.unlinkSync(req.files.identityProof[0].path);
         }
 
@@ -315,7 +330,7 @@ export const handleSignIn = async (req, res) => {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'None',
-                    domain: 'fixitnow.onrender.com',
+                    // domain: 'fixitnow.onrender.com',
                     maxAge: 3600000
                 })
                 .json({ success: true, user: user, message: "Signin successful" });
@@ -353,7 +368,7 @@ export const handleSignIn = async (req, res) => {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'None',
-                    domain: 'fixitnow.onrender.com',
+                    // domain: 'fixitnow.onrender.com',
                     maxAge: 3600000
                 })
                 .json({ success: true, user: updatedProvider, message: "Signin successful" });
@@ -383,9 +398,9 @@ export const handleGetLoggedInUser = async (req, res) => {
         }
 
         if (req.user.userRole === "serviceTaker") {
-            user = await User.findById(req.user._id);
+            user = await User.findById(req.user._id).select("-password -avatarPublicId");
         } else if (req.user.userRole === "serviceProvider") {
-            user = await Provider.findById(req.user._id);
+            user = await Provider.findById(req.user._id).select("-password -avatarPublicId -identityProofPublicId");
         }
 
         if (!user) {
@@ -417,7 +432,7 @@ export const handleLogout = async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            domain: 'fixitnow.onrender.com',
+            // domain: 'fixitnow.onrender.com',
             path: '/'
         });
         res.status(201).json({ success: true, message: "Logout successful" });

@@ -9,11 +9,13 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
     interface ProfileType {
         name?: string;
         avatar?: any;
+        avatarPublicId?: string;
     }
 
     const [profile, setProfile] = useState<ProfileType>({
         name: userData?.name,
-        avatar: userData?.avatar
+        avatar: userData?.avatar,
+        avatarPublicId: userData?.avatarPublicId
     });
 
     const [newProfile, setNewProfile] = useState<ProfileType>({});
@@ -77,6 +79,7 @@ const Profile: React.FC<{ onClose: () => void; }> = ({ onClose }) => {
             }
             if (newProfile.avatar) {
                 formData.append("avatar", newProfile.avatar);
+                formData.append("avatarPublicId", profile.avatarPublicId || "");
             }
             const response = await axios.patch(`${baseUrl}api/user/handleUpdateTaker/${userData._id}`,
                 formData,
